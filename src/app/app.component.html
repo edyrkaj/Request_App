@@ -1,0 +1,43 @@
+<div class=wrapper>
+  <header class="d-flex justify-content-between align-items-baseline px-3 mat-elevation-z1">
+    <div>
+      <span class="px-3"><img class="request-logo" src="assets/img/request-logo.png"></span>
+      <span class="semi-bold">Request</span>
+    </div>
+
+    <mat-form-field>
+      <input matInput type="text" [(ngModel)]="searchValue" />
+      <button mat-button matSuffix mat-icon-button>
+        <mat-icon>search</mat-icon>
+      </button>
+      <mat-placeholder><small>Search by Request ID / ETH address / ENS</small></mat-placeholder>
+    </mat-form-field>
+
+    <div class="d-flex align-items-baseline">
+      <button mat-icon-button>
+        <mat-icon mat-icon-button>account_circle</mat-icon>
+      </button>
+      <mat-form-field floatPlaceholder="never" [style.width]="'394px'">
+        <mat-select name="account" placeholder="select account" [(ngModel)]="account">
+          <mat-option *ngFor="let account of accounts" [value]="account">{{ account }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </header>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+  <footer class="justify-content-between">
+    <span><img class="request-logo" src="assets/img/request-logo.png"></span>
+    <span>Business Invoices</span>
+  </footer>
+</div>
+<!-- 
+<button mat-icon-button [mat-menu-trigger-for]="menu">
+  <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item>Option 1</button>
+  <button mat-menu-item>Option 2</button>
+</mat-menu>
+ -->

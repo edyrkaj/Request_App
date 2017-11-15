@@ -1,0 +1,61 @@
+@import 'variables';
+@import 'mixins';
+
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap-grid';
+@import '~bootstrap/scss/utilities';
+
+@import '~font-awesome/scss/font-awesome';
+@import url('//fonts.googleapis.com/icon?family=Material+Icons');
+
+html,
+body {
+	@include serif-font();
+	min-width: 320px;
+	height: 100%;
+}
+
+body {
+	margin: 0;
+}
+
+.semi-bold {
+	font-weight: 500;
+}
+
+mat-card {
+	max-width: 80%;
+	margin: 2em auto;
+	text-align: center;
+}
+
+
+.done {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	color: white;
+}
+
+* {
+	a:hover,
+	a:active,
+	a:focus {
+		text-decoration: none;
+	}
+
+	&:active,
+	 :focus {
+		outline: none !important;
+	}
+}
+
+label {
+	margin: 0;
+}
+
+code {
+	white-space: nowrap;
+	border-radius: 10px;
+	padding: 0 8px 1px 8px;
+}

@@ -1,0 +1,33 @@
+@import 'variables';
+
+.request-logo {
+  max-height: 36px;
+}
+
+
+header {
+  z-index: 1;
+  color: $primary;
+}
+
+.wrapper {
+  z-index: -2;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .content {
+    flex: 1 0 auto;
+    position: relative;
+    background: $grey-light;
+  }
+
+  footer {
+    background: $primary;
+    color: #fff;
+    padding: 0 15px;
+    text-align: center;
+    z-index: 1;
+  }
+}
+
