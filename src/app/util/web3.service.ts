@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import Web3 from 'web3';
 import { default as contract } from 'truffle-contract';
 import { Subject } from 'rxjs/Rx';
+import requestEthereumService from 'requestnetwork.js/dist/src/servicesContracts/requestEthereum-service';
+
 
 declare let window: any;
 
 @Injectable()
 export class Web3Service {
   private web3: Web3;
+  private requestEthereumService: requestEthereumService;
   private accounts: string[];
   public ready = false;
   public accountsObservable = new Subject < string[] > ();
@@ -31,12 +34,12 @@ export class Web3Service {
       // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
       this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     }
-
+    this.requestEthereumService = new requestEthereumService(this.web3.givenProvider)
     setInterval(() => this.refreshAccounts(), 100);
   }
 
   private refreshAccounts() {
-    console.log('refreshing accounts');
+    console.log('Refreshing accounts');
     this.web3.eth.getAccounts((err, accs) => {
       if (err != null) {
         alert('There was an error fetching your accounts.');
@@ -59,7 +62,7 @@ export class Web3Service {
     });
   }
 
-
+  //
   public async artifactsToContract(artifacts) {
     if (!this.web3) {
       const delay = new Promise(resolve => setTimeout(resolve, 100));
@@ -70,6 +73,34 @@ export class Web3Service {
     const contractAbstraction = contract(artifacts);
     contractAbstraction.setProvider(this.web3.currentProvider);
     return contractAbstraction;
-
   }
+  //
+
+  public async foo() {
+     console.log(this.requestEthereumService);
+
+    console.log(this.requestEthereumService.createRequestAsPayeeAsync);
+    try {
+      let result = await this.requestEthereumService.createRequestAsPayeeAsync(
+        "0xf17f52151ebef6c7334fad080c5704d77216b732", // 1
+        1000,
+        /* "", */
+        '',
+        /* [], */
+        ["0xc5fdf4076b8f3a5357c5e395ab970b5b54098fef"], // 2 
+        '{"reason":"wine purchased"}');
+
+      console.log("result createRequestAsPayeeAsync********************");
+      console.log(result);
+
+      let requestID = result.requestId;
+      result = await this.requestEthereumService.getRequestAsync(requestID);
+      console.log("result requestEthereumService getRequestAsync********************");
+      console.log(result);
+    } catch (err) {
+      console.log('Error: ', err.message);
+    }
+  }
+
+
 }

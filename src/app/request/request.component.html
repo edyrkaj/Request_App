@@ -1,28 +1,52 @@
-<mat-card>
-  <button mat-button>All</button>
-  <button mat-raised-button>Of</button>
-  <button mat-raised-button color="primary">The</button>
-  <button mat-raised-button color="accent">Buttons</button>
-</mat-card>
-<mat-card>
-  <h1>MetaCoin</h1>
-  <select name="account" (change)="clickAddress($event)">
-    <option *ngFor="let account of accounts">{{account}}</option>
-  </select>
-  <h2>Example Truffle Dapp</h2>
-  <h3>You have {{model.balance}} META</h3>
-  <br>
-  <h1>Send MetaCoin</h1>
-  <br>
-  <label for="amount">Amount:</label>
-  <input type="text" id="amount" placeholder="e.g., 95" (change)="setAmount($event)">
-  <br>
-  <label for="receiver">To Address:</label>
-  <input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae" (change)="setReceiver($event)">
-  <br>
-  <br>
-  <button id="send" (click)="sendCoin()">Send MetaCoin</button>
-  <br>
-  <br>
-  <span id="status">{{status}}</span>
-</mat-card>
+<div class="fc-primary container">
+  <div class="row my-5">
+    <div class="col-md-6 py-3">
+      <h1>Create and manage your payment requests</h1>
+      <p>Get paid in cryptocurrencies in minutes. The innovative way to request a payment.</p>
+      <p><a href="#">Why use Request Network?</a></p>
+    </div>
+    <div class="col-md-6">
+      <mat-card class="p-0 b-7">
+        <div class="d-flex bg-primary p-4 bt-7">
+          <img class="px-3 request-logo" src="assets/img/request-logo.png">
+          <div class="ml-auto">
+            <div class="fc-white semi-bold">New Request</div>
+            <div class="fc-white" style="opacity: 0.51"><i>Date du jour</i></div>
+          </div>
+        </div>
+        <div class="p-4">
+          <form class="requestForm">
+            <div class="d-flex w-100">
+              <mat-form-field class="w-100">
+                <input matInput type="number" placeholder="Request amount" [formControl]="amountFormControl">
+                <mat-error *ngIf="amountFormControl.hasError('required')">
+                  amount is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field [style.width]="'64px'">
+                <mat-select [(ngModel)]="currency" name="currency">
+                  <mat-option *ngFor="let currency of currencies" [value]="currency.iso">
+                    <img class="currencyIcon" src="assets/cryptoIcons/{{currency.iso}}.png">&nbsp;{{currency.iso}}
+                  </mat-option>
+                </mat-select>
+                <span matPrefix>
+                  <img class="currencyIcon" src="assets/cryptoIcons/{{currency}}.png">&nbsp;
+                </span>
+              </mat-form-field>
+            </div>
+            <mat-form-field class="w-100">
+              <input matInput placeholder="Payer’s ETH address (optional)" [formControl]="payerAddressFormControl">
+            </mat-form-field>
+            <mat-form-field class="w-100" hintLabel="Max 256 characters">
+              <textarea matInput maxlength="256" rows="1" placeholder="Reason (optional)" [formControl]="reasonFormControl"></textarea>
+              <mat-hint align="end">{{reason?.length || 0}}/256</mat-hint>
+            </mat-form-field>
+          </form>
+        </div>
+        <mat-toolbar class="p-4 bb-7" style="height: inherit">
+          <button class="ml-auto" mat-raised-button color="accent">Create your Request</button>
+        </mat-toolbar>
+      </mat-card>
+    </div>
+  </div>
+</div>

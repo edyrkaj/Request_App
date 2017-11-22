@@ -75,7 +75,7 @@ $mat-request-secondary: (
 
 $app-primary: mat-palette($mat-request-primary, 500, 300, contrast(50));
 $app-accent: mat-palette($mat-request-secondary);
-$app-warn: mat-palette($mat-deep-orange, A200);
+$app-warn: mat-palette($mat-red, A200);
 
 
 

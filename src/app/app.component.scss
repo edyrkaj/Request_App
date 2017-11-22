@@ -1,13 +1,11 @@
 @import 'variables';
 
-.request-logo {
-  max-height: 36px;
-}
-
 
 header {
   z-index: 1;
-  color: $primary;
+  .request-logo {
+    max-height: 36px;
+  }
 }
 
 .wrapper {
@@ -25,9 +23,20 @@ header {
   footer {
     background: $primary;
     color: #fff;
-    padding: 0 15px;
-    text-align: center;
-    z-index: 1;
+    .request-logo {
+      height: 50px;
+    }
+
+    .footer-column {
+     display:flex;
+     flex-direction: column;
+     margin-left: 3rem;
+     margin-right: 3rem;
+     a {
+      color: white;
+      font-size: 14px;
+      margin-bottom: 0.5rem;
+     }
+    }
   }
 }
-
