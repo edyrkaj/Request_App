@@ -1,13 +1,13 @@
 <div class="fc-primary container">
   <div class="row my-5">
     <div class="col-md-6 py-3">
-      <h1>Create and manage your payment requests</h1>
-      <p>Get paid in cryptocurrencies in minutes. The innovative way to request a payment.</p>
-      <p><a href="#">Why use Request Network?</a></p>
+      <h1>Send payment requests,<br/>the right way</h1>
+      <p>A decentralized network to get paid in cryptocurrencies.
+        <br/>Formal & Simple.</p>
     </div>
     <div class="col-md-6">
-      <mat-card class="p-0 b-7">
-        <div class="d-flex bg-primary p-4 bt-7">
+      <mat-card class="p-0 br-7" style="box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5)">
+        <div class="d-flex bg-primary p-4 btr-7">
           <img class="px-3 request-logo" src="assets/img/request-logo.png">
           <div class="ml-auto">
             <div class="fc-white semi-bold">New Request</div>
@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="p-4">
-          <form class="requestForm">
+          <form [formGroup]="requestForm" (ngSubmit)="createRequest()" class="requestForm">
             <div class="d-flex w-100">
               <mat-form-field class="w-100">
                 <input matInput type="number" placeholder="Request amount" [formControl]="amountFormControl">
@@ -24,13 +24,13 @@
                 </mat-error>
               </mat-form-field>
               <mat-form-field [style.width]="'64px'">
-                <mat-select [(ngModel)]="currency" name="currency">
-                  <mat-option *ngFor="let currency of currencies" [value]="currency.iso">
-                    <img class="currencyIcon" src="assets/cryptoIcons/{{currency.iso}}.png">&nbsp;{{currency.iso}}
+                <mat-select [formControl]="currency" name="currency">
+                  <mat-option *ngFor="let c of currencies" [value]="c.iso">
+                    <img class="currencyIcon" src="assets/cryptoIcons/{{c.iso}}.png">&nbsp;{{c.iso}}
                   </mat-option>
                 </mat-select>
                 <span matPrefix>
-                  <img class="currencyIcon" src="assets/cryptoIcons/{{currency}}.png">&nbsp;
+                  <img class="currencyIcon" src="assets/cryptoIcons/{{currency.value}}.png">&nbsp;
                 </span>
               </mat-form-field>
             </div>
@@ -43,8 +43,8 @@
             </mat-form-field>
           </form>
         </div>
-        <mat-toolbar class="p-4 bb-7" style="height: inherit">
-          <button class="ml-auto" mat-raised-button color="accent">Create your Request</button>
+        <mat-toolbar class="p-0 bbr-7" style="height: 60px">
+          <button class="ml-auto p-0 br-0" mat-raised-button color="accent" style="width: 50%; height: 100%; border-radius: 0 0 7px 0; box-shadow: none !important;" (click)="createRequest(requestForm)" [disabled]="!requestForm.valid">Create a Request</button>
         </mat-toolbar>
       </mat-card>
     </div>

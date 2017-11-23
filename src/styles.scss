@@ -19,6 +19,15 @@ body {
   margin: 0;
 }
 
+mat-toolbar.mat-toolbar {
+  background: #FBFBFB;
+}
+
+// .mat-input-container label {
+//   color: #617B9F;
+//   opacity: 0.5;
+// }
+
 .fc-primary {
   color: $primary;
 }
@@ -31,16 +40,16 @@ body {
   background: $primary;
 }
 
-.b-7 {
+.br-7 {
   border-radius: 7px !important;
 }
 
-.bt-7 {
+.btr-7 {
   border-top-left-radius: 7px !important;
   border-top-right-radius: 7px !important;
 }
 
-.bb-7 {
+.bbr-7 {
   border-bottom-right-radius: 7px !important;
   border-bottom-left-radius: 7px !important;
 }

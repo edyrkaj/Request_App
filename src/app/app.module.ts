@@ -10,13 +10,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { UtilModule } from './util/util.module';
 
 import { AppComponent } from './app.component';
-import { RequestComponent } from './request/request.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    RequestComponent
+    HomeComponent
   ],
   imports: [
     // angular

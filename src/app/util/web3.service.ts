@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, HostListener } from '@angular/core';
 import Web3 from 'web3';
 import { default as contract } from 'truffle-contract';
 import { Subject } from 'rxjs/Rx';
-import requestEthereumService from 'requestnetwork.js/dist/src/servicesContracts/requestEthereum-service';
+import RequestNetwork from 'requestnetwork.js/dist/src/requestNetwork';
 
 
 declare let window: any;
@@ -10,31 +10,34 @@ declare let window: any;
 @Injectable()
 export class Web3Service {
   private web3: Web3;
-  private requestEthereumService: requestEthereumService;
+  private requestNetwork: RequestNetwork;
   private accounts: string[];
   public ready = false;
   public accountsObservable = new Subject < string[] > ();
 
   constructor() {
     window.addEventListener('load', (event) => {
-      this.bootstrapWeb3();
+      this.checkAndInstantiateWeb3();
+      this.requestNetwork = new RequestNetwork(this.web3.currentProvider)
     });
   }
 
-  public bootstrapWeb3() {
+  public checkAndInstantiateWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
+      console.warn(
+        'Using web3 detected from external source. If you find that your accounts don\'t appear, ensure you\'ve configured that source properly.'
+      );
       // Use Mist/MetaMask's provider
       this.web3 = new Web3(window.web3.currentProvider);
     } else {
       console.log('No web3? You should consider trying MetaMask!');
-      // Hack to provide backwards compatibility for Truffle, which uses web3js 0.20.x
-      Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
-
+      console.warn(
+        'No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it\'s inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask'
+      );
       // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
       this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     }
-    this.requestEthereumService = new requestEthereumService(this.web3.givenProvider)
     setInterval(() => this.refreshAccounts(), 100);
   }
 
@@ -76,26 +79,21 @@ export class Web3Service {
   }
   //
 
-  public async foo() {
-     console.log(this.requestEthereumService);
-
-    console.log(this.requestEthereumService.createRequestAsPayeeAsync);
+  public async createRequestAsPayeeAsync(payerAddress, amountInitial, reason) {
     try {
-      let result = await this.requestEthereumService.createRequestAsPayeeAsync(
-        "0xf17f52151ebef6c7334fad080c5704d77216b732", // 1
-        1000,
-        /* "", */
+      let result = await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(
+        payerAddress,
+        amountInitial,
         '',
-        /* [], */
-        ["0xc5fdf4076b8f3a5357c5e395ab970b5b54098fef"], // 2 
-        '{"reason":"wine purchased"}');
+        [''],
+        `{"reason": "${reason}"}`);
 
       console.log("result createRequestAsPayeeAsync********************");
       console.log(result);
 
       let requestID = result.requestId;
-      result = await this.requestEthereumService.getRequestAsync(requestID);
-      console.log("result requestEthereumService getRequestAsync********************");
+      result = await this.requestNetwork.requestEthereumService.getRequestAsync(requestID);
+      console.log("result requestNetworkService getRequestAsync********************");
       console.log(result);
     } catch (err) {
       console.log('Error: ', err.message);
