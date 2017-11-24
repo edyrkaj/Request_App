@@ -31,8 +31,10 @@ export class HomeComponent implements OnInit {
 
   }
 
-  createRequest(r) {
-    console.log('test');
-    // this.web3Service.createRequestAsPayeeAsync(this.payerAddressFormControl.value, this.amountFormControl.value, this.reasonFormControl.value)
+  async createRequest() {
+    let result = await this.web3Service.createRequestAsPayeeAsync2(this.payerAddressFormControl.value, this.amountFormControl.value, this.reasonFormControl.value);
+    if (result.requestId) {
+      
+    }
   }
 }

@@ -4,7 +4,6 @@ import { default as contract } from 'truffle-contract';
 import { Subject } from 'rxjs/Rx';
 import RequestNetwork from 'requestnetwork.js/dist/src/requestNetwork';
 
-
 declare let window: any;
 
 @Injectable()
@@ -79,22 +78,23 @@ export class Web3Service {
   }
   //
 
-  public async createRequestAsPayeeAsync(payerAddress, amountInitial, reason) {
-    try {
-      let result = await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(
-        payerAddress,
-        amountInitial,
-        '',
-        [''],
-        `{"reason": "${reason}"}`);
 
-      console.log("result createRequestAsPayeeAsync********************");
+  public async createRequestAsPayeeAsync(payerAddress, amountInitial, reason) {
+      return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitial, '', [''], `{"reason": "${reason}"}`);
+  }
+
+  public async createRequestAsPayeeAsync2(payerAddress, amountInitial, reason) {
+    try {
+      let result = await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitial, '', [''], `{"reason": "${reason}"}`);
+
+      console.log('result createRequestAsPayeeAsync********************');
       console.log(result);
 
       let requestID = result.requestId;
       result = await this.requestNetwork.requestEthereumService.getRequestAsync(requestID);
-      console.log("result requestNetworkService getRequestAsync********************");
+      console.log('result requestNetworkService getRequestAsync********************');
       console.log(result);
+      return result;
     } catch (err) {
       console.log('Error: ', err.message);
     }
