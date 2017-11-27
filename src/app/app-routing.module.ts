@@ -7,7 +7,7 @@ import { RequestComponent } from './request/request.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'request', component: RequestComponent },
+  { path: 'request/:requestId', component: RequestComponent },
   { path: '**', redirectTo: '/' },
 
   // // {

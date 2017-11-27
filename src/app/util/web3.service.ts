@@ -16,6 +16,7 @@ export class Web3Service {
 
   constructor() {
     window.addEventListener('load', (event) => {
+      console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
       this.requestNetwork = new RequestNetwork(this.web3.currentProvider)
     });
@@ -37,7 +38,7 @@ export class Web3Service {
       // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
       this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     }
-    setInterval(() => this.refreshAccounts(), 10000);
+    setInterval(() => this.refreshAccounts(), 100);
   }
 
   private refreshAccounts() {

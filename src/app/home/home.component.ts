@@ -16,13 +16,11 @@ export class HomeComponent implements OnInit {
   payerAddressFormControl = new FormControl('', []);
   reasonFormControl = new FormControl('', []);
   currency = new FormControl('ETH', []);
-  
+
 
   currencies = [{ name: 'ether', iso: 'ETH' }];
 
-  constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {
-  }
-
+  constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
     this.requestForm = this.formBuilder.group({
@@ -34,8 +32,9 @@ export class HomeComponent implements OnInit {
 
   async createRequest() {
     let result = await this.web3Service.createRequestAsPayeeAsync(this.payerAddressFormControl.value, this.amountFormControl.value, `{"reason": "${this.reasonFormControl.value}"}`);
-    if (result.requestId) {
-      this.router.navigate([`/request/${result.requestId}`])
+    if (result.request && result.request.requestId) {
+      this.router.navigate(['/request', result.request.requestId]);
+      }
     }
+
   }
-}

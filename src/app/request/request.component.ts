@@ -21,11 +21,12 @@ export class RequestComponent implements OnInit {
       await delay;
       return await this.ngOnInit();
     }
-    if (this.route.snapshot.queryParams['requestId']) {
-      this.requestId = this.route.snapshot.queryParams['requestId'];
+
+    if (this.route.snapshot.params['requestId']) {
+      this.requestId = this.route.snapshot.params['requestId'];
       this.request = await this.web3Service.getRequestAsync(this.requestId);
       console.log(this.request);
     }
   }
-  
+
 }
