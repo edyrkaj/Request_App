@@ -4,7 +4,7 @@
       <img class="px-3 request-logo" src="assets/img/request-logo.png">
       <span class="semi-bold">Request</span>
     </div>
-    <mat-form-field class="mx-3" [style.width]="'394px'">
+    <mat-form-field class="mx-3" [style.width]="'494px'">
       <input matInput type="text" [(ngModel)]="searchValue" />
       <small matSuffix><mat-icon>search</mat-icon></small>
       <mat-placeholder><small>Search by Request ID / ETH address / ENS</small></mat-placeholder>
@@ -14,7 +14,9 @@
         <mat-option *ngFor="let account of accounts" [value]="account">{{ account }}</mat-option>
       </mat-select>
       <small matPrefix>
-        <mat-icon matPrefix>account_circle</mat-icon>&nbsp;
+        <img *ngIf="account" [src]="icon ? icon.toDataURL() : ''" style="position: relative; top:-6px; width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />
+        <mat-icon *ngIf="!account">account_circle</mat-icon>
+        &nbsp;
       </small>
     </mat-form-field>
   </header>

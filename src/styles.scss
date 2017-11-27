@@ -28,6 +28,14 @@ mat-toolbar.mat-toolbar {
 //   opacity: 0.5;
 // }
 
+.sh-blue {
+ box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5);
+}
+
+.bor-accent {
+  border: 1px solid $accent !important;
+}
+
 .fc-primary {
   color: $primary;
 }
