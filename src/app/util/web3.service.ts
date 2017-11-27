@@ -37,7 +37,7 @@ export class Web3Service {
       // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
       this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     }
-    setInterval(() => this.refreshAccounts(), 100);
+    setInterval(() => this.refreshAccounts(), 10000);
   }
 
   private refreshAccounts() {
@@ -79,26 +79,23 @@ export class Web3Service {
   //
 
 
-  public async createRequestAsPayeeAsync(payerAddress, amountInitial, reason) {
-      return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitial, '', [''], `{"reason": "${reason}"}`);
-  }
-
-  public async createRequestAsPayeeAsync2(payerAddress, amountInitial, reason) {
+  public async createRequestAsPayeeAsync(payerAddress, amountInitial, details) {
     try {
-      let result = await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitial, '', [''], `{"reason": "${reason}"}`);
-
-      console.log('result createRequestAsPayeeAsync********************');
-      console.log(result);
-
-      let requestID = result.requestId;
-      result = await this.requestNetwork.requestEthereumService.getRequestAsync(requestID);
-      console.log('result requestNetworkService getRequestAsync********************');
-      console.log(result);
-      return result;
+      console.log('createRequestAsPayeeAsync');
+      return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitial, details, '', ['']);
     } catch (err) {
       console.log('Error: ', err.message);
+      return err;
     }
   }
 
-
+  public async getRequestAsync(requestId) {
+    try {
+      console.log('result requestNetworkService getRequestAsync');
+      return await this.requestNetwork.requestEthereumService.getRequestAsync('0xcc69885fda6bcc1a4ace058b4a62bf5e179ea78fd58a1ccd71c22cc9b688792f');
+    } catch (err) {
+      console.log('Error: ', err.message);
+      return err;
+    }
+  }
 }

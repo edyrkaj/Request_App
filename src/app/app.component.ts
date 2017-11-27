@@ -14,11 +14,12 @@ import { routerTransition } from './animations/router.transition';
 export class AppComponent implements OnInit {
 
   accounts: string[];
-  account: string = '';
+  account: string;
 
   icon;
 
-  constructor(private web3Service: Web3Service) {}
+  constructor(private web3Service: Web3Service) {
+  }
 
   ngOnInit(): void {
     this.watchAccount();
