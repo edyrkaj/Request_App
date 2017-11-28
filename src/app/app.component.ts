@@ -15,7 +15,6 @@ export class AppComponent implements OnInit {
 
   accounts: string[];
   account: string;
-
   icon;
 
   constructor(private web3Service: Web3Service) {

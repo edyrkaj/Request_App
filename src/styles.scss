@@ -13,6 +13,7 @@ body {
   @include serif-font();
   min-width: 320px;
   height: 100%;
+  font-weight: 300;
 }
 
 body {
@@ -20,22 +21,19 @@ body {
 }
 
 mat-toolbar.mat-toolbar {
-  background: #FBFBFB;
+  background: $grey-white;
 }
 
-// .mat-input-container label {
-//   color: #617B9F;
-//   opacity: 0.5;
-// }
-
-.sh-blue {
- box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5);
+.img-fluid {
+  max-width: 100%;
+  max-height: 100%;
 }
 
-.bor-accent {
-  border: 1px solid $accent !important;
+.text-right {
+  text-align: right;
 }
 
+// FONT COLORS
 .fc-primary {
   color: $primary;
 }
@@ -44,8 +42,43 @@ mat-toolbar.mat-toolbar {
   color: #fff;
 }
 
+.fc-blue-grey {
+  color: $blue-grey;
+}
+
+
+// BACKGROUND COLORS
 .bg-primary {
   background: $primary;
+}
+
+.bg-grey-white {
+  background: $grey-white;
+}
+
+// FONT SIZE & WEIGHT
+.fs-14 {
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.fs-18 {
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.semi-bold {
+  font-weight: 500;
+}
+
+
+// BORDERS & SHADOW
+.sh-blue {
+  box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+}
+
+.bor-accent {
+  border: 1px solid $accent !important;
 }
 
 .br-7 {
@@ -66,15 +99,6 @@ mat-toolbar.mat-toolbar {
   width: 100%;
 }
 
-.semi-bold {
-  font-weight: 500;
-}
-
-.img-fluid {
-  max-width: 100%;
-  max-height:100%;
-}
-
 .currencyIcon {
   max-height: 16px;
   max-width: 16px;
@@ -88,7 +112,7 @@ mat-toolbar.mat-toolbar {
   }
 
   &:active,
-   :focus {
+  :focus {
     outline: none !important;
   }
 }
@@ -106,10 +130,11 @@ code {
 //remove number input spinners
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
+
 //Supports Mozilla
 input[type=number] {
-    -moz-appearance:textfield;
+  -moz-appearance: textfield;
 }

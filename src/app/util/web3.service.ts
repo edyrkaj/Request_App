@@ -93,7 +93,7 @@ export class Web3Service {
   public async getRequestAsync(requestId) {
     try {
       console.log('result requestNetworkService getRequestAsync');
-      return await this.requestNetwork.requestEthereumService.getRequestAsync('0xcc69885fda6bcc1a4ace058b4a62bf5e179ea78fd58a1ccd71c22cc9b688792f');
+      return await this.requestNetwork.requestEthereumService.getRequestAsync(requestId);
     } catch (err) {
       console.log('Error: ', err.message);
       return err;
