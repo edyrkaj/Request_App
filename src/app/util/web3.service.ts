@@ -1,7 +1,6 @@
 import { Injectable, HostListener } from '@angular/core';
-import Web3 from 'web3';
-import { default as contract } from 'truffle-contract';
 import { Subject } from 'rxjs/Rx';
+import Web3 from 'web3';
 import RequestNetwork from 'requestnetwork.js/dist/src/requestNetwork';
 
 declare let window: any;
@@ -22,7 +21,7 @@ export class Web3Service {
     });
   }
 
-  public checkAndInstantiateWeb3() {
+  private checkAndInstantiateWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
       console.warn(
@@ -65,25 +64,11 @@ export class Web3Service {
     });
   }
 
-  //
-  public async artifactsToContract(artifacts) {
-    if (!this.web3) {
-      const delay = new Promise(resolve => setTimeout(resolve, 100));
-      await delay;
-      return await this.artifactsToContract(artifacts);
-    }
-
-    const contractAbstraction = contract(artifacts);
-    contractAbstraction.setProvider(this.web3.currentProvider);
-    return contractAbstraction;
-  }
-  //
-
-
   public async createRequestAsPayeeAsync(payerAddress, amountInitial, details) {
     try {
-      console.log('createRequestAsPayeeAsync');
-      return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitial, details, '', ['']);
+    console.log('createRequestAsPayeeAsync');
+    let amountInitialInWei = this.web3.utils.toWei(amountInitial.toString(), 'ether');
+    return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitialInWei, details);
     } catch (err) {
       console.log('Error: ', err.message);
       return err;
@@ -93,10 +78,26 @@ export class Web3Service {
   public async getRequestAsync(requestId) {
     try {
       console.log('result requestNetworkService getRequestAsync');
-      return await this.requestNetwork.requestEthereumService.getRequestAsync(requestId);
+      let result = await this.requestNetwork.requestEthereumService.getRequestAsync(requestId);
+      return this.convertRequestAmountsFromWei(result)
     } catch (err) {
       console.log('Error: ', err.message);
       return err;
     }
   }
+
+  convertRequestAmountsFromWei(request) {
+    const toBN = this.web3.utils.toBN;
+    const fromWei = this.web3.utils.fromWei;
+    if (request.amountInitial)
+      request.amountInitial = fromWei(toBN(request.amountInitial), 'ether');
+    if (request.amountPaid)
+      request.amountPaid = fromWei(toBN(request.amountPaid), 'ether');
+    if (request.amountAdditional)
+      request.amountAdditional = fromWei(toBN(request.amountAdditional), 'ether');
+    if (request.amountSubtract)
+      request.amountSubtract = fromWei(toBN(request.amountSubtract), 'ether');
+    return request;
+  }
+
 }

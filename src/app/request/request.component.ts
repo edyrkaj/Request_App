@@ -14,9 +14,12 @@ export class RequestComponent implements OnInit {
   fromIcon;
   toIcon;
   objectKeys = Object.keys;
+  progress;
+  url: string;
+  copyUrlTxt: string = 'Copy url';
 
   constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {
-
+    this.url = `localhost:4200${this.router.url}`;
   }
 
   async ngOnInit() {
@@ -29,14 +32,22 @@ export class RequestComponent implements OnInit {
     if (this.route.snapshot.params['requestId']) {
       this.requestId = this.route.snapshot.params['requestId'];
       this.request = await this.web3Service.getRequestAsync(this.requestId);
-      this.fromIcon = blockies({
-        seed: this.request.payee.toLowerCase(),
-      });
-      this.toIcon = blockies({
-        seed: this.request.payer.toLowerCase(),
-      });
-      console.log(this.request);
+
+      if (this.request) {
+        this.fromIcon = blockies({
+          seed: this.request.payee.toLowerCase(),
+        });
+        this.toIcon = blockies({
+          seed: this.request.payer.toLowerCase(),
+        });
+        this.progress = this.request.amountPaid / this.request.amountInitial;
+      }
     }
+  }
+
+  copyToClipboard() {
+    this.copyUrlTxt = 'Copied!';
+    setTimeout(() => {this.copyUrlTxt = 'Copy url'}, 500);
   }
 
 }

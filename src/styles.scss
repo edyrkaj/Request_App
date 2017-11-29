@@ -43,7 +43,7 @@ mat-toolbar.mat-toolbar {
 }
 
 .fc-blue-grey {
-  color: $blue-grey;
+  color: $blue-grey !important;
 }
 
 
@@ -56,15 +56,39 @@ mat-toolbar.mat-toolbar {
   background: $grey-white;
 }
 
+.bg-white {
+  background: #fff;
+}
+
+.bg-blue-grey {
+  color: $blue-grey;
+}
+
+
 // FONT SIZE & WEIGHT
+.fs-12 {
+  font-size: 12px !important;
+  line-height: 14px !important;
+}
+
 .fs-14 {
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 14px !important;
+  line-height: 18px !important;
+}
+
+.fs-16 {
+  font-size: 16px !important;
+  line-height: 20px !important;
 }
 
 .fs-18 {
-  font-size: 18px;
-  line-height: 20px;
+  font-size: 18px !important;
+  line-height: 22px !important;
+}
+
+.fs-24 {
+  font-size: 24px !important;
+  line-height: 28px !important;
 }
 
 .semi-bold {
@@ -79,6 +103,10 @@ mat-toolbar.mat-toolbar {
 
 .bor-accent {
   border: 1px solid $accent !important;
+}
+
+.br-2 {
+  border-radius: 2px;
 }
 
 .br-7 {
@@ -99,9 +127,17 @@ mat-toolbar.mat-toolbar {
   width: 100%;
 }
 
+.w-50 {
+  width: 50%;
+}
+
 .currencyIcon {
   max-height: 16px;
   max-width: 16px;
+}
+
+.centered {
+  text-align: center;
 }
 
 * {

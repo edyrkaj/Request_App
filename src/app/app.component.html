@@ -5,7 +5,7 @@
       <span class="semi-bold">Request</span>
     </a>
     <mat-form-field class="mx-3" [style.width]="'400px'">
-      <input matInput type="text" [(ngModel)]="searchValue" />
+      <input matInput type="text" #searchValue/>
       <small matSuffix><mat-icon>search</mat-icon></small>
       <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>
     </mat-form-field>

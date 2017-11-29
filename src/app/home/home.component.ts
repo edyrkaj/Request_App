@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
 
   async createRequest() {
     let result = await this.web3Service.createRequestAsPayeeAsync(this.payerAddressFormControl.value, this.amountFormControl.value, `{"reason": "${this.reasonFormControl.value}", "date": "${this.date}"}`);
-    if (result.request && result.request.requestId) {
+    if (result && result.request && result.request.requestId) {
       this.router.navigate(['/request', result.request.requestId]);
     }
   }

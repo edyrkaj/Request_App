@@ -39,7 +39,7 @@
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
               <textarea matInput maxlength="256" rows="1" placeholder="Reason (optional)" [formControl]="reasonFormControl"></textarea>
-              <mat-hint align="end">{{reason?.length || 0}}/256</mat-hint>
+              <mat-hint align="end">{{reasonFormControl?.value.length || 0}}/256</mat-hint>
             </mat-form-field>
           </form>
         </div>

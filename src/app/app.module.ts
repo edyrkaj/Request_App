@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import { SharedModule } from './shared/shared.module';
 
@@ -26,6 +27,9 @@ import { RequestComponent } from './request/request.component';
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+
+    // Feature Modules
+    ClipboardModule,
 
     // features
     SharedModule,
