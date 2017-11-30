@@ -34,12 +34,7 @@ export class RequestComponent implements OnInit {
       this.request = await this.web3Service.getRequestAsync(this.requestId);
 
       if (this.request) {
-        this.fromIcon = blockies({
-          seed: this.request.payee.toLowerCase(),
-        });
-        this.toIcon = blockies({
-          seed: this.request.payer.toLowerCase(),
-        });
+        this.getBlockies();
         this.progress = this.request.amountPaid / this.request.amountInitial;
       }
     }
@@ -47,7 +42,21 @@ export class RequestComponent implements OnInit {
 
   copyToClipboard() {
     this.copyUrlTxt = 'Copied!';
-    setTimeout(() => {this.copyUrlTxt = 'Copy url'}, 500);
+    setTimeout(() => { this.copyUrlTxt = 'Copy url' }, 500);
+  }
+
+  getBlockies() {
+    this.fromIcon = blockies({
+      seed: this.request.payee.toLowerCase(),
+    });
+    this.toIcon = blockies({
+      seed: this.request.payer.toLowerCase(),
+    });
+  }
+
+  getRequestMode() {
+    if (this.request)
+
   }
 
 }
