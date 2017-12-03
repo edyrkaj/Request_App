@@ -20,6 +20,20 @@ body {
   margin: 0;
 }
 
+mat-toolbar.cta-toolbar {
+   :first-child {
+    border-bottom-left-radius: 7px;
+  }
+   :last-child {
+    border-bottom-right-radius: 7px;
+  }
+  button {
+    border-radius: 0;
+    box-shadow: none !important;
+    height: 100%;
+  }
+}
+
 mat-toolbar.mat-toolbar {
   background: $grey-white;
 }
@@ -36,6 +50,10 @@ mat-toolbar.mat-toolbar {
 // FONT COLORS
 .fc-primary {
   color: $primary;
+}
+
+.fc-warn {
+  color: $warn;
 }
 
 .fc-white {
@@ -123,6 +141,11 @@ mat-toolbar.mat-toolbar {
   border-bottom-left-radius: 7px !important;
 }
 
+// OTHERS
+.h-100 {
+  height: 100%;
+}
+
 .w-100 {
   width: 100%;
 }
@@ -148,7 +171,7 @@ mat-toolbar.mat-toolbar {
   }
 
   &:active,
-  :focus {
+   :focus {
     outline: none !important;
   }
 }

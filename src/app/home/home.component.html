@@ -43,8 +43,9 @@
             </mat-form-field>
           </form>
         </div>
-        <mat-toolbar class="p-0 bbr-7" style="height: 60px">
-          <button class="ml-auto p-0 br-0" mat-raised-button color="accent" style="width: 50%; height: 100%; border-radius: 0 0 7px 0; box-shadow: none !important;" (click)="createRequest()" [disabled]="!requestForm.valid">Create a Request</button>
+        <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 60px">
+          <div></div>
+          <button class="ml-auto w-50 fs-18" mat-raised-button color="accent" (click)="createRequest()" [disabled]="!requestForm.valid">Create a Request</button>
         </mat-toolbar>
       </mat-card>
     </div>

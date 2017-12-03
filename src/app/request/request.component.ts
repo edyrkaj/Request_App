@@ -9,6 +9,8 @@ import blockies from 'blockies';
   styleUrls: ['./request.component.scss'],
 })
 export class RequestComponent implements OnInit {
+  account: string;
+  mode: string;
   requestId: string;
   request: any;
   fromIcon;
@@ -23,26 +25,46 @@ export class RequestComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // wait for web3 to be instantiated
     if (!this.web3Service || !this.web3Service.ready) {
       const delay = new Promise(resolve => setTimeout(resolve, 1000));
       await delay;
       return await this.ngOnInit();
     }
 
+    // get request
     if (this.route.snapshot.params['requestId']) {
       this.requestId = this.route.snapshot.params['requestId'];
       this.request = await this.web3Service.getRequestAsync(this.requestId);
-
+      console.log(this.request)
       if (this.request) {
         this.getBlockies();
-        this.progress = this.request.amountPaid / this.request.amountInitial;
+        this.watchAccount();
+        this.progress = 100 * this.request.amountPaid / this.request.amountInitial;
       }
     }
   }
 
-  copyToClipboard() {
-    this.copyUrlTxt = 'Copied!';
-    setTimeout(() => { this.copyUrlTxt = 'Copy url' }, 500);
+  watchAccount() {
+    if (!this.account && this.web3Service.accounts) {
+      this.account = this.web3Service.accounts[0];
+      this.getRequestMode()
+    }
+    this.web3Service.accountsObservable.subscribe((accounts) => {
+      this.account = accounts[0];
+      this.getRequestMode()
+    });
+  }
+
+  getRequestMode() {
+    if (this.account === this.request.payee) {
+      return this.mode = 'payee';
+    }
+    if (this.account === this.request.payer) {
+      return this.mode = 'payer'
+    } else {
+      return this.mode = 'none';
+    }
   }
 
   getBlockies() {
@@ -54,9 +76,23 @@ export class RequestComponent implements OnInit {
     });
   }
 
-  getRequestMode() {
-    if (this.request)
-
+  copyToClipboard() {
+    this.copyUrlTxt = 'Copied!';
+    setTimeout(() => { this.copyUrlTxt = 'Copy url' }, 500);
   }
+
+  async cancelRequest() {
+    await this.web3Service.cancelAsync(this.request.requestId);
+  }
+
+  async acceptRequest() {
+    await this.web3Service.acceptAsync(this.request.requestId);
+  }
+
+  async payRequest() {
+    await this.web3Service.payAsync(this.request.requestId, 1);
+  }
+
+
 
 }
