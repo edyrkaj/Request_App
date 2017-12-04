@@ -1,6 +1,6 @@
 <div class=wrapper>
   <header class="d-flex flex-wrap justify-content-between align-items-baseline fc-primary px-3 mat-elevation-z1">
-    <a routerLink="/" style="text-decoration: none" class="py-3 mr-auto">
+    <a (click)="goHome()" style="cursor: pointer" class="py-3 mr-auto">
       <img class="px-3 request-logo" src="assets/img/request-logo.png">
       <span class="semi-bold">Request</span>
     </a>
@@ -29,7 +29,7 @@
   </div>
   <footer class="d-flex flex-wrap justify-content-between fc-primary p-3">
     <div class="d-flex flex-column m-3">
-      <a routerLink="/" style="text-decoration: none" class="request-logo my-1">
+      <a (click)="goHome" style="cursor: pointer" class="request-logo my-1">
         <img class="img-fluid" src="assets/img/request-logo.png">
       </a>
       <span class="semi-bold">Request</span>

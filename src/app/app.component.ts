@@ -19,7 +19,11 @@ export class AppComponent implements OnInit {
   searchValue: string;
   icon;
 
-  constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {}
+  constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {
+    this.web3Service.searchValue.subscribe(async (searchValue) => {
+      this.searchValue = searchValue;
+    })
+  }
 
   ngOnInit(): void {
     this.watchAccount();
@@ -41,6 +45,11 @@ export class AppComponent implements OnInit {
       this.router.navigate(['/search', this.searchValue]);
     else
       this.router.navigate(['/request', this.searchValue]);
+  }
+
+  goHome() {
+    this.web3Service.setSearchValue(null);
+    this.router.navigate(['/']);
   }
 
 
