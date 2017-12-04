@@ -11,6 +11,7 @@ export class Web3Service {
   private requestNetwork: RequestNetwork;
   public accounts: string[];
   public ready = false;
+  public metamaskReady = new Subject < boolean > ();
   public accountsObservable = new Subject < string[] > ();
   public searchValue = new Subject < string > ();
 
@@ -38,20 +39,15 @@ export class Web3Service {
       // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
       this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     }
-    setInterval(() => this.refreshAccounts(), 100);
+    setInterval(() => this.refreshAccounts(), 500);
   }
 
   private refreshAccounts() {
     console.log('Refreshing accounts');
     this.web3.eth.getAccounts((err, accs) => {
-      if (err != null) {
-        alert('There was an error fetching your accounts.');
-        return;
-      }
-
-      if (accs.length === 0) {
-        alert('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
-        return;
+      if (err != null || accs.length === 0) {
+        console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
+        return this.metamaskReady.next(false);
       }
 
       if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
@@ -136,6 +132,7 @@ export class Web3Service {
     if (request.amountSubtract)
       request.amountSubtract = fromWei(toBN(request.amountSubtract), 'ether');
     return request;
-  } s
+  }
+  s
 
 }

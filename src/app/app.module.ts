@@ -9,6 +9,7 @@ import { SharedModule } from './shared/shared.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { UtilModule } from './util/util.module';
+import { PayDialogComponent } from './util/payDialog.component';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -21,7 +22,8 @@ import { SearchComponent } from './search/search.component';
     AppComponent,
     HomeComponent,
     RequestComponent,
-    SearchComponent
+    SearchComponent,
+    PayDialogComponent
   ],
   imports: [
     // angular
@@ -39,6 +41,10 @@ import { SearchComponent } from './search/search.component';
 
     // app
     AppRoutingModule,
+  ],
+  entryComponents: [
+    // dialog
+    PayDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

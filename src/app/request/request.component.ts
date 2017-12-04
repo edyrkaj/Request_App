@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { PayDialogComponent } from '../util/payDialog.component';
 import blockies from 'blockies';
 
 @Component({
@@ -18,8 +20,10 @@ export class RequestComponent implements OnInit {
   progress;
   url: string;
   copyUrlTxt: string = 'Copy url';
+  payDialogComponent: MatDialogRef < PayDialogComponent > ;
 
-  constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {
+
+  constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
     this.url = `localhost:4200${this.router.url}`;
   }
 
@@ -33,7 +37,7 @@ export class RequestComponent implements OnInit {
 
     this.web3Service.searchValue.subscribe(async(searchValue) => {
       let result = await this.web3Service.getRequestAsync(searchValue);
-      if (result.creator === '0x0000000000000000000000000000000000000000') {
+      if (!result || !result.requestId || result.creator === '0x0000000000000000000000000000000000000000') {
         this.request = { 'requestId': null };
       } else {
         this.request = result;
@@ -102,6 +106,9 @@ export class RequestComponent implements OnInit {
     await this.web3Service.payAsync(this.request.requestId, 1);
   }
 
-
-
+  openAddFileDialog() {
+    this.payDialogComponent = this.dialog.open(PayDialogComponent, {
+      hasBackdrop: false
+    });
+  }
 }

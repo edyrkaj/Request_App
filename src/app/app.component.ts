@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Web3Service } from './util/web3.service';
+import { Web3Service } from './util/web3.service'
+import { MatSnackBar } from '@angular/material';
 import blockies from 'blockies';
 
 import { routerTransition } from './animations/router.transition';
@@ -17,12 +18,30 @@ export class AppComponent implements OnInit {
   accounts: string[];
   account: string;
   searchValue: string;
+  metamaskReady: boolean = true;
   icon;
 
-  constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {
-    this.web3Service.searchValue.subscribe(async (searchValue) => {
+  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {
+    this.web3Service.searchValue.subscribe(async(searchValue) => {
       this.searchValue = searchValue;
     })
+
+    this.web3Service.metamaskReady.subscribe((metamaskReady) => {
+      if (this.metamaskReady != metamaskReady && !metamaskReady) {
+        this.metamaskReady = metamaskReady;
+        this.openSnackBar();
+      }
+    })
+
+  }
+
+  openSnackBar() {
+    this.snackBar.open('You need to connect your Metamask wallet to create a Request', 'Ok', {
+      duration: 10000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: 'metamask-snackbar',
+    });
   }
 
   ngOnInit(): void {

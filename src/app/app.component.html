@@ -13,7 +13,7 @@
         <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>
       </mat-form-field>
     </form>
-    <mat-form-field class="mx-3" floatPlaceholder="never" [style.width]="'427px'">
+    <mat-form-field *ngIf="accounts && accounts.length > 0; else connectAccount" class="mx-3" floatPlaceholder="never" [style.width]="'427px'">
       <mat-select name="account" placeholder="select account" [(ngModel)]="account">
         <mat-option *ngFor="let account of accounts" [value]="account">{{ account }}</mat-option>
       </mat-select>
@@ -23,6 +23,12 @@
         &nbsp;
       </small>
     </mat-form-field>
+    <ng-template #connectAccount>
+      <button (click)="openSnackBar()" mat-button>
+        <mat-icon>account_circle</mat-icon>
+        <span>Connect an account</span>
+      </button>
+    </ng-template>
   </header>
   <div class="content">
     <router-outlet></router-outlet>
@@ -30,29 +36,29 @@
   <footer class="d-flex flex-wrap justify-content-between fc-primary p-3">
     <div class="d-flex flex-column m-3">
       <a (click)="goHome" style="cursor: pointer" class="request-logo my-1">
-        <img class="img-fluid" src="assets/img/request-logo.png">
-      </a>
+      <img class="img-fluid" src="assets/img/request-logo.png">
+    </a>
       <span class="semi-bold">Request</span>
       <span><small>© Request.Network</small></span>
       <div class="d-flex justify-content-between">
         <a target="_blank" href="https://www.facebook.com/Request-Network-140279756554525/">
-          <i class="fa fa-facebook" aria-hidden="true"></i>
-        </a>
+        <i class="fa fa-facebook" aria-hidden="true"></i>
+      </a>
         <a target="_blank" href="https://t.me/requestnetwork">
-          <i class="fa fa-telegram" aria-hidden="true"></i>
-        </a>
+        <i class="fa fa-telegram" aria-hidden="true"></i>
+      </a>
         <a target="_blank" href="https://twitter.com/requestnetwork">
-          <i class="fa fa-twitter" aria-hidden="true"></i>
-        </a>
+        <i class="fa fa-twitter" aria-hidden="true"></i>
+      </a>
         <a target="_blank" href="https://github.com/RequestNetwork/">
-          <i class="fa fa-github" aria-hidden="true"></i>
-        </a>
+        <i class="fa fa-github" aria-hidden="true"></i>
+      </a>
         <a target="_blank" href="https://www.reddit.com/r/RequestNetwork/">
-          <i class="fa fa-reddit-alien" aria-hidden="true"></i>
-        </a>
+        <i class="fa fa-reddit-alien" aria-hidden="true"></i>
+      </a>
         <a target="_blank" href="https://blog.request.network">
-          <i class="fa fa-medium" aria-hidden="true"></i>
-        </a>
+        <i class="fa fa-medium" aria-hidden="true"></i>
+      </a>
       </div>
     </div>
     <div class="ml-auto d-flex">
@@ -60,7 +66,6 @@
         <span class="my-3 semi-bold">Protocol</span>
         <a href="#">Github</a>
         <a href="#">Develop with Request</a>
-        <a href="#">API</a>
         <a href="#">Library</a>
       </div>
       <div class="footer-column">

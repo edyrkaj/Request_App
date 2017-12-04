@@ -20,6 +20,15 @@ body {
   margin: 0;
 }
 
+.metamask-snackbar {
+  color: #F0A73A !important;
+  background-color: #FDF1E0 !important;
+  border: 1px solid #F9DCB0 !important;
+  button {
+    color: #F0A73A;
+  }
+}
+
 mat-toolbar.cta-toolbar {
    :first-child {
     border-bottom-left-radius: 7px;
@@ -163,17 +172,12 @@ mat-toolbar.mat-toolbar {
   text-align: center;
 }
 
-a {
-  cursor: pointer;
-}
-
 * {
   &:active,
    :focus {
     outline: none !important;
   }
 }
-
 
 label {
   margin: 0;
