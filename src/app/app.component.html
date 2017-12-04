@@ -4,17 +4,21 @@
       <img class="px-3 request-logo" src="assets/img/request-logo.png">
       <span class="semi-bold">Request</span>
     </a>
-    <mat-form-field class="mx-3" [style.width]="'400px'">
-      <input matInput type="text" #searchValue/>
-      <small matSuffix><mat-icon>search</mat-icon></small>
-      <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>
-    </mat-form-field>
+    <form (ngSubmit)="search()" #searchForm="ngForm">
+      <mat-form-field class="mx-3" [style.width]="'400px'">
+        <input matInput type="text" name="searchvalue" [(ngModel)]="searchValue" #searchvalue="ngModel" />
+        <button type="submit" matSuffix mat-icon-button color="primary">
+          <mat-icon>search</mat-icon>
+        </button>
+        <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>
+      </mat-form-field>
+    </form>
     <mat-form-field class="mx-3" floatPlaceholder="never" [style.width]="'427px'">
       <mat-select name="account" placeholder="select account" [(ngModel)]="account">
         <mat-option *ngFor="let account of accounts" [value]="account">{{ account }}</mat-option>
       </mat-select>
       <small matPrefix>
-        <img *ngIf="account" [src]="icon ? icon.toDataURL() : ''" style="position: relative; top:-6px; width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />
+        <img *ngIf="account" [src]="icon ? icon.toDataURL() : ''" style="position: relative; top: -6px; width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />
         <mat-icon *ngIf="!account">account_circle</mat-icon>
         &nbsp;
       </small>

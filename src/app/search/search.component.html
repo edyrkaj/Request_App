@@ -1,0 +1,23 @@
+<div class="fc-primary container">
+  <div class="row my-5">
+    <!--     <div>
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+    </div> -->
+    <mat-spinner class="mx-auto" *ngIf="!dataSource || dataSource.length < 1; else tableBlock"></mat-spinner>
+    <ng-template #tableBlock>
+      <mat-table class="d-flex flex-column" [dataSource]="dataSource" matSort>
+        <!-- ID Column -->
+        <ng-container matColumnDef="requestId">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+          <mat-cell *matCellDef="let request">{{request.requestId}}test</mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+      </mat-table>
+      <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator> -->
+    </ng-template>
+  </div>
+</div>

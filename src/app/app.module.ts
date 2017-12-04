@@ -13,13 +13,15 @@ import { UtilModule } from './util/util.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { RequestComponent } from './request/request.component';
+import { SearchComponent } from './search/search.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    RequestComponent
+    RequestComponent,
+    SearchComponent
   ],
   imports: [
     // angular

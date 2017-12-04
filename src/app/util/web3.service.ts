@@ -12,6 +12,7 @@ export class Web3Service {
   public accounts: string[];
   public ready = false;
   public accountsObservable = new Subject < string[] > ();
+  public searchValue = new Subject < string > ();
 
   constructor() {
     window.addEventListener('load', (event) => {
@@ -61,6 +62,10 @@ export class Web3Service {
 
       this.ready = true;
     });
+  }
+
+  public setSearchValue(searchValue) {
+    this.searchValue.next(searchValue);
   }
 
   public async createRequestAsPayeeAsync(payerAddress, amountInitial, details) {
@@ -119,8 +124,6 @@ export class Web3Service {
     }
   }
 
-  
-
   private convertRequestAmountsFromWei(request) {
     const toBN = this.web3.utils.toBN;
     const fromWei = this.web3.utils.fromWei;
@@ -133,10 +136,6 @@ export class Web3Service {
     if (request.amountSubtract)
       request.amountSubtract = fromWei(toBN(request.amountSubtract), 'ether');
     return request;
-  }
-
-
-
-
+  } s
 
 }

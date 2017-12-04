@@ -18,7 +18,6 @@ export class HomeComponent implements OnInit {
   reasonFormControl = new FormControl('', []);
   currency = new FormControl('ETH', []);
 
-
   currencies = [{ name: 'ether', iso: 'ETH' }];
 
   constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {

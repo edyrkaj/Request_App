@@ -10,10 +10,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -23,26 +26,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     FormsModule,
 
-    MatButtonModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatIconModule,
-    MatMenuModule,
-    MatInputModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatTooltipModule
-  ],
-  declarations: [],
-  exports: [
-    CommonModule,
-    FormsModule,
 
     MatButtonModule,
     MatCardModule,
@@ -52,10 +35,38 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatMenuModule,
     MatInputModule,
     MatListModule,
+    MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule
+  ],
+  declarations: [],
+  exports: [
+    CommonModule,
+    FormsModule,
+
+
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatIconModule,
+    MatMenuModule,
+    MatInputModule,
+    MatListModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSortModule,
+    MatTableModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule
