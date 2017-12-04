@@ -37,8 +37,10 @@ export class AppComponent implements OnInit {
 
   search() {
     this.web3Service.setSearchValue(this.searchValue);
-    if (this.searchValue && this.searchValue.length)
+    if (this.searchValue && this.searchValue.length <= 42)
       this.router.navigate(['/search', this.searchValue]);
+    else
+      this.router.navigate(['/request', this.searchValue]);
   }
 
 

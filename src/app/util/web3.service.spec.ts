@@ -19,7 +19,7 @@ describe('Web3Service', () => {
   }));
 
   it('should inject a default web3 on a contract', inject([Web3Service], (service: Web3Service) => {
-    service.bootstrapWeb3();
+    service.checkAndInstantiateWeb3();
 
     // return service.artifactsToContract(metacoin_artifacts).then((abstraction) => {
     //   expect(abstraction.currentProvider.host).toBe('http://localhost:8545');
@@ -31,7 +31,7 @@ describe('Web3Service', () => {
       currentProvider: new Web3.providers.HttpProvider('http://localhost:1337')
     };
 
-    service.bootstrapWeb3();
+    service.checkAndInstantiateWeb3();
 
     // return service.artifactsToContract(metacoin_artifacts).then((abstraction) => {
     //   expect(abstraction.currentProvider.host).toBe('http://localhost:1337');

@@ -11,7 +11,6 @@ import blockies from 'blockies';
 export class RequestComponent implements OnInit {
   account: string;
   mode: string;
-  requestId: string;
   request: any;
   fromIcon;
   toIcon;
@@ -32,16 +31,26 @@ export class RequestComponent implements OnInit {
       return await this.ngOnInit();
     }
 
-    // get request
-    if (this.route.snapshot.params['requestId']) {
-      this.requestId = this.route.snapshot.params['requestId'];
-      this.request = await this.web3Service.getRequestAsync(this.requestId);
-      console.log(this.request)
-      if (this.request) {
-        this.getBlockies();
-        this.watchAccount();
-        this.progress = 100 * this.request.amountPaid / this.request.amountInitial;
+    this.web3Service.searchValue.subscribe(async(searchValue) => {
+      let result = await this.web3Service.getRequestAsync(searchValue);
+      if (result.creator === '0x0000000000000000000000000000000000000000') {
+        this.request = { 'requestId': null };
+      } else {
+        this.request = result;
+        this.calculateInfo();
       }
+    })
+
+    if (this.route.snapshot.params['requestId']) {
+      this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
+    }
+  }
+
+  calculateInfo() {
+    if (this.request && this.request.requestId) {
+      this.getBlockies();
+      this.watchAccount();
+      this.progress = 100 * this.request.amountPaid / this.request.amountInitial;
     }
   }
 

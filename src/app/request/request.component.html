@@ -1,100 +1,111 @@
-<div class="container">
+<div class="container fc-primary">
   <div class="row my-5">
-    <div class="col-md-3">
-      <button mat-button class="url-box fc-blue-grey fs-12 px-3" disabled>
-        {{url}}
-      </button>
-      <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
+    <div class="col-12" *ngIf="!request; else resultBlock">
+      <mat-spinner class="mx-auto"></mat-spinner>
     </div>
-    <div class="ml-auto col-md-8">
-      <mat-spinner class="mx-auto" *ngIf="!request || !request.requestId; else requestBlock"></mat-spinner>
+    <ng-template #resultBlock>
+      <div class="col-12 centered" *ngIf="!request.requestId; else requestBlock">
+        <img class="mx-auto" src="assets/img/searching.png" style="max-width: 120px;">
+        <h1 class="my-3">Oops</h1>
+        <p>Sorry, we couldn’t find any matches for this Request ID.</p>
+        <p>Please try searching with another ID.</p>
+        <button mat-raised-button routerLink="/" class="px-5 my-5" color="accent">Back to home</button>
+      </div>
       <ng-template #requestBlock>
-        <mat-card class="p-0 br-7 sh-blue">
-          <div class="d-flex bg-primary p-4 btr-7">
-            <img class="px-3" style="max-height: 75px;" src="assets/img/request-logo.png">
-            <div class="ml-auto text-right px-3">
-              <h4 class="fc-white semi-bold fs-18">{{request.details.data.date | date: 'fullDate'}}</h4>
-              <div class="fc-white fs-14"><i>Request Id: {{request.requestId}}</i></div>
-            </div>
-          </div>
-          <div class="bg-grey-white fc-blue-grey p-4 d-flex flex-wrap">
-            <div class="d-flex" style="flex: 1">
-              <div class="px-3">
-                <img [src]="fromIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
-              </div>
-              <div class="fs-14">
-                <div class="mb-1" style="opacity: 0.5">FROM</div>
-                <div class="semi-bold">ETH address</div>
-                <div matTooltip="{{request.payer}}">{{request.payee.substring(0, 10)}}...{{request.payee.substring(32, 42)}}</div>
+        <div class="col-md-3">
+          <button mat-button class="url-box fc-blue-grey fs-12 px-3" disabled>{{url}}</button>
+          <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
+        </div>
+        <div class="ml-auto col-md-8">
+          <mat-card class="p-0 br-7 sh-blue">
+            <div class="d-flex bg-primary p-4 btr-7">
+              <img class="px-3" style="max-height: 75px;" src="assets/img/request-logo.png">
+              <div class="ml-auto text-right px-3">
+                <h4 class="fc-white semi-bold fs-18">{{request.details.data.date | date: 'fullDate'}}</h4>
+                <div class="fc-white fs-14"><i>Request Id: {{request.requestId}}</i></div>
               </div>
             </div>
-            <div class="d-flex" style="flex: 1">
-              <div class="px-3">
-                <img [src]="toIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
-              </div>
-              <div class="fs-14">
-                <div class="mb-1" style="opacity: 0.5">TO</div>
-                <div class="semi-bold">ETH address</div>
-                <div matTooltip="{{request.payee}}">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
-              </div>
-            </div>
-          </div>
-          <div class="fc-blue-grey p-4" style="border-bottom: 1px solid #DFE5EC">
-            <div class="px-3" *ngFor="let data of objectKeys(request.details.data)" [hidden]="data == 'date'">
-              <div class="semi-bold">{{data}}</div>
-              <div>{{request.details.data[data]}}</div>
-            </div>
-          </div>
-          <div class="d-flex">
-            <div class="ml-auto d-inline-block semi-bold fc-primary px-5 py-4" style="background: #DFE5EC">
-              <div class="fs-14">AMOUNT</div>
-              <div class="fs-24">{{request.amountInitial}} ETH</div>
-            </div>
-          </div>
-          <div class="p-5">
-            <div class="mx-auto w-50 centered">
-              <div class="fc-blue-grey fs-12 mb-1">
-                {{progress | number: '1.0-2'}}% of the Request has been paid
-              </div>
-              <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
-            </div>
-          </div>
-          <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 90px">
-            <!-- STATE CANCELED -->
-            <div *ngIf="request.state == 3 || request.state == 2; else ctaBlock" class="h-100 w-100 d-flex flex-column justify-content-center centered fs-12">
-              <mat-icon class="mx-auto my-1" color="warn">lock</mat-icon>
-              <div class="semi-bold fc-warn"><i>This request has been cancelled.<br/>You can’t interact with it anymore.</i></div>
-            </div>
-            <!-- OTHER STATES -->
-            <ng-template #ctaBlock>
-              <div class="h-100 w-100 fs-18" [ngSwitch]="mode">
-                <!-- PAYEE -->
-                <div *ngSwitchCase="'payee'" class="d-flex h-100">
-                  <div class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
-                    <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Cancel this Request</a>
-                  </div>
-                  <button class="ml-auto fs-18" mat-raised-button color="accent" style="flex: 1">Update the request</button>
+            <div class="bg-grey-white fc-blue-grey p-4 d-flex flex-wrap">
+              <div class="d-flex" style="flex: 1">
+                <div class="px-3">
+                  <img [src]="fromIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
-                <!-- PAYER -->
-                <div *ngSwitchCase="'payer'" class="d-flex h-100">
-                  <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-white" style="flex: 1">
-                    <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Decline this request</a>
-                  </div>
-                  <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
-                    <a [routerLink]="" (click)="acceptRequest()">Accept & Pay later</a>
-                  </div>
-                  <button style="flex: 1" class="ml-auto fs-18" mat-raised-button color="accent" (click)="payRequest()">Pay now</button>
-                </div>
-                <!-- ELSE -->
-                <div *ngSwitchDefault class="d-flex flex-column justify-content-center centered fs-12 h-100">
-                  <mat-icon class="mx-auto my-1" color="accent">remove_red_eye</mat-icon>
-                  <div class="fc-primary semi-bold"><i>You are in view mode.<br/> You can’t interact with this Request right now.</i></div>
+                <div class="fs-14">
+                  <div class="mb-1" style="opacity: 0.5">FROM</div>
+                  <div class="semi-bold">ETH address</div>
+                  <div matTooltip="{{request.payer}}">{{request.payee.substring(0, 10)}}...{{request.payee.substring(32, 42)}}</div>
                 </div>
               </div>
-            </ng-template>
-          </mat-toolbar>
-        </mat-card>
+              <div class="d-flex" style="flex: 1">
+                <div class="px-3">
+                  <img [src]="toIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
+                </div>
+                <div class="fs-14">
+                  <div class="mb-1" style="opacity: 0.5">TO</div>
+                  <div class="semi-bold">ETH address</div>
+                  <div matTooltip="{{request.payee}}">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="fc-blue-grey p-4" style="border-bottom: 1px solid #DFE5EC">
+              <div class="px-3" *ngFor="let data of objectKeys(request.details.data)" [hidden]="data == 'date'">
+                <div class="semi-bold">{{data}}</div>
+                <div>{{request.details.data[data]}}</div>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="ml-auto d-inline-block semi-bold fc-primary px-5 py-4" style="background: #DFE5EC">
+                <div class="fs-14">AMOUNT</div>
+                <div class="fs-24">{{request.amountInitial}} ETH</div>
+              </div>
+            </div>
+            <div class="p-5">
+              <div class="mx-auto w-50 centered">
+                <div class="fc-blue-grey fs-12 mb-1">
+                  {{progress | number: '1.0-2'}}% of the Request has been paid
+                </div>
+                <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+              </div>
+            </div>
+            <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 90px">
+              <!-- STATE CANCELED -->
+              <div *ngIf="request.state == 3 || request.state == 2; else ctaBlock" class="h-100 w-100 d-flex flex-column justify-content-center centered fs-12">
+                <mat-icon class="mx-auto my-1" color="warn">lock</mat-icon>
+                <div class="semi-bold fc-warn"><i>This request has been cancelled.<br/>You can’t interact with it anymore.</i></div>
+              </div>
+              <!-- OTHER STATES -->
+              <ng-template #ctaBlock>
+                <div class="h-100 w-100 fs-18" [ngSwitch]="mode">
+                  <!-- PAYEE -->
+                  <div *ngSwitchCase="'payee'" class="d-flex h-100">
+                    <div class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
+                      <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Cancel this Request</a>
+                    </div>
+                    <button class="ml-auto fs-18" mat-raised-button color="accent" style="flex: 1">Update the request</button>
+                  </div>
+                  <!-- PAYER -->
+                  <div *ngSwitchCase="'payer'" class="d-flex h-100">
+                    <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-white" style="flex: 1">
+                      <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Decline this request</a>
+                    </div>
+                    <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
+                      <a [routerLink]="" (click)="acceptRequest()">Accept & Pay later</a>
+                    </div>
+                    <button style="flex: 1" class="ml-auto fs-18" mat-raised-button color="accent" (click)="payRequest()">Pay now</button>
+                  </div>
+                  <!-- ELSE -->
+                  <div *ngSwitchDefault class="d-flex flex-column justify-content-center centered fs-12 h-100">
+                    <mat-icon class="mx-auto my-1" color="accent">remove_red_eye</mat-icon>
+                    <div class="fc-primary semi-bold">
+                      <i>You are in view mode.<br/> You can’t interact with this Request right now.</i>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-toolbar>
+          </mat-card>
+        </div>
       </ng-template>
-    </div>
+    </ng-template>
   </div>
 </div>
