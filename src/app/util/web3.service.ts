@@ -26,16 +26,12 @@ export class Web3Service {
   private checkAndInstantiateWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
-      console.warn(
-        'Using web3 detected from external source. If you find that your accounts don\'t appear, ensure you\'ve configured that source properly.'
-      );
+      console.warn('Using web3 detected from external source. If you find that your accounts don\'t appear, ensure you\'ve configured that source properly.');
       // Use Mist/MetaMask's provider
       this.web3 = new Web3(window.web3.currentProvider);
     } else {
       console.log('No web3? You should consider trying MetaMask!');
-      console.warn(
-        'No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it\'s inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask'
-      );
+      console.warn('No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it\'s inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask');
       // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
       this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     }
@@ -52,6 +48,7 @@ export class Web3Service {
 
       if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
         console.log('Observed new accounts');
+        this.metamaskReady.next(true);
         this.accountsObservable.next(accs);
         this.accounts = accs;
       }

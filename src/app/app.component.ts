@@ -4,14 +4,10 @@ import { Web3Service } from './util/web3.service'
 import { MatSnackBar } from '@angular/material';
 import blockies from 'blockies';
 
-import { routerTransition } from './animations/router.transition';
-
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [routerTransition]
 })
 export class AppComponent implements OnInit {
 
@@ -21,7 +17,11 @@ export class AppComponent implements OnInit {
   metamaskReady: boolean = true;
   icon;
 
-  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {
+  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.watchAccount();
+
     this.web3Service.searchValue.subscribe(async(searchValue) => {
       this.searchValue = searchValue;
     })
@@ -32,20 +32,6 @@ export class AppComponent implements OnInit {
         this.openSnackBar();
       }
     })
-
-  }
-
-  openSnackBar() {
-    this.snackBar.open('You need to connect your Metamask wallet to create a Request', 'Ok', {
-      duration: 10000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-      panelClass: 'metamask-snackbar',
-    });
-  }
-
-  ngOnInit(): void {
-    this.watchAccount();
   }
 
   watchAccount() {
@@ -55,6 +41,15 @@ export class AppComponent implements OnInit {
       this.icon = blockies({
         seed: this.account.toLowerCase(),
       });
+    });
+  }
+
+  openSnackBar() {
+    this.snackBar.open('You need to connect your Metamask wallet to create a Request', 'Ok', {
+      duration: 10000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: 'metamask-snackbar',
     });
   }
 
