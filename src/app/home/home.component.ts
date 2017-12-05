@@ -11,10 +11,11 @@ import { Web3Service } from '../util/web3.service';
 export class HomeComponent implements OnInit {
   accounts: string[];
   date: Date;
+  formDisabled: boolean = false;
 
   requestForm: FormGroup;
   amountFormControl = new FormControl('', [Validators.required]);
-  payerAddressFormControl = new FormControl('', []);
+  payerAddressFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
   reasonFormControl = new FormControl('', []);
   currency = new FormControl('ETH', []);
 
@@ -22,6 +23,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {
     setInterval(() => { this.date = new Date() }, 1000);
+    this.web3Service.setSearchValue(null);
   }
 
   ngOnInit(): void {
@@ -33,6 +35,18 @@ export class HomeComponent implements OnInit {
   }
 
   async createRequest() {
+    if (!this.requestForm.valid) {
+      if (this.amountFormControl.hasError('required')) {
+        this.amountFormControl.markAsTouched();
+        this.amountFormControl.setErrors({ 'required': true });
+      }
+      if (this.payerAddressFormControl.hasError('required')) {
+        this.payerAddressFormControl.markAsTouched();
+        this.payerAddressFormControl.setErrors({ 'required': true });
+      }
+      return this.formDisabled = true;
+    }
+
     let result = await this.web3Service.createRequestAsPayeeAsync(this.payerAddressFormControl.value, this.amountFormControl.value, `{"reason": "${this.reasonFormControl.value}", "date": "${this.date}"}`);
     if (result && result.request && result.request.requestId) {
       this.router.navigate(['/request', result.request.requestId]);

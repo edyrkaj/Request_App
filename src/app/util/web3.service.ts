@@ -19,7 +19,7 @@ export class Web3Service {
     window.addEventListener('load', (event) => {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
-      this.requestNetwork = new RequestNetwork(this.web3.currentProvider)
+      this.requestNetwork = new RequestNetwork(this.web3.givenProvider)
     });
   }
 
@@ -48,11 +48,11 @@ export class Web3Service {
 
       if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
         console.log('Observed new accounts');
-        this.metamaskReady.next(true);
         this.accountsObservable.next(accs);
         this.accounts = accs;
       }
 
+      this.metamaskReady.next(true);
       this.ready = true;
     });
   }
@@ -68,7 +68,7 @@ export class Web3Service {
       return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitialInWei, details);
     } catch (err) {
       console.log('Error: ', err.message);
-      return err;
+      return {error: err};
     }
   }
 

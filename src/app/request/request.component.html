@@ -1,6 +1,5 @@
 <div class="container fc-primary">
   <button mat-button (click)="openAddFileDialog()">Open dialog</button>
-
   <div class="row my-5">
     <div class="col-12" *ngIf="!request; else resultBlock">
       <mat-spinner class="mx-auto"></mat-spinner>
@@ -11,7 +10,7 @@
         <h1 class="my-3">Oops</h1>
         <p>Sorry, we couldn’t find any matches for this Request ID.</p>
         <p>Please try searching with another ID.</p>
-        <button mat-raised-button routerLink="/" class="px-5 my-5" color="accent">Back to home</button>
+        <button mat-raised-button (click)="goHome()" class="px-5 my-5" color="accent">Back to home</button>
       </div>
       <ng-template #requestBlock>
         <div class="col-md-3">
@@ -94,7 +93,9 @@
                     <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
                       <a [routerLink]="" (click)="acceptRequest()">Accept & Pay later</a>
                     </div>
-                    <button style="flex: 1" class="ml-auto fs-18" mat-raised-button color="accent" (click)="payRequest()">Pay now</button>
+                    <button style="flex: 1" class="ml-auto fs-18" mat-raised-button color="accent" (click)="payRequest()">
+                      <mat-icon>lock</mat-icon>
+                      Pay now</button>
                   </div>
                   <!-- ELSE -->
                   <div *ngSwitchDefault class="d-flex flex-column justify-content-center centered fs-12 h-100">

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { PayDialogComponent } from '../util/payDialog.component';
+import { PayDialogComponent } from './dialog/pay-dialog.component';
 import blockies from 'blockies';
 
 @Component({
@@ -20,7 +20,8 @@ export class RequestComponent implements OnInit {
   progress;
   url: string;
   copyUrlTxt: string = 'Copy url';
-  payDialogComponent: MatDialogRef < PayDialogComponent > ;
+  // payDialogRef: MatDialogRef < PayDialogComponent > ;
+  files = [];
 
 
   constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
@@ -35,7 +36,8 @@ export class RequestComponent implements OnInit {
       return await this.ngOnInit();
     }
 
-    this.web3Service.searchValue.subscribe(async(searchValue) => {
+    this.web3Service.searchValue.subscribe(async searchValue => {
+      if (!searchValue) return;
       let result = await this.web3Service.getRequestAsync(searchValue);
       if (!result || !result.requestId || result.creator === '0x0000000000000000000000000000000000000000') {
         this.request = { 'requestId': null };
@@ -63,7 +65,7 @@ export class RequestComponent implements OnInit {
       this.account = this.web3Service.accounts[0];
       this.getRequestMode()
     }
-    this.web3Service.accountsObservable.subscribe((accounts) => {
+    this.web3Service.accountsObservable.subscribe(accounts => {
       this.account = accounts[0];
       this.getRequestMode()
     });
@@ -106,9 +108,27 @@ export class RequestComponent implements OnInit {
     await this.web3Service.payAsync(this.request.requestId, 1);
   }
 
-  openAddFileDialog() {
-    this.payDialogComponent = this.dialog.open(PayDialogComponent, {
-      hasBackdrop: false
-    });
+  goHome() {
+    this.router.navigate(['/']);
   }
+
+  openAddFileDialog() {
+    let payDialogRef = this.dialog.open(PayDialogComponent, {
+      hasBackdrop: true,
+      data: {
+        request: this.request
+      }
+    });
+
+    // payDialogRef
+    //   .afterClosed()
+    //   .pipe(filter(name => name))
+    //   .subscribe(name => {
+    //     this.files.push({ name, content: '' })
+    //     console.log(this.files);
+    //   });
+
+  }
+
+
 }

@@ -27,10 +27,10 @@ export class AppComponent implements OnInit {
     })
 
     this.web3Service.metamaskReady.subscribe((metamaskReady) => {
-      if (this.metamaskReady != metamaskReady && !metamaskReady) {
-        this.metamaskReady = metamaskReady;
+      if (!metamaskReady && this.metamaskReady != metamaskReady) {
         this.openSnackBar();
       }
+      this.metamaskReady = metamaskReady;
     })
   }
 
@@ -57,12 +57,11 @@ export class AppComponent implements OnInit {
     this.web3Service.setSearchValue(this.searchValue);
     if (this.searchValue && this.searchValue.length <= 42)
       this.router.navigate(['/search', this.searchValue]);
-    else
+    else if (this.searchValue)
       this.router.navigate(['/request', this.searchValue]);
   }
 
   goHome() {
-    this.web3Service.setSearchValue(null);
     this.router.navigate(['/']);
   }
 

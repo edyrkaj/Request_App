@@ -14,8 +14,8 @@
             <div class="fc-white" style="opacity: 0.51"><i>{{date | date: 'fullDate'}}</i></div>
           </div>
         </div>
-        <div class="p-4">
-          <form [formGroup]="requestForm" (ngSubmit)="createRequest()" class="requestForm">
+        <form [formGroup]="requestForm" (ngSubmit)="createRequest()" (keydown.enter)="createRequest()">
+          <div class="p-4">
             <div class="d-flex w-100">
               <mat-form-field class="w-100">
                 <input matInput type="number" placeholder="Request amount" [formControl]="amountFormControl">
@@ -35,18 +35,24 @@
               </mat-form-field>
             </div>
             <mat-form-field class="w-100">
-              <input matInput placeholder="Payer’s ETH address (optional)" [formControl]="payerAddressFormControl">
+              <input matInput maxlength="42" placeholder="Payer’s ETH address" [formControl]="payerAddressFormControl">
+              <mat-error *ngIf="payerAddressFormControl.hasError('required')">
+                payer's ETH address is <strong>required</strong>
+              </mat-error>
+              <mat-error *ngIf="payerAddressFormControl.hasError('pattern')">
+                ETH address format <strong>not valid</strong>
+              </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
               <textarea matInput maxlength="256" rows="1" placeholder="Reason (optional)" [formControl]="reasonFormControl"></textarea>
               <mat-hint align="end">{{reasonFormControl?.value.length || 0}}/256</mat-hint>
             </mat-form-field>
-          </form>
-        </div>
-        <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 60px">
-          <div></div>
-          <button class="ml-auto w-50 fs-18" mat-raised-button color="accent" (click)="createRequest()" [disabled]="!requestForm.valid">Create a Request</button>
-        </mat-toolbar>
+          </div>
+          <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 60px">
+            <div></div>
+            <button class="ml-auto w-50 fs-18" mat-raised-button color="accent" (click)="createRequest()" [disabled]="formDisabled && !requestForm.valid">Create a Request</button>
+          </mat-toolbar>
+        </form>
       </mat-card>
     </div>
   </div>
