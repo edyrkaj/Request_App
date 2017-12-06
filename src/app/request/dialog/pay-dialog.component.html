@@ -1,12 +1,41 @@
-<form [formGroup]="form" (ngSubmit)="submit(form)">
-  <h1 mat-dialog-title>Add file</h1>
+<form class="fc-primary" [formGroup]="formPay" (ngSubmit)="submit(formPay)">
+  <h1 mat-dialog-title>Pay Request</h1>
   <mat-dialog-content>
-    <mat-form-field>
-      <input matInput formControlName="filename" placeholder="Enter filename">
+    <div class="d-flex justify-content-between mb-1">
+      <div><strong>Amount initial</strong></div>
+      <div>{{ this.request.amountInitial }} ETH</div>
+    </div>
+    <div *ngIf="request.amountSubtract" class="d-flex justify-content-between mb-1">
+      <div><strong>Amount substracted</strong></div>
+      <div>- {{ this.request.amountSubtract }} ETH</div>
+    </div>
+    <div *ngIf="request.amountAdditional" class="d-flex justify-content-between mb-1">
+      <div><strong>Amount additional</strong></div>
+      <div>{{ + this.request.amountAdditional }} ETH</div>
+    </div>
+    <div *ngIf="request.amountPaid" class="d-flex justify-content-between mb-1">
+      <div><strong>Already paid</strong></div>
+      <div>- {{ this.request.amountPaid }} ETH</div>
+    </div>
+    <hr style="border-top: 1px solid #617B9F; opacity: 0.2">
+    <div class="d-flex justify-content-between mb-3">
+      <div><strong>Remains</strong></div>
+      <div>{{ (this.request.amountInitial - this.request.amountSubtract + this.request.amountAdditional) - this.request.amountPaid }} ETH</div>
+    </div>
+    <mat-form-field class="w-100">
+      <input matInput type="number" formControlName="amountFormControl" placeholder="amount">
+      <mat-error *ngIf="amountFormControl.hasError('required')">
+        amount is <strong>required</strong>
+      </mat-error>
+      <span matSuffix><img class="currencyIcon" src="assets/cryptoIcons/ETH.png">&nbsp;ETH</span>
+    </mat-form-field>
+    <mat-form-field class="w-100">
+      <input matInput type="number" formControlName="tipsFormControl" placeholder="tip ?">
+      <span matSuffix><img class="currencyIcon" src="assets/cryptoIcons/ETH.png">&nbsp;ETH</span>
     </mat-form-field>
   </mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button type="submit">Add</button>
-    <button mat-button type="button" mat-dialog-close>Cancel</button>
+  <mat-dialog-actions class="mt-3 d-flex justify-content-around w-100">
+    <button class="col-5" mat-raised-button type="button" mat-dialog-close>Cancel</button>
+    <button class="col-5" mat-raised-button type="submit" color="accent">Pay</button>
   </mat-dialog-actions>
 </form>

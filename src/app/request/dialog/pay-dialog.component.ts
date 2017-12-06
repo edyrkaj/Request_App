@@ -1,23 +1,25 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   templateUrl: './pay-dialog.component.html'
 })
 export class PayDialogComponent {
+  request;
+  formPay: FormGroup;
+  amountFormControl = new FormControl('', [Validators.required]);
+  tipsFormControl = new FormControl('', [Validators.required]);
 
- form: FormGroup;
+  constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef < PayDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
+    this.request = data.request;
+    console.log(this.request);
+  }
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<PayDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data
-  ) {}
-  
   ngOnInit() {
-    this.form = this.formBuilder.group({
-      filename: ''
+    this.formPay = this.formBuilder.group({
+      amountFormControl: this.amountFormControl;
+      tipsFormControl: this.tipsFormControl;
     })
   }
 

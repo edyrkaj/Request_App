@@ -16,7 +16,7 @@ export class Web3Service {
   public searchValue = new Subject < string > ();
 
   constructor() {
-    window.addEventListener('load', (event) => {
+    window.addEventListener('load', event => {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
       this.requestNetwork = new RequestNetwork(this.web3.givenProvider)
@@ -95,7 +95,7 @@ export class Web3Service {
     }
   }
 
-  public async payAsync(requestId, amount) {
+  public async payAsync(requestId, amount, tips?) {
     try {
       console.log('RequestNetworkService payAsync');
       let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');

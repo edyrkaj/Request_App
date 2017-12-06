@@ -17,10 +17,9 @@ export class RequestComponent implements OnInit {
   fromIcon;
   toIcon;
   objectKeys = Object.keys;
-  progress;
+  progress: number;
   url: string;
   copyUrlTxt: string = 'Copy url';
-  // payDialogRef: MatDialogRef < PayDialogComponent > ;
   files = [];
 
 
@@ -58,7 +57,7 @@ export class RequestComponent implements OnInit {
     if (this.request && this.request.requestId) {
       this.getBlockies();
       this.watchAccount();
-      this.progress = 100 * this.request.amountPaid / this.request.amountInitial;
+      this.progress = 100 * this.request.amountPaid / (this.request.amountInitial - this.request.amountSubtract + this.request.amountAdditional);
     }
   }
 
@@ -113,8 +112,8 @@ export class RequestComponent implements OnInit {
   }
 
 
-  async payRequest() {
-    await this.web3Service.payAsync(this.request.requestId, 1);
+  async payRequest(amount, tips?) {
+    await this.web3Service.payAsync(this.request.requestId, amount, tips);
   }
 
 
@@ -123,21 +122,21 @@ export class RequestComponent implements OnInit {
   }
 
 
-  openAddFileDialog() {
+  openPayDialog() {
     let payDialogRef = this.dialog.open(PayDialogComponent, {
       hasBackdrop: true,
+      width: '300px',
       data: {
         request: this.request
       }
     });
 
-    // payDialogRef
-    //   .afterClosed()
-    //   .pipe(filter(name => name))
-    //   .subscribe(name => {
-    //     this.files.push({ name, content: '' })
-    //     console.log(this.files);
-    //   });
+    payDialogRef
+      .afterClosed()
+      .subscribe(result => {
+        this.files.push({ result, content: '' })
+        console.log(this.files);
+      });
 
   }
 

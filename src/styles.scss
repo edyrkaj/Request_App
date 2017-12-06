@@ -99,12 +99,12 @@ mat-toolbar.mat-toolbar {
 // FONT SIZE & WEIGHT
 .fs-12 {
   font-size: 12px !important;
-  line-height: 14px !important;
+  line-height: 14px;
 }
 
 .fs-14 {
   font-size: 14px !important;
-  line-height: 18px !important;
+  line-height: 18px;
 }
 
 .fs-16 {
@@ -114,12 +114,12 @@ mat-toolbar.mat-toolbar {
 
 .fs-18 {
   font-size: 18px !important;
-  line-height: 22px !important;
+  line-height: 22px;
 }
 
 .fs-24 {
   font-size: 24px !important;
-  line-height: 28px !important;
+  line-height: 28px;
 }
 
 .semi-bold {
@@ -158,6 +158,8 @@ mat-toolbar.mat-toolbar {
 .currencyIcon {
   max-height: 16px;
   max-width: 16px;
+  position: relative;
+  top: -2px;
 }
 
 .centered {

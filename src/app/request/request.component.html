@@ -1,5 +1,4 @@
 <div class="container fc-primary">
-  <button mat-button (click)="openAddFileDialog()">Open dialog</button>
   <div class="row my-5">
     <div class="col-12" *ngIf="!request; else resultBlock">
       <mat-spinner class="mx-auto"></mat-spinner>
@@ -62,11 +61,10 @@
               </div>
             </div>
             <div class="p-5">
-              <div class="mx-auto w-50 centered">
-                <div class="fc-blue-grey fs-12 mb-1">
-                  {{progress | number: '1.0-2'}}% of the Request has been paid
-                </div>
-                <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+              <div class="fc-blue-grey fs-12 mx-auto w-50 centered">
+                <div><strong>{{progress | number: '1.0-2'}}%</strong> of the Request has been paid</div>
+                <mat-progress-bar class="my-1" mode="determinate" [value]="progress"></mat-progress-bar>
+                <div><strong>{{(request.amountInitial - request.amountSubtract + request.amountAdditional) - request.amountPaid}} ETH</strong> remains to be paid</div>
               </div>
             </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 90px">
@@ -93,9 +91,10 @@
                     <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
                       <a [routerLink]="" (click)="acceptRequest()">Accept & Pay later</a>
                     </div>
-                    <button style="flex: 1" class="ml-auto fs-18" mat-raised-button color="accent" (click)="payRequest()">
+                    <button style="flex: 1" class="ml-auto fs-18" mat-raised-button color="accent" (click)="openPayDialog()">
                       <mat-icon>lock</mat-icon>
-                      Pay now</button>
+                      <span>Pay now</span>
+                    </button>
                   </div>
                   <!-- ELSE -->
                   <div *ngSwitchDefault class="d-flex flex-column justify-content-center centered fs-12 h-100">
