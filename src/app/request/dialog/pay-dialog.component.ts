@@ -18,8 +18,8 @@ export class PayDialogComponent {
 
   ngOnInit() {
     this.formPay = this.formBuilder.group({
-      amountFormControl: this.amountFormControl;
-      tipsFormControl: this.tipsFormControl;
+      amountFormControl: this.amountFormControl,
+      tipsFormControl: this.tipsFormControl
     })
   }
 
