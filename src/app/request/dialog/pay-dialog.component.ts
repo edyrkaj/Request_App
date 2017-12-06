@@ -7,7 +7,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 })
 export class PayDialogComponent {
   request;
-  formPay: FormGroup;
+  payForm: FormGroup;
   amountFormControl = new FormControl('', [Validators.required]);
   tipsFormControl = new FormControl('');
 
@@ -17,13 +17,13 @@ export class PayDialogComponent {
   }
 
   ngOnInit() {
-    this.formPay = this.formBuilder.group({
+    this.payForm = this.formBuilder.group({
       amountFormControl: this.amountFormControl,
       tipsFormControl: this.tipsFormControl
     })
   }
 
   submit(form) {
-    this.dialogRef.close(`${form.value.filename}`);
+    this.dialogRef.close(form.value);
   }
 }
