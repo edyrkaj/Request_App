@@ -47,6 +47,10 @@ mat-toolbar.cta-toolbar {
   }
 }
 
+button.no-focus-overlay .mat-button-focus-overlay {
+  background-color: transparent;
+}
+
 mat-toolbar.mat-toolbar {
   background: $grey-white;
 }

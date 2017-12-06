@@ -91,7 +91,7 @@
                     <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
                       <a [routerLink]="" (click)="acceptRequest()">Accept & Pay later</a>
                     </div>
-                    <button style="flex: 1" class="ml-auto fs-18" mat-raised-button color="accent" (click)="openPayDialog()">
+                    <button style="flex: 1" class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="openPayDialog()">
                       <mat-icon>lock</mat-icon>
                       <span>Pay now</span>
                     </button>

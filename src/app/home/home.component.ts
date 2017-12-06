@@ -14,10 +14,10 @@ export class HomeComponent implements OnInit {
   account: string;
 
   requestForm: FormGroup;
-  amountFormControl = new FormControl('', [Validators.required]);
-  payerAddressFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
-  reasonFormControl = new FormControl('', []);
-  currency = new FormControl('ETH', []);
+  amountFormControl: FormControl;
+  payerAddressFormControl: FormControl;
+  reasonFormControl: FormControl;
+  currency: FormControl;
 
   currencies = [{ name: 'ether', iso: 'ETH' }];
 
@@ -28,6 +28,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.watchAccount();
+
+    this.amountFormControl = new FormControl('', [Validators.required, this.positiveNumberValidator]);
+    this.payerAddressFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
+    this.reasonFormControl = new FormControl('', []);
+    this.currency = new FormControl('ETH', []);
 
     this.requestForm = this.formBuilder.group({
       amount: this.amountFormControl,
@@ -43,6 +48,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  positiveNumberValidator(control: FormControl) {
+    return Number(control.value) < 0 ? { negativeNumber: true } : null;
+  }
 
   // VALIDATOR
   // isPayeeAddress(account: string) {

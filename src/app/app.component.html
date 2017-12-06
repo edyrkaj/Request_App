@@ -14,7 +14,7 @@
       </mat-form-field>
     </form>
     <div class="mx-3" [style.width]="'427px'">
-      <mat-form-field *ngIf="false || metamaskReady && accounts; else connectAccount" floatPlaceholder="never" class="w-100">
+      <mat-form-field *ngIf="metamaskReady && accounts; else connectAccount" floatPlaceholder="never" class="w-100">
         <mat-select name="account" placeholder="select account" [(ngModel)]="account">
           <mat-option *ngFor="let account of accounts" [value]="account">{{ account }}</mat-option>
         </mat-select>
@@ -25,7 +25,7 @@
       </small>
       </mat-form-field>
       <ng-template #connectAccount>
-        <button mat-button class="fs-16" (click)="openSnackBar()">
+        <button mat-button class="pull-right fs-16" (click)="openSnackBar()">
           <mat-icon>account_circle</mat-icon>
           <span>Connect an account</span>
         </button>

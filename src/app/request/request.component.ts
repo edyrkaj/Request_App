@@ -134,8 +134,7 @@ export class RequestComponent implements OnInit {
     payDialogRef
       .afterClosed()
       .subscribe(result => {
-        this.files.push({ result, content: '' })
-        console.log(this.files);
+        console.log('result');
       });
 
   }
