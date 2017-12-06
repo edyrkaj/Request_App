@@ -62,14 +62,14 @@ export class Web3Service {
     this.searchValue.next(searchValue);
   }
 
-  public async createRequestAsPayeeAsync(payerAddress, amountInitial, details) {
+  public async createRequestAsPayeeAsync(payerAddress, amount, data) {
     try {
       console.log('RequestNetworkService createRequestAsPayeeAsync');
-      let amountInitialInWei = this.web3.utils.toWei(amountInitial.toString(), 'ether');
-      return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInitialInWei, details);
+      let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
+      return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInWei, data);
     } catch (err) {
       console.log('Error: ', err.message);
-      return {error: err};
+      return { error: err };
     }
   }
 
@@ -95,11 +95,11 @@ export class Web3Service {
     }
   }
 
-  public async payAsync(requestId, amount, tips?) {
+  public async paymentActionAsync(requestId, amount, additionals ? ) {
     try {
       console.log('RequestNetworkService payAsync');
       let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
-      let resultPay = await this.requestNetwork.requestEthereumService.payAsync(requestId, amountInWei, 0);
+      let resultPay = await this.requestNetwork.requestEthereumService.paymentActionAsync(requestId, amountInWei, 0);
       return resultPay;
     } catch (err) {
       console.log('Error: ', err.message);
@@ -121,16 +121,11 @@ export class Web3Service {
   private convertRequestAmountsFromWei(request) {
     const toBN = this.web3.utils.toBN;
     const fromWei = this.web3.utils.fromWei;
-    if (request.amountInitial)
-      request.amountInitial = fromWei(toBN(request.amountInitial), 'ether');
-    if (request.amountPaid)
-      request.amountPaid = fromWei(toBN(request.amountPaid), 'ether');
-    if (request.amountAdditional)
-      request.amountAdditional = fromWei(toBN(request.amountAdditional), 'ether');
-    if (request.amountSubtract)
-      request.amountSubtract = fromWei(toBN(request.amountSubtract), 'ether');
+    if (request.expectedAmount)
+      request.expectedAmount = fromWei(toBN(request.expectedAmount), 'ether');
+    if (request.balance)
+      request.balance = fromWei(toBN(request.balance), 'ether');
     return request;
   }
-  s
 
 }

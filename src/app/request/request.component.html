@@ -22,7 +22,7 @@
             <div class="d-flex bg-primary p-4 btr-7">
               <img class="px-3" style="max-height: 75px;" src="assets/img/request-logo.png">
               <div class="ml-auto text-right px-3">
-                <h4 class="fc-white semi-bold fs-18">{{request.details.data.date | date: 'fullDate'}}</h4>
+                <h4 class="fc-white semi-bold fs-18">{{request.data.data.date | date: 'fullDate'}}</h4>
                 <div class="fc-white fs-14"><i>Request Id: {{request.requestId}}</i></div>
               </div>
             </div>
@@ -49,22 +49,22 @@
               </div>
             </div>
             <div class="fc-blue-grey p-4" style="border-bottom: 1px solid #DFE5EC">
-              <div class="px-3" *ngFor="let data of objectKeys(request.details.data)" [hidden]="data == 'date'">
+              <div class="px-3" *ngFor="let data of objectKeys(request.data.data)" [hidden]="data == 'date'">
                 <div class="semi-bold">{{data}}</div>
-                <div>{{request.details.data[data]}}</div>
+                <div>{{request.data.data[data]}}</div>
               </div>
             </div>
             <div class="d-flex">
               <div class="ml-auto d-inline-block semi-bold fc-primary px-5 py-4" style="background: #DFE5EC">
                 <div class="fs-14">AMOUNT</div>
-                <div class="fs-24">{{request.amountInitial}} ETH</div>
+                <div class="fs-24">{{request.expectedAmount}} ETH</div>
               </div>
             </div>
             <div class="p-5">
               <div class="fc-blue-grey fs-12 mx-auto w-50 centered">
                 <div><strong>{{progress | number: '1.0-2'}}%</strong> of the Request has been paid</div>
                 <mat-progress-bar class="my-1" mode="determinate" [value]="progress"></mat-progress-bar>
-                <div><strong>{{(request.amountInitial - request.amountSubtract + request.amountAdditional) - request.amountPaid}} ETH</strong> remains to be paid</div>
+                <div><strong>{{ request.expectedAmount - request.balance }} ETH</strong> remains to be paid</div>
               </div>
             </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 90px">

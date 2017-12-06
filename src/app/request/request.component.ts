@@ -57,7 +57,7 @@ export class RequestComponent implements OnInit {
     if (this.request && this.request.requestId) {
       this.getBlockies();
       this.watchAccount();
-      this.progress = 100 * this.request.amountPaid / (this.request.amountInitial - this.request.amountSubtract + this.request.amountAdditional);
+      this.progress = 100 * this.request.balance / this.request.expectedAmount;
     }
   }
 
@@ -113,7 +113,7 @@ export class RequestComponent implements OnInit {
 
 
   async payRequest(amount, tips?) {
-    await this.web3Service.payAsync(this.request.requestId, amount, tips);
+    await this.web3Service.paymentActionAsync(this.request.requestId, amount, tips);
   }
 
 

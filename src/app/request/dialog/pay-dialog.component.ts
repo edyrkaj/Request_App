@@ -9,7 +9,7 @@ export class PayDialogComponent {
   request;
   payForm: FormGroup;
   amountFormControl = new FormControl('', [Validators.required]);
-  tipsFormControl = new FormControl('');
+  additionalsFormControl = new FormControl('');
 
   constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef < PayDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
     this.request = data.request;
@@ -19,7 +19,7 @@ export class PayDialogComponent {
   ngOnInit() {
     this.payForm = this.formBuilder.group({
       amountFormControl: this.amountFormControl,
-      tipsFormControl: this.tipsFormControl
+      additionalsFormControl: this.additionalsFormControl
     })
   }
 
