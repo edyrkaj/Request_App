@@ -14,7 +14,7 @@
             <div class="fc-white" style="opacity: 0.51"><i>{{date | date: 'fullDate'}}</i></div>
           </div>
         </div>
-        <form [formGroup]="requestForm" (ngSubmit)="createRequest()" (keydown.enter)="createRequest()">
+        <form [formGroup]="requestForm" (ngSubmit)="createRequest()">
           <div class="p-4">
             <div class="d-flex w-100">
               <mat-form-field class="w-100">
@@ -42,6 +42,9 @@
               <mat-error *ngIf="payerAddressFormControl.hasError('pattern')">
                 ETH address format <strong>not valid</strong>
               </mat-error>
+               <mat-error *ngIf="account && payerAddressFormControl.value.toLowerCase() == account.toLowerCase() && payerAddressFormControl.hasError('is42')">
+                payer's address has to be different from payee's
+              </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
               <textarea matInput maxlength="256" rows="1" placeholder="Reason (optional)" [formControl]="reasonFormControl"></textarea>
@@ -50,7 +53,7 @@
           </div>
           <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 60px">
             <div></div>
-            <button class="ml-auto w-50 fs-18" mat-raised-button color="accent" (click)="createRequest()" [disabled]="formDisabled && !requestForm.valid">Create a Request</button>
+            <button class="ml-auto w-50 fs-18" mat-raised-button color="accent" type="submit" [disabled]="formDisabled && !requestForm.valid">Create a Request</button>
           </mat-toolbar>
         </form>
       </mat-card>

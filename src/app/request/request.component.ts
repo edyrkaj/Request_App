@@ -28,6 +28,7 @@ export class RequestComponent implements OnInit {
     this.url = `localhost:4200${this.router.url}`;
   }
 
+
   async ngOnInit() {
     // wait for web3 to be instantiated
     if (!this.web3Service || !this.web3Service.ready) {
@@ -52,6 +53,7 @@ export class RequestComponent implements OnInit {
     }
   }
 
+
   calculateInfo() {
     if (this.request && this.request.requestId) {
       this.getBlockies();
@@ -59,6 +61,7 @@ export class RequestComponent implements OnInit {
       this.progress = 100 * this.request.amountPaid / this.request.amountInitial;
     }
   }
+
 
   watchAccount() {
     if (!this.account && this.web3Service.accounts) {
@@ -71,6 +74,7 @@ export class RequestComponent implements OnInit {
     });
   }
 
+
   getRequestMode() {
     if (this.account === this.request.payee) {
       return this.mode = 'payee';
@@ -82,6 +86,7 @@ export class RequestComponent implements OnInit {
     }
   }
 
+
   getBlockies() {
     this.fromIcon = blockies({
       seed: this.request.payee.toLowerCase(),
@@ -91,26 +96,32 @@ export class RequestComponent implements OnInit {
     });
   }
 
+
   copyToClipboard() {
     this.copyUrlTxt = 'Copied!';
     setTimeout(() => { this.copyUrlTxt = 'Copy url' }, 500);
   }
 
+
   async cancelRequest() {
     await this.web3Service.cancelAsync(this.request.requestId);
   }
+
 
   async acceptRequest() {
     await this.web3Service.acceptAsync(this.request.requestId);
   }
 
+
   async payRequest() {
     await this.web3Service.payAsync(this.request.requestId, 1);
   }
 
+
   goHome() {
     this.router.navigate(['/']);
   }
+
 
   openAddFileDialog() {
     let payDialogRef = this.dialog.open(PayDialogComponent, {

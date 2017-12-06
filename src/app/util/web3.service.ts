@@ -43,6 +43,7 @@ export class Web3Service {
     this.web3.eth.getAccounts((err, accs) => {
       if (err != null || accs.length === 0) {
         console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
+        this.ready = false;
         return this.metamaskReady.next(false);
       }
 
