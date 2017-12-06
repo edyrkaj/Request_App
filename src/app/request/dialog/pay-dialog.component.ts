@@ -9,7 +9,7 @@ export class PayDialogComponent {
   request;
   formPay: FormGroup;
   amountFormControl = new FormControl('', [Validators.required]);
-  tipsFormControl = new FormControl('', [Validators.required]);
+  tipsFormControl = new FormControl('');
 
   constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef < PayDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
     this.request = data.request;
