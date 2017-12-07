@@ -61,7 +61,7 @@ export class RequestComponent implements OnInit {
   }
 
   setRequest(request) {
-      this.request = request.requestId
+      this.request = request;
       this.getBlockies();
       this.watchAccount();
       this.progress = 100 * this.request.balance / this.request.expectedAmount;
