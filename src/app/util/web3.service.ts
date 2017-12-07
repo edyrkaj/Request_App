@@ -1,6 +1,5 @@
 import { Injectable, HostListener } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
-import Net from 'web3-net';
 
 import Web3 from 'web3';
 import RequestNetwork from 'requestnetwork.js/dist/src/requestNetwork';
@@ -12,19 +11,19 @@ export class Web3Service {
   private web3: Web3;
   private requestNetwork: RequestNetwork;
   public accounts: string[];
-  public ready = false;
+  public ready: boolean = false;
   public metamaskReady = new Subject < boolean > ();
   public accountsObservable = new Subject < string[] > ();
   public searchValue = new Subject < string > ();
+  public request: any;
 
   constructor() {
     window.addEventListener('load', event => {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
-      // if (this.ready)
-        this.web3.eth.net.getId().then(networkId => {
-          this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
-        });
+      this.web3.eth.net.getId().then(networkId => {
+        this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
+      });
     });
   }
 
@@ -63,22 +62,22 @@ export class Web3Service {
     });
   }
 
-  public setSearchValue(searchValue) {
+  public setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
   }
 
-  public async createRequestAsPayeeAsync(payerAddress, amount, data) {
+  public async createRequestAsPayeeAsync(payer: string, amountExpected: number, data: string) {
+    console.log('RequestNetworkService createRequestAsPayeeAsync');
+    let amountExpectedInWei = this.web3.utils.toWei(amountExpected.toString(), 'ether');
     try {
-      console.log('RequestNetworkService createRequestAsPayeeAsync');
-      let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
-      return await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payerAddress, amountInWei, data);
+      this.request = await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payer, amountExpectedInWei, data);
     } catch (err) {
       console.log('Error: ', err.message);
       return { error: err };
     }
   }
 
-  public async getRequestAsync(requestId) {
+  public async getRequestAsync(requestId: string) {
     try {
       console.log('RequestNetworkService getRequestAsync');
       let result = await this.requestNetwork.requestEthereumService.getRequestAsync(requestId);
@@ -89,7 +88,7 @@ export class Web3Service {
     }
   }
 
-  public async acceptAsync(requestId) {
+  public async acceptAsync(requestId: string) {
     try {
       console.log('RequestNetworkService acceptAsync');
       let resultAccept = await this.requestNetwork.requestEthereumService.acceptAsync(requestId);
@@ -100,7 +99,7 @@ export class Web3Service {
     }
   }
 
-  public async paymentActionAsync(requestId, amount, additionals ? ) {
+  public async paymentActionAsync(requestId: string, amount: number, additionals ? : number) {
     try {
       console.log('RequestNetworkService payAsync');
       let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
@@ -112,7 +111,7 @@ export class Web3Service {
     }
   }
 
-  public async cancelAsync(requestId) {
+  public async cancelAsync(requestId: string) {
     try {
       console.log('RequestNetworkService cancelAsync');
       let resultCancel = await this.requestNetwork.requestEthereumService.cancelAsync(requestId)
@@ -123,7 +122,7 @@ export class Web3Service {
     }
   }
 
-  private convertRequestAmountsFromWei(request) {
+  private convertRequestAmountsFromWei(request: any) {
     const toBN = this.web3.utils.toBN;
     const fromWei = this.web3.utils.fromWei;
     if (request.expectedAmount)

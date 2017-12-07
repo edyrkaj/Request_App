@@ -70,7 +70,19 @@ export class HomeComponent implements OnInit {
       return this.formDisabled = true;
     }
     this.requestForm.controls['date'].setValue(this.date);
-    return this.router.navigate(['/request', this.requestForm.value ]);
+
+    let data = {};
+    Object.keys(this.requestForm.value).forEach((key) => {
+      if (key !== 'amountExpected' && key !== 'payer')
+        data[key] = this.requestForm.value[key];
+    })
+
+    await this.web3Service.createRequestAsPayeeAsync(this.payerFormControl.value, this.amountExpectedFormControl.value, JSON.stringify(data)).then(
+      response => {
+        console.log(response);
+        this.router.navigate(['/request', this.requestForm.value]);
+      })
+
 
 
 
