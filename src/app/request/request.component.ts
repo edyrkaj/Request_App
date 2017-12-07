@@ -52,6 +52,22 @@ export class RequestComponent implements OnInit {
     }
 
     if (this.route.snapshot.params['txHash']) {
+      if (this.route.snapshot.queryParams) {
+        let queryRequest = {
+          requestId: 'waiting for block confirmation',
+          amountExpected: this.route.snapshot.queryParams.amountExpected,
+          payer: this.route.snapshot.queryParams.payer,
+          payee: this.route.snapshot.queryParams.payee,
+          data: { data: {} }
+        }
+        Object.keys(this.route.snapshot.queryParams).forEach((key) => {
+          if (!queryRequest[key])
+            queryRequest.data.data[key] = this.route.snapshot.queryParams[key];
+        })
+        this.setRequest(queryRequest);
+
+      }
+
       this.web3Service.request.subscribe(request => {
         if (request.requestId && request.transactionHash == this.route.snapshot.params['txHash'])
           this.setRequest(request);
@@ -61,10 +77,10 @@ export class RequestComponent implements OnInit {
   }
 
   setRequest(request) {
-      this.request = request;
-      this.getBlockies();
-      this.watchAccount();
-      this.progress = 100 * this.request.balance / this.request.expectedAmount;
+    this.request = request;
+    this.getBlockies();
+    this.watchAccount();
+    this.progress = 100 * this.request.balance / this.request.expectedAmount;
   }
 
 
@@ -81,7 +97,7 @@ export class RequestComponent implements OnInit {
 
 
   getRequestMode() {
-    this.mode = this.account === this.request.payee ? 'payee' : this.account === this.request.payer ? 'payer' : 'none';
+    return this.mode = this.account && this.account === this.request.payee ? 'payee' : this.account && this.account === this.request.payer ? 'payer' : 'none';
   }
 
 
