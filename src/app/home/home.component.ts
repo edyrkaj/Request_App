@@ -77,20 +77,12 @@ export class HomeComponent implements OnInit {
         data[key] = this.requestForm.value[key];
     })
 
-    await this.web3Service.createRequestAsPayeeAsync(this.payerFormControl.value, this.amountExpectedFormControl.value, JSON.stringify(data)).then(
-      response => {
-        console.log(response);
-        this.router.navigate(['/request', this.requestForm.value]);
-      })
+    let createRequestAsPayeeCallback = (response) => {
+      if (response.transactionHash)
+        this.router.navigate(['/request/txHash', response.transactionHash], { queryParams: this.requestForm.value });
+    }
 
-
-
-
-    // let result = await this.web3Service.createRequestAsPayeeAsync(this.payerFormControl.value, this.amountExpectedFormControl.value, `{"reason": "${this.reasonFormControl.value}", "date": "${this.date}"}`);
-    // if (result && result.request && result.request.requestId) {
-    //   this.web3Service.setSearchValue(result.request.requestId);
-    //   this.router.navigate(['/request', result.request.requestId]);
-    // }
+    this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.amountExpectedFormControl.value, JSON.stringify(data), createRequestAsPayeeCallback);
   }
 
 

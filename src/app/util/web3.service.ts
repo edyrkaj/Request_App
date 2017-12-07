@@ -66,21 +66,27 @@ export class Web3Service {
     this.searchValue.next(searchValue);
   }
 
-  public async createRequestAsPayeeAsync(payer: string, amountExpected: number, data: string) {
-    console.log('RequestNetworkService createRequestAsPayeeAsync');
+  public createRequestAsPayee(payer: string, amountExpected: number, data: string, callback ? ) {
+    console.log('RequestNetworkService createRequestAsPayee');
     let amountExpectedInWei = this.web3.utils.toWei(amountExpected.toString(), 'ether');
-    try {
-      this.request = await this.requestNetwork.requestEthereumService.createRequestAsPayeeAsync(payer, amountExpectedInWei, data);
-    } catch (err) {
-      console.log('Error: ', err.message);
-      return { error: err };
-    }
+
+    this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, amountExpectedInWei, data).on('broadcasted', response => {
+        callback(response);
+      })
+      .then(response => {
+        console.log(response);
+        this.request = response;
+      }, err => {
+        console.log(err);
+        callback(err);
+      });
+
   }
 
-  public async getRequestAsync(requestId: string) {
+  public async getRequest(requestId: string) {
     try {
-      console.log('RequestNetworkService getRequestAsync');
-      let result = await this.requestNetwork.requestEthereumService.getRequestAsync(requestId);
+      console.log('RequestNetworkService getRequest');
+      let result = await this.requestNetwork.requestEthereumService.getRequest(requestId);
       return this.convertRequestAmountsFromWei(result)
     } catch (err) {
       console.log('Error: ', err.message);
@@ -88,10 +94,10 @@ export class Web3Service {
     }
   }
 
-  public async acceptAsync(requestId: string) {
+  public async accept(requestId: string) {
     try {
-      console.log('RequestNetworkService acceptAsync');
-      let resultAccept = await this.requestNetwork.requestEthereumService.acceptAsync(requestId);
+      console.log('RequestNetworkService accept');
+      let resultAccept = await this.requestNetwork.requestEthereumService.accept(requestId);
       return resultAccept;
     } catch (err) {
       console.log('Error: ', err.message);
@@ -99,11 +105,11 @@ export class Web3Service {
     }
   }
 
-  public async paymentActionAsync(requestId: string, amount: number, additionals ? : number) {
+  public async paymentAction(requestId: string, amount: number, additionals ? : number) {
     try {
-      console.log('RequestNetworkService payAsync');
+      console.log('RequestNetworkService pay');
       let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
-      let resultPay = await this.requestNetwork.requestEthereumService.paymentActionAsync(requestId, amountInWei, 0);
+      let resultPay = await this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0);
       return resultPay;
     } catch (err) {
       console.log('Error: ', err.message);
@@ -111,10 +117,10 @@ export class Web3Service {
     }
   }
 
-  public async cancelAsync(requestId: string) {
+  public async cancel(requestId: string) {
     try {
-      console.log('RequestNetworkService cancelAsync');
-      let resultCancel = await this.requestNetwork.requestEthereumService.cancelAsync(requestId)
+      console.log('RequestNetworkService cancel');
+      let resultCancel = await this.requestNetwork.requestEthereumService.cancel(requestId)
       return resultCancel;
     } catch (err) {
       console.log('Error: ', err.message);

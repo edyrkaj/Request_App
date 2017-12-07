@@ -38,7 +38,7 @@ export class RequestComponent implements OnInit {
 
     this.web3Service.searchValue.subscribe(async searchValue => {
       if (!searchValue) return;
-      let result = await this.web3Service.getRequestAsync(searchValue);
+      let result = await this.web3Service.getRequest(searchValue);
       console.log(result);
       if (!result || !result.requestId || result.creator === '0x0000000000000000000000000000000000000000') {
         this.request = { 'requestId': null };
@@ -104,24 +104,18 @@ export class RequestComponent implements OnInit {
 
 
   async cancelRequest() {
-    await this.web3Service.cancelAsync(this.request.requestId);
+    await this.web3Service.cancel(this.request.requestId);
   }
 
 
   async acceptRequest() {
-    await this.web3Service.acceptAsync(this.request.requestId);
+    await this.web3Service.accept(this.request.requestId);
   }
 
 
   async payRequest(amount, tips?) {
-    await this.web3Service.paymentActionAsync(this.request.requestId, amount, tips);
+    await this.web3Service.paymentAction(this.request.requestId, amount, tips);
   }
-
-
-  goHome() {
-    this.router.navigate(['/']);
-  }
-
 
   openPayDialog() {
     let payDialogRef = this.dialog.open(PayDialogComponent, {
