@@ -8,7 +8,7 @@ import { SearchComponent } from './search/search.component';
 
 const routes: Routes = [
   { pathMatch: 'full', path: '', component: HomeComponent },
-  { pathMatch: 'full', path: 'request/:requestId', component: RequestComponent },
+  { pathMatch: 'full', path: 'request', component: RequestComponent },
   { pathMatch: 'full', path: 'search/:searchValue', component: SearchComponent },
   { pathMatch: 'full', path: '**', redirectTo: '/' },
 ];

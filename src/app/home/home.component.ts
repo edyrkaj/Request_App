@@ -14,12 +14,12 @@ export class HomeComponent implements OnInit {
   account: string;
 
   requestForm: FormGroup;
-  amountFormControl: FormControl;
-  payerAddressFormControl: FormControl;
-  reasonFormControl: FormControl;
-  currency: FormControl;
-
-  currencies = [{ name: 'ether', iso: 'ETH' }];
+  amountExpectedFormControl = new FormControl('', [Validators.required, this.positiveNumberValidator]);
+  payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
+  reasonFormControl = new FormControl('');
+  dateFormControl = new FormControl('');
+  // currency = new FormControl('ETH');
+  // currencies = [{ name: 'ether', iso: 'ETH' }];
 
   constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {
     setInterval(() => { this.date = new Date() }, 1000);
@@ -29,14 +29,10 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.watchAccount();
 
-    this.amountFormControl = new FormControl('', [Validators.required, this.positiveNumberValidator]);
-    this.payerAddressFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
-    this.reasonFormControl = new FormControl('', []);
-    this.currency = new FormControl('ETH', []);
-
     this.requestForm = this.formBuilder.group({
-      amount: this.amountFormControl,
-      payerAddress: this.payerAddressFormControl,
+      amountExpected: this.amountExpectedFormControl,
+      payer: this.payerFormControl,
+      date: this.dateFormControl,
       reason: this.reasonFormControl,
     });
 
@@ -63,22 +59,26 @@ export class HomeComponent implements OnInit {
 
   async createRequest() {
     if (!this.requestForm.valid) {
-      if (this.amountFormControl.hasError('required')) {
-        this.amountFormControl.markAsTouched();
-        this.amountFormControl.setErrors({ required: true });
+      if (this.amountExpectedFormControl.hasError('required')) {
+        this.amountExpectedFormControl.markAsTouched();
+        this.amountExpectedFormControl.setErrors({ required: true });
       }
-      if (this.payerAddressFormControl.hasError('required')) {
-        this.payerAddressFormControl.markAsTouched();
-        this.payerAddressFormControl.setErrors({ required: true });
+      if (this.payerFormControl.hasError('required')) {
+        this.payerFormControl.markAsTouched();
+        this.payerFormControl.setErrors({ required: true });
       }
       return this.formDisabled = true;
     }
+    this.requestForm.controls['date'].setValue(this.date);
+    return this.router.navigate(['/request', this.requestForm.value ]);
 
-    let result = await this.web3Service.createRequestAsPayeeAsync(this.payerAddressFormControl.value, this.amountFormControl.value, `{"reason": "${this.reasonFormControl.value}", "date": "${this.date}"}`);
-    if (result && result.request && result.request.requestId) {
-      this.web3Service.setSearchValue(result.request.requestId);
-      this.router.navigate(['/request', result.request.requestId]);
-    }
+
+
+    // let result = await this.web3Service.createRequestAsPayeeAsync(this.payerFormControl.value, this.amountExpectedFormControl.value, `{"reason": "${this.reasonFormControl.value}", "date": "${this.date}"}`);
+    // if (result && result.request && result.request.requestId) {
+    //   this.web3Service.setSearchValue(result.request.requestId);
+    //   this.router.navigate(['/request', result.request.requestId]);
+    // }
   }
 
 

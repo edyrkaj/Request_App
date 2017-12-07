@@ -39,6 +39,7 @@ export class RequestComponent implements OnInit {
     this.web3Service.searchValue.subscribe(async searchValue => {
       if (!searchValue) return;
       let result = await this.web3Service.getRequestAsync(searchValue);
+      console.log(result);
       if (!result || !result.requestId || result.creator === '0x0000000000000000000000000000000000000000') {
         this.request = { 'requestId': null };
       } else {
@@ -136,8 +137,6 @@ export class RequestComponent implements OnInit {
       .subscribe(result => {
         console.log('result');
       });
-
   }
-
 
 }

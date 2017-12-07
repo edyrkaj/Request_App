@@ -18,15 +18,16 @@
           <div class="p-4">
             <div class="d-flex w-100">
               <mat-form-field class="w-100">
-                <input matInput type="number" placeholder="Request amount" [formControl]="amountFormControl">
-                <mat-error *ngIf="amountFormControl.hasError('required')">
+                <input matInput type="number" placeholder="Request amount" [formControl]="amountExpectedFormControl">
+                <mat-error *ngIf="amountExpectedFormControl.hasError('required')">
                   amount is <strong>required</strong>
                 </mat-error>
-                <mat-error *ngIf="amountFormControl.hasError('negativeNumber')">
+                <mat-error *ngIf="amountExpectedFormControl.hasError('negativeNumber')">
                   amount must be a <strong>positive number</strong>
                 </mat-error>
+                <span matSuffix><img class="currencyIcon" src="assets/cryptoIcons/ETH.png">&nbsp;ETH</span>
               </mat-form-field>
-              <mat-form-field [style.width]="'64px'">
+              <!-- <mat-form-field [style.width]="'64px'">
                 <mat-select [formControl]="currency" name="currency">
                   <mat-option *ngFor="let c of currencies" [value]="c.iso">
                     <img class="currencyIcon" src="assets/cryptoIcons/{{c.iso}}.png">&nbsp;{{c.iso}}
@@ -35,17 +36,17 @@
                 <span matPrefix>
                   <img class="currencyIcon" src="assets/cryptoIcons/{{currency.value}}.png">&nbsp;
                 </span>
-              </mat-form-field>
+              </mat-form-field> -->
             </div>
             <mat-form-field class="w-100">
-              <input matInput maxlength="42" placeholder="Payer’s ETH address" [formControl]="payerAddressFormControl">
-              <mat-error *ngIf="payerAddressFormControl.hasError('required')">
+              <input matInput maxlength="42" placeholder="Payer’s ETH address" [formControl]="payerFormControl">
+              <mat-error *ngIf="payerFormControl.hasError('required')">
                 payer's ETH address is <strong>required</strong>
               </mat-error>
-              <mat-error *ngIf="payerAddressFormControl.hasError('pattern')">
+              <mat-error *ngIf="payerFormControl.hasError('pattern')">
                 ETH address format <strong>not valid</strong>
               </mat-error>
-              <!--               <mat-error *ngIf="account && payerAddressFormControl.value.toLowerCase() == account.toLowerCase() && payerAddressFormControl.hasError('is42')">
+              <!--               <mat-error *ngIf="account && payerFormControl.value.toLowerCase() == account.toLowerCase() && payerFormControl.hasError('is42')">
                 payer's address has to be different from payee's
               </mat-error> -->
             </mat-form-field>

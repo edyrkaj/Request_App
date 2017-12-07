@@ -1,5 +1,7 @@
 import { Injectable, HostListener } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
+import Net from 'web3-net';
+
 import Web3 from 'web3';
 import RequestNetwork from 'requestnetwork.js/dist/src/requestNetwork';
 
@@ -19,7 +21,10 @@ export class Web3Service {
     window.addEventListener('load', event => {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
-      this.requestNetwork = new RequestNetwork(this.web3.givenProvider)
+      // if (this.ready)
+        this.web3.eth.net.getId().then(networkId => {
+          this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
+        });
     });
   }
 
@@ -53,8 +58,8 @@ export class Web3Service {
         this.accounts = accs;
       }
 
-      this.metamaskReady.next(true);
       this.ready = true;
+      this.metamaskReady.next(true);
     });
   }
 
