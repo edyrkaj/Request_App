@@ -15,7 +15,7 @@ export class Web3Service {
   public metamaskReady = new Subject < boolean > ();
   public accountsObservable = new Subject < string[] > ();
   public searchValue = new Subject < string > ();
-  public request: any;
+  public request = new Subject < any > ();
 
   constructor() {
     window.addEventListener('load', event => {
@@ -74,8 +74,8 @@ export class Web3Service {
         callback(response);
       })
       .then(response => {
-        console.log(response);
-        this.request = response;
+        response.request.transactionHash = response.transactionHash;
+        this.request.next(response.request);
       }, err => {
         console.log(err);
         callback(err);

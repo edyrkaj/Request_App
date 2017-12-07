@@ -9,7 +9,7 @@ import { Web3Service } from '../util/web3.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  date: Date;
+  date: number = new Date().getTime();
   formDisabled: boolean = false;
   account: string;
 
@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   // currencies = [{ name: 'ether', iso: 'ETH' }];
 
   constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {
-    setInterval(() => { this.date = new Date() }, 1000);
+    setInterval(() => { this.date = new Date().getTime() }, 1000);
     this.web3Service.setSearchValue(null);
   }
 
@@ -35,7 +35,6 @@ export class HomeComponent implements OnInit {
       date: this.dateFormControl,
       reason: this.reasonFormControl,
     });
-
   }
 
   watchAccount() {
@@ -79,11 +78,18 @@ export class HomeComponent implements OnInit {
 
     let createRequestAsPayeeCallback = (response) => {
       if (response.transactionHash)
-        this.router.navigate(['/request/txHash', response.transactionHash], { queryParams: this.requestForm.value });
+        this.router.navigate(['/request/txHash', response.transactionHash], {
+          queryParams: {
+            amountExpected: this.amountExpectedFormControl.value,
+            payer: this.payerFormControl.value,
+            payee: this.account,
+            reason: this.reasonFormControl.value,
+            date: this.dateFormControl.value
+          }
+        });
     }
 
     this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.amountExpectedFormControl.value, JSON.stringify(data), createRequestAsPayeeCallback);
   }
-
 
 }

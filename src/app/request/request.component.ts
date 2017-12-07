@@ -39,27 +39,32 @@ export class RequestComponent implements OnInit {
     this.web3Service.searchValue.subscribe(async searchValue => {
       if (!searchValue) return;
       let result = await this.web3Service.getRequest(searchValue);
-      console.log(result);
+
       if (!result || !result.requestId || result.creator === '0x0000000000000000000000000000000000000000') {
         this.request = { 'requestId': null };
       } else {
-        this.request = result;
-        this.calculateInfo();
+        this.setRequest(result);
       }
     })
 
     if (this.route.snapshot.params['requestId']) {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
     }
+
+    if (this.route.snapshot.params['txHash']) {
+      this.web3Service.request.subscribe(request => {
+        if (request.requestId && request.transactionHash == this.route.snapshot.params['txHash'])
+          this.setRequest(request);
+      })
+    }
+
   }
 
-
-  calculateInfo() {
-    if (this.request && this.request.requestId) {
+  setRequest(request) {
+      this.request = request.requestId
       this.getBlockies();
       this.watchAccount();
       this.progress = 100 * this.request.balance / this.request.expectedAmount;
-    }
   }
 
 
@@ -76,14 +81,7 @@ export class RequestComponent implements OnInit {
 
 
   getRequestMode() {
-    if (this.account === this.request.payee) {
-      return this.mode = 'payee';
-    }
-    if (this.account === this.request.payer) {
-      return this.mode = 'payer'
-    } else {
-      return this.mode = 'none';
-    }
+    this.mode = this.account === this.request.payee ? 'payee' : this.account === this.request.payer ? 'payer' : 'none';
   }
 
 
@@ -113,7 +111,7 @@ export class RequestComponent implements OnInit {
   }
 
 
-  async payRequest(amount, tips?) {
+  async payRequest(amount, tips ? ) {
     await this.web3Service.paymentAction(this.request.requestId, amount, tips);
   }
 
