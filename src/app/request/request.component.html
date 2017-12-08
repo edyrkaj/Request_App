@@ -4,7 +4,7 @@
       <mat-spinner class="mx-auto"></mat-spinner>
     </div>
     <ng-template #resultBlock>
-      <div class="col-12 centered" *ngIf="!request.requestId; else requestBlock">
+      <div class="col-12 centered" *ngIf="!request || !request.requestId; else requestBlock">
         <img class="mx-auto" src="assets/img/searching.png" style="max-width: 120px;">
         <h1 class="my-3">Oops</h1>
         <p>Sorry, we couldn’t find any matches for this Request ID.</p>
@@ -29,7 +29,7 @@
             <div class="bg-grey-white fc-blue-grey p-4 d-flex flex-wrap">
               <div class="d-flex" style="flex: 1">
                 <div class="px-3">
-                  <img [src]="fromIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
+                  <img *ngIf="fromIcon" [src]="fromIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
                 <div class="fs-14">
                   <div class="mb-1" style="opacity: 0.5">FROM</div>
@@ -39,7 +39,7 @@
               </div>
               <div class="d-flex" style="flex: 1">
                 <div class="px-3">
-                  <img [src]="toIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
+                  <img *ngIf="toIcon" [src]="toIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
                 <div class="fs-14">
                   <div class="mb-1" style="opacity: 0.5">TO</div>
@@ -68,42 +68,50 @@
               </div>
             </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 90px">
-              <!-- STATE CANCELED -->
-              <div *ngIf="request.state == 3 || request.state == 2; else ctaBlock" class="h-100 w-100 d-flex flex-column justify-content-center centered fs-12">
-                <mat-icon class="mx-auto my-1" color="warn">lock</mat-icon>
-                <div class="semi-bold fc-warn"><i>This request has been cancelled.<br/>You can’t interact with it anymore.</i></div>
-              </div>
-              <!-- OTHER STATES -->
-              <ng-template #ctaBlock>
-                <div class="h-100 w-100 fs-18" [ngSwitch]="mode">
-                  <!-- PAYEE -->
-                  <div *ngSwitchCase="'payee'" class="d-flex h-100">
-                    <div class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
-                      <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Cancel this Request</a>
-                    </div>
-                    <button class="ml-auto fs-18" mat-raised-button color="accent" style="flex: 1">Update the request</button>
-                  </div>
-                  <!-- PAYER -->
-                  <div *ngSwitchCase="'payer'" class="d-flex h-100">
-                    <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-white" style="flex: 1">
-                      <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Decline this request</a>
-                    </div>
-                    <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
-                      <a [routerLink]="" (click)="acceptRequest()">Accept & Pay later</a>
-                    </div>
-                    <button style="flex: 1" class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="openPayDialog()">
-                      <mat-icon>lock</mat-icon>
-                      <span>Pay now</span>
-                    </button>
-                  </div>
-                  <!-- ELSE -->
-                  <div *ngSwitchDefault class="d-flex flex-column justify-content-center centered fs-12 h-100">
-                    <mat-icon class="mx-auto my-1" color="accent">remove_red_eye</mat-icon>
-                    <div class="fc-primary semi-bold">
-                      <i>You are in view mode.<br/> You can’t interact with this Request right now.</i>
-                    </div>
-                  </div>
+              <div *ngIf="!request.state; else ctaMode" class="d-flex flex-column justify-content-center centered fs-12 w-100 h-100">
+                <mat-icon class="mx-auto mb-1" color="accent">remove_red_eye</mat-icon>
+                <div class="fc-primary semi-bold">
+                  <i>You are in view mode.<br/> You can’t interact with this Request right now.</i>
                 </div>
+              </div>
+              <ng-template #ctaMode>
+                <!-- STATE CANCELED -->
+                <div *ngIf="request.state == 2; else ctaBlock" class="h-100 w-100 d-flex flex-column justify-content-center centered fs-12">
+                  <mat-icon class="mx-auto mb-1" color="warn">lock</mat-icon>
+                  <div class="semi-bold fc-warn"><i>This request has been cancelled.<br/>You can’t interact with it anymore.</i></div>
+                </div>
+                <!-- OTHER STATES -->
+                <ng-template #ctaBlock>
+                  <div class="h-100 w-100 fs-18" [ngSwitch]="mode">
+                    <!-- PAYEE -->
+                    <div *ngSwitchCase="'payee'" class="d-flex h-100">
+                      <div class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
+                        <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Cancel this Request</a>
+                      </div>
+                      <button class="ml-auto fs-18" mat-raised-button color="accent" style="flex: 1">Update the request</button>
+                    </div>
+                    <!-- PAYER -->
+                    <div *ngSwitchCase="'payer'" class="d-flex h-100">
+                      <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-white" style="flex: 1">
+                        <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Decline this request</a>
+                      </div>
+                      <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
+                        <a [routerLink]="" (click)="acceptRequest()">Accept & Pay later</a>
+                      </div>
+                      <button style="flex: 1" class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="openPayDialog()">
+                        <mat-icon>lock</mat-icon>
+                        <span>Pay now</span>
+                      </button>
+                    </div>
+                    <!-- ELSE -->
+                    <div *ngSwitchDefault class="d-flex flex-column justify-content-center centered fs-12 h-100">
+                      <mat-icon class="mx-auto mb-1" color="accent">remove_red_eye</mat-icon>
+                      <div class="fc-primary semi-bold">
+                        <i>You are in view mode.<br/> You can’t interact with this Request right now.</i>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
               </ng-template>
             </mat-toolbar>
           </mat-card>

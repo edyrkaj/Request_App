@@ -12,6 +12,7 @@ export class HomeComponent implements OnInit {
   date: number = new Date().getTime();
   formDisabled: boolean = false;
   account: string;
+  createLoading: boolean = false;
 
   requestForm: FormGroup;
   expectedAmountFormControl = new FormControl('', [Validators.required, this.positiveNumberValidator]);
@@ -38,6 +39,9 @@ export class HomeComponent implements OnInit {
   }
 
   watchAccount() {
+    if (!this.account && this.web3Service.accounts) {
+      this.account = this.web3Service.accounts[0];
+    }
     this.web3Service.accountsObservable.subscribe(accounts => {
       this.account = accounts[0];
     });
@@ -57,6 +61,11 @@ export class HomeComponent implements OnInit {
 
 
   async createRequest() {
+    if (this.createLoading)
+      return;
+    
+    this.createLoading = true;
+
     if (!this.requestForm.valid) {
       if (this.expectedAmountFormControl.hasError('required')) {
         this.expectedAmountFormControl.markAsTouched();
@@ -66,6 +75,7 @@ export class HomeComponent implements OnInit {
         this.payerFormControl.markAsTouched();
         this.payerFormControl.setErrors({ required: true });
       }
+      this.createLoading = false;
       return this.formDisabled = true;
     }
     this.requestForm.controls['date'].setValue(this.date);
@@ -77,6 +87,7 @@ export class HomeComponent implements OnInit {
     })
 
     let createRequestAsPayeeCallback = (response) => {
+      this.createLoading = false;
       if (response.transactionHash)
         this.router.navigate(['/request/txHash', response.transactionHash], {
           queryParams: {
