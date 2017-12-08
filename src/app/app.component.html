@@ -25,7 +25,7 @@
       </small>
       </mat-form-field>
       <ng-template #connectAccount>
-        <button mat-button class="pull-right fs-16" (click)="openSnackBar()">
+        <button mat-button class="pull-right fs-16" (click)="openSnackBar('You need to connect your Metamask wallet to create a Request', 'Ok')">
           <mat-icon>account_circle</mat-icon>
           <span>Connect an account</span>
         </button>
