@@ -53,11 +53,14 @@ export class RequestComponent implements OnInit {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
     }
 
+
     // if search with txHash
     if (this.route.snapshot.params['txHash']) {
-      if (this.route.snapshot.queryParams) {
+      let txHash = this.route.snapshot.params['txHash'];
+      // get Request from queryParams
+      if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
         let queryRequest = {
-          requestId: 'waiting for block confirmation',
+          requestId: 'waiting for blockchain response',
           expectedAmount: this.route.snapshot.queryParams.expectedAmount,
           balance: 0,
           payer: this.route.snapshot.queryParams.payer,
@@ -71,17 +74,24 @@ export class RequestComponent implements OnInit {
         this.setRequest(queryRequest);
       }
 
+      // get Request from block confirmation
       this.web3Service.request.subscribe(request => {
-        if (request.requestId && request.transactionHash == this.route.snapshot.params['txHash'])
-          this.url = `${window.location.hostname}/request/requestId/${request.requestId}`;
+        if (request.requestId && request.transactionHash == txHash)
           this.setRequest(request);
       })
+
+      // get Request from txHash
+      let result = await this.web3Service.getRequestByTransactionHashAsync(txHash);
+      if (result && result.requestId) {
+        this.setRequest(result);
+      }
     }
 
   }
 
 
   setRequest(request) {
+    if (request.state && request.requestId) this.url = `${window.location.protocol}//${window.location.host}/request/requestId/${request.requestId}`;
     this.request = request;
     this.getBlockies();
     this.watchAccount();

@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
       expectedAmount: this.expectedAmountFormControl,
       payer: this.payerFormControl,
       date: this.dateFormControl,
-      reason: this.reasonFormControl,
+      Reason: this.reasonFormControl,
     });
   }
 
@@ -63,7 +63,6 @@ export class HomeComponent implements OnInit {
   async createRequest() {
     if (this.createLoading)
       return;
-
     this.createLoading = true;
 
     if (!this.requestForm.valid) {
