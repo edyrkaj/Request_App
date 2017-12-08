@@ -22,6 +22,7 @@ export class Web3Service {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
       this.web3.eth.net.getId().then(networkId => {
+        // TODO detect wrong networkId
         this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
       });
     });
@@ -66,16 +67,16 @@ export class Web3Service {
     this.searchValue.next(searchValue);
   }
 
-  public createRequestAsPayee(payer: string, amountExpected: number, data: string, callback ? ) {
+  public createRequestAsPayee(payer: string, expectedAmount: number, data: string, callback ? ) {
     console.log('RequestNetworkService createRequestAsPayee');
-    let amountExpectedInWei = this.web3.utils.toWei(amountExpected.toString(), 'ether');
+    let expectedAmountInWei = this.web3.utils.toWei(expectedAmount.toString(), 'ether');
 
-    this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, amountExpectedInWei, data).on('broadcasted', response => {
+    this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, expectedAmountInWei, data).on('broadcasted', response => {
         callback(response);
       })
       .then(response => {
         response.request.transactionHash = response.transactionHash;
-        this.request.next(response.request);
+        this.request.next(this.convertRequestAmountsFromWei(response.request));
       }, err => {
         console.log(err);
         callback(err);

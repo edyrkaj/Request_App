@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
 
     this.web3Service.metamaskReady.subscribe((metamaskReady) => {
       if (!metamaskReady && this.metamaskReady != metamaskReady) {
-        this.openSnackBar();
+        this.openSnackBar('You need to connect your Metamask wallet to create a Request', 'Ok');
       }
       this.metamaskReady = metamaskReady;
     })
@@ -44,8 +44,8 @@ export class AppComponent implements OnInit {
     });
   }
 
-  openSnackBar() {
-    this.snackBar.open('You need to connect your Metamask wallet to create a Request', 'Ok', {
+  openSnackBar(msg:string, ok:string) {
+    this.snackBar.open(msg, ok, {
       duration: 10000,
       horizontalPosition: 'right',
       verticalPosition: 'top',

@@ -36,6 +36,7 @@ export class RequestComponent implements OnInit {
       return await this.ngOnInit();
     }
 
+    // subscribe to search
     this.web3Service.searchValue.subscribe(async searchValue => {
       if (!searchValue) return;
       let result = await this.web3Service.getRequest(searchValue);
@@ -47,15 +48,18 @@ export class RequestComponent implements OnInit {
       }
     })
 
+    // if requestId search
     if (this.route.snapshot.params['requestId']) {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
     }
 
+    // if search with txHash
     if (this.route.snapshot.params['txHash']) {
       if (this.route.snapshot.queryParams) {
         let queryRequest = {
           requestId: 'waiting for block confirmation',
-          amountExpected: this.route.snapshot.queryParams.amountExpected,
+          expectedAmount: this.route.snapshot.queryParams.expectedAmount,
+          balance: 0,
           payer: this.route.snapshot.queryParams.payer,
           payee: this.route.snapshot.queryParams.payee,
           data: { data: {} }
@@ -65,7 +69,6 @@ export class RequestComponent implements OnInit {
             queryRequest.data.data[key] = this.route.snapshot.queryParams[key];
         })
         this.setRequest(queryRequest);
-
       }
 
       this.web3Service.request.subscribe(request => {
@@ -75,6 +78,7 @@ export class RequestComponent implements OnInit {
     }
 
   }
+
 
   setRequest(request) {
     this.request = request;

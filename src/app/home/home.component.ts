@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   account: string;
 
   requestForm: FormGroup;
-  amountExpectedFormControl = new FormControl('', [Validators.required, this.positiveNumberValidator]);
+  expectedAmountFormControl = new FormControl('', [Validators.required, this.positiveNumberValidator]);
   payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
   reasonFormControl = new FormControl('');
   dateFormControl = new FormControl('');
@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
     this.watchAccount();
 
     this.requestForm = this.formBuilder.group({
-      amountExpected: this.amountExpectedFormControl,
+      expectedAmount: this.expectedAmountFormControl,
       payer: this.payerFormControl,
       date: this.dateFormControl,
       reason: this.reasonFormControl,
@@ -58,9 +58,9 @@ export class HomeComponent implements OnInit {
 
   async createRequest() {
     if (!this.requestForm.valid) {
-      if (this.amountExpectedFormControl.hasError('required')) {
-        this.amountExpectedFormControl.markAsTouched();
-        this.amountExpectedFormControl.setErrors({ required: true });
+      if (this.expectedAmountFormControl.hasError('required')) {
+        this.expectedAmountFormControl.markAsTouched();
+        this.expectedAmountFormControl.setErrors({ required: true });
       }
       if (this.payerFormControl.hasError('required')) {
         this.payerFormControl.markAsTouched();
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
 
     let data = {};
     Object.keys(this.requestForm.value).forEach((key) => {
-      if (key !== 'amountExpected' && key !== 'payer')
+      if (key !== 'expectedAmount' && key !== 'payer')
         data[key] = this.requestForm.value[key];
     })
 
@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
       if (response.transactionHash)
         this.router.navigate(['/request/txHash', response.transactionHash], {
           queryParams: {
-            amountExpected: this.amountExpectedFormControl.value,
+            expectedAmount: this.expectedAmountFormControl.value,
             payer: this.payerFormControl.value,
             payee: this.account,
             reason: this.reasonFormControl.value,
@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.amountExpectedFormControl.value, JSON.stringify(data), createRequestAsPayeeCallback);
+    this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), createRequestAsPayeeCallback);
   }
 
 }

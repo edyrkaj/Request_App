@@ -18,11 +18,11 @@
           <div class="p-4">
             <div class="d-flex w-100">
               <mat-form-field class="w-100">
-                <input matInput type="number" placeholder="Request amount" [formControl]="amountExpectedFormControl">
-                <mat-error *ngIf="amountExpectedFormControl.hasError('required')">
+                <input matInput type="number" placeholder="Request amount" [formControl]="expectedAmountFormControl">
+                <mat-error *ngIf="expectedAmountFormControl.hasError('required')">
                   amount is <strong>required</strong>
                 </mat-error>
-                <mat-error *ngIf="amountExpectedFormControl.hasError('negativeNumber')">
+                <mat-error *ngIf="expectedAmountFormControl.hasError('negativeNumber')">
                   amount must be a <strong>positive number</strong>
                 </mat-error>
                 <span matSuffix><img class="currencyIcon" src="assets/cryptoIcons/ETH.png">&nbsp;ETH</span>
