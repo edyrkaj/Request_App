@@ -81,23 +81,23 @@ export class HomeComponent implements OnInit {
     this.requestForm.controls['date'].setValue(this.date);
 
     let data = {};
-    Object.keys(this.requestForm.value).forEach((key) => {
+    Object.keys(this.requestForm.value).forEach(key => {
       if (key !== 'expectedAmount' && key !== 'payer' && this.requestForm.value[key] && this.requestForm.value[key] != '')
         data[key] = this.requestForm.value[key];
     })
 
-    let createRequestAsPayeeCallback = (response) => {
+    let createRequestAsPayeeCallback = response => {
       this.createLoading = false;
-      if (response.transactionHash)
-        this.router.navigate(['/request/txHash', response.transactionHash], {
-          queryParams: {
-            expectedAmount: this.expectedAmountFormControl.value,
-            payer: this.payerFormControl.value,
-            payee: this.account,
-            reason: this.reasonFormControl.value,
-            date: this.dateFormControl.value
-          }
-        });
+      if (response.transactionHash) {
+        let queryParams = {
+          expectedAmount: this.expectedAmountFormControl.value,
+          payer: this.payerFormControl.value,
+          payee: this.account,
+        };
+        Object.keys(data).forEach(key => queryParams[key] = data[key])
+
+        this.router.navigate(['/request/txHash', response.transactionHash], { queryParams });
+      }
     }
 
     this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), createRequestAsPayeeCallback);

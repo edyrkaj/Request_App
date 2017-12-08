@@ -28,6 +28,7 @@ export class Web3Service {
     });
   }
 
+
   private checkAndInstantiateWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
@@ -42,6 +43,7 @@ export class Web3Service {
     }
     setInterval(() => this.refreshAccounts(), 500);
   }
+
 
   private refreshAccounts() {
     console.log('Refreshing accounts');
@@ -63,9 +65,11 @@ export class Web3Service {
     });
   }
 
+
   public setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
   }
+
 
   public createRequestAsPayee(payer: string, expectedAmount: number, data: string, callback ? ) {
     console.log('RequestNetworkService createRequestAsPayee');
@@ -81,19 +85,9 @@ export class Web3Service {
         console.log(err);
         callback(err);
       });
-
   }
 
-  public async getRequestAsync(requestId: string) {
-    try {
-      console.log('RequestNetworkService getRequest');
-      let result = await this.requestNetwork.requestCoreService.getRequest(requestId);
-      return this.convertRequestAmountsFromWei(result)
-    } catch (err) {
-      console.log('Error: ', err.message);
-      return err;
-    }
-  }
+
 
   public async accept(requestId: string) {
     try {
@@ -105,6 +99,7 @@ export class Web3Service {
       return err;
     }
   }
+
 
   public async paymentAction(requestId: string, amount: number, additionals ? : number) {
     try {
@@ -118,6 +113,7 @@ export class Web3Service {
     }
   }
 
+
   public async cancel(requestId: string) {
     try {
       console.log('RequestNetworkService cancel');
@@ -128,6 +124,31 @@ export class Web3Service {
       return err;
     }
   }
+
+
+  public async getRequestAsync(requestId: string) {
+    try {
+      console.log('RequestNetworkService getRequest');
+      let result = await this.requestNetwork.requestCoreService.getRequestAsync(requestId);
+      return this.convertRequestAmountsFromWei(result)
+    } catch (err) {
+      console.log('Error: ', err.message);
+      return err;
+    }
+  }
+
+
+  public async getRequestByTransactionHashAsync(requestId: string) {
+    try {
+      console.log('RequestNetworkService getRequest');
+      let result = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
+      return this.convertRequestAmountsFromWei(result)
+    } catch (err) {
+      console.log('Error: ', err.message);
+      return err;
+    }
+  }
+
 
   private convertRequestAmountsFromWei(request: any) {
     const toBN = this.web3.utils.toBN;

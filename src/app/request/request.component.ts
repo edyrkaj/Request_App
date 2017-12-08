@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PayDialogComponent } from './dialog/pay-dialog.component';
@@ -23,8 +23,8 @@ export class RequestComponent implements OnInit {
   files = [];
 
 
-  constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
-    this.url = `localhost:4200${this.router.url}`;
+  constructor(private web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
+    this.url = window.location.href;
   }
 
 
@@ -73,7 +73,7 @@ export class RequestComponent implements OnInit {
 
       this.web3Service.request.subscribe(request => {
         if (request.requestId && request.transactionHash == this.route.snapshot.params['txHash'])
-          this.url = `localhost:4200/request/requestId/${request.requestId}`;
+          this.url = `${window.location.hostname}/request/requestId/${request.requestId}`;
           this.setRequest(request);
       })
     }
