@@ -39,7 +39,7 @@ export class RequestComponent implements OnInit {
     // subscribe to search
     this.web3Service.searchValue.subscribe(async searchValue => {
       if (!searchValue) return;
-      let result = await this.web3Service.getRequest(searchValue);
+      let result = await this.web3Service.getRequestAsync(searchValue);
 
       if (!result || !result.requestId || result.creator === '0x0000000000000000000000000000000000000000') {
         this.request = { 'requestId': null };
@@ -73,6 +73,7 @@ export class RequestComponent implements OnInit {
 
       this.web3Service.request.subscribe(request => {
         if (request.requestId && request.transactionHash == this.route.snapshot.params['txHash'])
+          this.url = `localhost:4200/request/requestId/${request.requestId}`;
           this.setRequest(request);
       })
     }

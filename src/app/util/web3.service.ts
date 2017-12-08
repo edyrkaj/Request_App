@@ -84,10 +84,10 @@ export class Web3Service {
 
   }
 
-  public async getRequest(requestId: string) {
+  public async getRequestAsync(requestId: string) {
     try {
       console.log('RequestNetworkService getRequest');
-      let result = await this.requestNetwork.requestEthereumService.getRequest(requestId);
+      let result = await this.requestNetwork.requestCoreService.getRequest(requestId);
       return this.convertRequestAmountsFromWei(result)
     } catch (err) {
       console.log('Error: ', err.message);

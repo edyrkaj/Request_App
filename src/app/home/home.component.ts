@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
   async createRequest() {
     if (this.createLoading)
       return;
-    
+
     this.createLoading = true;
 
     if (!this.requestForm.valid) {
@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit {
 
     let data = {};
     Object.keys(this.requestForm.value).forEach((key) => {
-      if (key !== 'expectedAmount' && key !== 'payer')
+      if (key !== 'expectedAmount' && key !== 'payer' && this.requestForm.value[key] && this.requestForm.value[key] != '')
         data[key] = this.requestForm.value[key];
     })
 

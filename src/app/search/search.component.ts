@@ -35,7 +35,7 @@ export class SearchComponent implements OnInit {
 
   async listRequest() {
     // let result = await this.web3Service.getRequest(this.searchValue);
-    let result = await this.web3Service.getRequest('0x7dfe757ecd65cbd7922a9c0161e935dd7fdbcc0e999689c7d31633896b1fc60b');
+    let result = await this.web3Service.getRequestAsync('0x7dfe757ecd65cbd7922a9c0161e935dd7fdbcc0e999689c7d31633896b1fc60b');
     // this.dataSource = new MatTableDataSource([result]);
     console.log(this.dataSource)
   }

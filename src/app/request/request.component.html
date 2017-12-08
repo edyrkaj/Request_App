@@ -23,7 +23,10 @@
               <img class="px-3" style="max-height: 75px;" src="assets/img/request-logo.png">
               <div class="ml-auto text-right px-3">
                 <h4 class="fc-white semi-bold fs-18">{{request.data.data.date | date: 'fullDate'}}</h4>
-                <div class="fc-white fs-14"><i>Request Id: {{request.requestId}}</i></div>
+                <div class="fc-white fs-14">
+                  <span *ngIf="request.state; else waitingTemplate"><i>Request Id: {{request.requestId}}</i></span>
+                  <ng-template #waitingTemplate><span><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;{{request.requestId}}</span></ng-template>
+                </div>
               </div>
             </div>
             <div class="bg-grey-white fc-blue-grey p-4 d-flex flex-wrap">
