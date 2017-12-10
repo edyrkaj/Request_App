@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 import { Web3Service } from '../util/web3.service';
 
 @Component({
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit {
   // currency = new FormControl('ETH');
   // currencies = [{ name: 'ether', iso: 'ETH' }];
 
-  constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {
+  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {
     setInterval(() => { this.date = new Date().getTime() }, 1000);
     this.web3Service.setSearchValue(null);
   }
@@ -60,10 +61,12 @@ export class HomeComponent implements OnInit {
   // }
 
 
-  async createRequest() {
-    if (this.createLoading)
-      return;
+  createRequest() {
+    if (this.createLoading) return;
     this.createLoading = true;
+
+    if (!this.account) return this.snackBar.open('You need to connect your Metamask wallet to create a Request.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
+    if (this.account == this.payerFormControl.value) return this.snackBar.open('Payer\'s address must be different from yours.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
 
     if (!this.requestForm.valid) {
       if (this.expectedAmountFormControl.hasError('required')) {
@@ -85,7 +88,7 @@ export class HomeComponent implements OnInit {
         data[key] = this.requestForm.value[key];
     })
 
-    let createRequestAsPayeeCallback = response => {
+    this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), response => {
       this.createLoading = false;
       if (response.transactionHash) {
         let queryParams = {
@@ -96,10 +99,10 @@ export class HomeComponent implements OnInit {
         Object.keys(data).forEach(key => queryParams[key] = data[key])
 
         this.router.navigate(['/request/txHash', response.transactionHash], { queryParams });
+      } else if (response.message) {
+        this.snackBar.open(response.message, 'Ok', { duration: 10000 });
       }
-    }
-
-    this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), createRequestAsPayeeCallback);
+    });
   }
 
 }

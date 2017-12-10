@@ -36,14 +36,28 @@ a {
 mat-toolbar.cta-toolbar {
    :first-child {
     border-bottom-left-radius: 7px;
+    flex: 1;
   }
    :last-child {
     border-bottom-right-radius: 7px;
+    flex: 1;
   }
   button {
     border-radius: 0;
     box-shadow: none !important;
     height: 100%;
+  }
+}
+
+.actionsMenu {
+  box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+  max-width: none !important;
+  width: 25.25vw;
+  min-width: 185px !important;
+  top: 64px;
+  .mat-menu-item {
+    color: $blue-grey;
+    padding: 0 3rem;
   }
 }
 

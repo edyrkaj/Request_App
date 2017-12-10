@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
 import { PayDialogComponent } from './dialog/pay-dialog.component';
 import blockies from 'blockies';
 
@@ -21,9 +22,10 @@ export class RequestComponent implements OnInit {
   url: string;
   copyUrlTxt: string = 'Copy url';
   files = [];
+  txHash: string;
 
 
-  constructor(private web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
     this.url = window.location.href;
   }
 
@@ -56,7 +58,7 @@ export class RequestComponent implements OnInit {
 
     // if url with /txHash
     if (this.route.snapshot.params['txHash']) {
-      let txHash = this.route.snapshot.params['txHash'];
+      this.txHash = this.route.snapshot.params['txHash'];
       // if queryParams get Request from queryParams
       if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
         let queryRequest = {
@@ -76,12 +78,12 @@ export class RequestComponent implements OnInit {
 
       // get Request from block confirmation
       this.web3Service.request.subscribe(request => {
-        if (request.requestId && request.transactionHash === txHash)
+        if (request.requestId && request.transactionHash === this.txHash)
           this.setRequest(request);
       })
 
       // get Request from txHash
-      let result = await this.web3Service.getRequestByTransactionHashAsync(txHash);
+      let result = await this.web3Service.getRequestByTransactionHashAsync(this.txHash);
       if (result && result.requestId) {
         this.setRequest(result);
       } else {
@@ -143,8 +145,16 @@ export class RequestComponent implements OnInit {
   }
 
 
-  async cancelRequest() {
-    await this.web3Service.cancel(this.request.requestId);
+  cancelRequest() {
+    this.web3Service.cancel(this.request.requestId, response => {
+      if(response.transactionHash) {
+        this.txHash = response.transactionHash;
+        this.snackBar.open('Transaction in progress', 'Ok', { duration: 3000 });
+      } else if (response.message) {
+        this.snackBar.open(response.message, 'Ok', { duration: 5000 });
+      }
+    });
+
   }
 
 
