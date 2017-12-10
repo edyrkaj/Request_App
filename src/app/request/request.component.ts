@@ -36,7 +36,7 @@ export class RequestComponent implements OnInit {
       return await this.ngOnInit();
     }
 
-    // subscribe to search
+    // subscribe to searchbar queries
     this.web3Service.searchValue.subscribe(async searchValue => {
       if (!searchValue) return;
       let result = await this.web3Service.getRequestAsync(searchValue);
@@ -48,16 +48,16 @@ export class RequestComponent implements OnInit {
       }
     })
 
-    // if requestId search
+    // if url with /requestId
     if (this.route.snapshot.params['requestId']) {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
     }
 
 
-    // if search with txHash
+    // if url with /txHash
     if (this.route.snapshot.params['txHash']) {
       let txHash = this.route.snapshot.params['txHash'];
-      // get Request from queryParams
+      // if queryParams get Request from queryParams
       if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
         let queryRequest = {
           requestId: 'waiting for blockchain response',
@@ -76,7 +76,7 @@ export class RequestComponent implements OnInit {
 
       // get Request from block confirmation
       this.web3Service.request.subscribe(request => {
-        if (request.requestId && request.transactionHash == txHash)
+        if (request.requestId && request.transactionHash === txHash)
           this.setRequest(request);
       })
 
@@ -84,6 +84,17 @@ export class RequestComponent implements OnInit {
       let result = await this.web3Service.getRequestByTransactionHashAsync(txHash);
       if (result && result.requestId) {
         this.setRequest(result);
+      } else {
+        // this.watchTxHash();
+        // switch (result.message) {
+        //   case 'transaction not found':
+        //   this.message = 'transaction not found'
+        //     break;
+        //   default:
+        // this.watchTxHash();
+
+        //     break;
+        // }
       }
     }
 

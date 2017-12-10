@@ -57,7 +57,7 @@
           </div>
           <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'60px'">
             <div></div>
-            <button class="ml-auto w-50 fs-18" mat-raised-button color="accent" type="submit" [disabled]="formDisabled && !requestForm.valid">Create a Request&nbsp;
+            <button class="ml-auto w-50 fs-18" mat-raised-button color="accent" type="submit" [disabled]="!this.account || formDisabled && !requestForm.valid">Create a Request&nbsp;
               <i *ngIf="createLoading" class="fa fa-circle-o-notch fa-spin"></i>
             </button>
           </mat-toolbar>

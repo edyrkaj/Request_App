@@ -50,18 +50,17 @@ export class Web3Service {
     this.web3.eth.getAccounts((err, accs) => {
       if (err != null || accs.length === 0) {
         console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
-        this.ready = false;
-        return this.metamaskReady.next(false);
+        this.metamaskReady.next(false);
       }
 
       if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
         console.log('Observed new accounts');
         this.accountsObservable.next(accs);
         this.accounts = accs;
+        this.ready = true;
+        this.metamaskReady.next(true);
       }
 
-      this.ready = true;
-      this.metamaskReady.next(true);
     });
   }
 

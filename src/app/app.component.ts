@@ -38,9 +38,9 @@ export class AppComponent implements OnInit {
     this.web3Service.accountsObservable.subscribe((accounts) => {
       this.accounts = accounts;
       this.account = accounts[0];
-      this.icon = blockies({
+      this.icon = this.account ? blockies({
         seed: this.account.toLowerCase(),
-      });
+      }) : null;
     });
   }
 
@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
       duration: 10000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
-      panelClass: 'metamask-snackbar',
+      panelClass: 'warning-snackbar',
     });
   }
 
