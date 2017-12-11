@@ -52,6 +52,12 @@ export class RequestComponent implements OnInit {
       }
     })
 
+    // subscribe to transaction in progress
+    this.web3Service.request.subscribe(request => {
+      if (this.txHash && request.requestId && request.transactionHash === this.txHash)
+        this.setRequest(request);
+    })
+
     // if url with /requestId
     if (this.route.snapshot.params['requestId']) {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
@@ -76,12 +82,6 @@ export class RequestComponent implements OnInit {
         })
         this.setRequest(queryRequest);
       }
-
-      // get Request from block confirmation
-      this.web3Service.request.subscribe(request => {
-        if (request.requestId && request.transactionHash === this.txHash)
-          this.setRequest(request);
-      })
 
       // get Request from txHash
       let result = await this.web3Service.getRequestByTransactionHashAsync(this.txHash);
@@ -135,6 +135,7 @@ export class RequestComponent implements OnInit {
     setTimeout(() => { this.copyUrlTxt = 'Copy url' }, 500);
   }
 
+
   callbackTx(response) {
     if (response.transactionHash) {
       this.txHash = response.transactionHash;
@@ -147,7 +148,7 @@ export class RequestComponent implements OnInit {
 
 
   cancelRequest() {
-    this.web3Service.cancel(this.request.requestId, response => this.callbackTx(response))
+    this.web3Service.cancel(this.request.requestId, response => this.callbackTx(response));
   }
 
 
@@ -163,21 +164,17 @@ export class RequestComponent implements OnInit {
     updateDialogRef
       .afterClosed()
       .subscribe(subtractValue => {
-        this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response))
+        this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
       });
   }
 
 
-  async acceptRequest() {
-    await this.web3Service.accept(this.request.requestId);
+  acceptRequest() {
+    this.web3Service.accept(this.request.requestId, response => this.callbackTx(response));
   }
 
 
-  async payRequest(amount, tips ? ) {
-    await this.web3Service.paymentAction(this.request.requestId, amount, tips);
-  }
-
-  openPayDialog() {
+  payRequest() {
     let payDialogRef = this.dialog.open(PayDialogComponent, {
       hasBackdrop: true,
       width: '300px',
@@ -188,8 +185,8 @@ export class RequestComponent implements OnInit {
 
     payDialogRef
       .afterClosed()
-      .subscribe(result => {
-        console.log('result');
+      .subscribe(amountValue => {
+        this.web3Service.paymentAction(this.request.requestId, amountValue, response => this.callbackTx(response));
       });
   }
 

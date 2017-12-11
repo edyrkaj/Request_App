@@ -91,6 +91,8 @@ export class HomeComponent implements OnInit {
     this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), response => {
       this.createLoading = false;
       if (response.transactionHash) {
+        this.snackBar.open('Transaction in progress', 'Ok', { duration: 3000 });
+        
         let queryParams = {
           expectedAmount: this.expectedAmountFormControl.value,
           payer: this.payerFormControl.value,

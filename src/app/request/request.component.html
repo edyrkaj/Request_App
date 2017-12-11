@@ -89,10 +89,8 @@
                   <div class="h-100 w-100 fs-18" [ngSwitch]="mode">
                     <!-- PAYEE -->
                     <div *ngSwitchCase="'payee'" class="d-flex h-100">
-                      <!--                       <div class="d-flex align-items-center justify-content-center bg-grey-white" style="flex: 1">
-                        <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Cancel this Request</a>
-                      </div> -->
-                      <button type="button" class="fs-18 bg-grey-white fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payeeActionsMenu">Actions&nbsp;<mat-icon>expand_more</mat-icon>
+                      <button type="button" class="fs-18 bg-grey-white fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payeeActionsMenu">Actions&nbsp;
+                        <mat-icon>expand_more</mat-icon>
                       </button>
                       <mat-menu #payeeActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
                         <button (click)="cancelRequest()" [disabled]="request.balance > 0" mat-menu-item>
@@ -102,17 +100,25 @@
                           <span>Refund</span>
                         </button>
                       </mat-menu>
-                      <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="updateRequest()">Update the request</button>
+                      <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="updateRequest()">Update the Request</button>
                     </div>
                     <!-- PAYER -->
                     <div *ngSwitchCase="'payer'" class="d-flex h-100">
-                      <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-white">
-                        <a [routerLink]="" (click)="cancelRequest()" class="fc-blue-grey">Decline this request</a>
-                      </div>
-                      <div *ngIf="request.state != 1" class="d-flex align-items-center justify-content-center bg-grey-white">
-                        <a [routerLink]="" (click)="acceptRequest()">Accept & Pay later</a>
-                      </div>
-                      <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="openPayDialog()">
+                      <button type="button" class="fs-18 bg-grey-white fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payerActionsMenu">Actions&nbsp;
+                        <mat-icon>expand_more</mat-icon>
+                      </button>
+                      <mat-menu #payerActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
+                        <button (click)="cancelRequest()" *ngIf="request.state == 0" mat-menu-item>
+                          Decline this Request
+                        </button>
+                        <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
+                          <span>Accept and pay later</span>
+                        </button>
+                        <button mat-menu-item>
+                          <span>Update the Request</span>
+                        </button>
+                      </mat-menu>
+                      <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="payRequest()">
                         <mat-icon>lock</mat-icon>
                         <span>Pay now</span>
                       </button>

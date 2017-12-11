@@ -74,78 +74,85 @@ export class Web3Service {
     console.log('RequestNetworkService createRequestAsPayee');
     let expectedAmountInWei = this.web3.utils.toWei(expectedAmount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, expectedAmountInWei, data).on('broadcasted', response => {
-        callback(response);
-      })
-      .then(response => {
-        response.request.transactionHash = response.transactionHash;
-        this.request.next(this.convertRequestAmountsFromWei(response.request));
-      }, err => {
-        console.log(err);
-        callback(err);
-      });
+      callback(response);
+    })
+    .then(response => {
+      response.request.transactionHash = response.transactionHash;
+      this.request.next(this.convertRequestAmountsFromWei(response.request));
+    }, err => {
+      console.log(err);
+      callback(err);
+    });
   }
 
 
   public cancel(requestId: string, callback ? ) {
     console.log('RequestNetworkService cancel');
     this.requestNetwork.requestEthereumService.cancel(requestId).on('broadcasted', response => {
-        callback(response);
-      })
-      .then(response => {
-        response.request.transactionHash = response.transactionHash;
-        this.request.next(this.convertRequestAmountsFromWei(response.request));
-      }, err => {
-        console.log(err);
-        callback(err);
-      });
+      callback(response);
+    })
+    .then(response => {
+      response.request.transactionHash = response.transactionHash;
+      this.request.next(this.convertRequestAmountsFromWei(response.request));
+    }, err => {
+      console.log(err);
+      callback(err);
+    });
   }
+
 
   public subtractAction(requestId: string, amount: number, callback ? ) {
     console.log('RequestNetworkService subtractAction');
     let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.subtractAction(requestId, amountInWei).on('broadcasted', response => {
-        callback(response);
-      })
-      .then(response => {
-        response.request.transactionHash = response.transactionHash;
-        this.request.next(this.convertRequestAmountsFromWei(response.request));
-      }, err => {
-        console.log(err);
-        callback(err);
-      });
+      callback(response);
+    })
+    .then(response => {
+      response.request.transactionHash = response.transactionHash;
+      this.request.next(this.convertRequestAmountsFromWei(response.request));
+    }, err => {
+      console.log(err);
+      callback(err);
+    });
 
   }
 
 
-  public async accept(requestId: string) {
-    try {
-      console.log('RequestNetworkService accept');
-      let resultAccept = await this.requestNetwork.requestEthereumService.accept(requestId);
-      return resultAccept;
-    } catch (err) {
-      console.log('Error: ', err.message);
-      return err;
-    }
+  public accept(requestId: string, callback ? ) {
+    console.log('RequestNetworkService accept');
+    this.requestNetwork.requestEthereumService.accept(requestId).on('broadcasted', response => {
+      callback(response);
+    })
+    .then(response => {
+      response.request.transactionHash = response.transactionHash;
+      this.request.next(this.convertRequestAmountsFromWei(response.request));
+    }, err => {
+      console.log(err);
+      callback(err);
+    });
   }
 
 
-  public async paymentAction(requestId: string, amount: number, additionals ? : number) {
-    try {
-      console.log('RequestNetworkService pay');
-      let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
-      let resultPay = await this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0);
-      return resultPay;
-    } catch (err) {
-      console.log('Error: ', err.message);
-      return err;
-    }
+  public paymentAction(requestId: string, amount: number, callback ? ) {
+    console.log('RequestNetworkService pay');
+    let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
+    this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0).on('broadcasted', response => {
+      callback(response);
+    })
+    .then(response => {
+      response.request.transactionHash = response.transactionHash;
+      this.request.next(this.convertRequestAmountsFromWei(response.request));
+    }, err => {
+      console.log(err);
+      callback(err);
+    });
   }
 
 
   public async getRequestAsync(requestId: string) {
     try {
       console.log('RequestNetworkService getRequest');
-      let result = await this.requestNetwork.requestCoreService.getRequestAsync(requestId);
+      let result = await this.requestNetwork.requestCoreService.getRequest(requestId);
       return this.convertRequestAmountsFromWei(result)
     } catch (err) {
       console.log('Error: ', err.message);
