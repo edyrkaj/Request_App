@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
   accounts: string[];
   account: string;
   searchValue: string;
-  metamaskReady: boolean = true;
+  metamaskReady: boolean;
   icon;
 
   constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {}
@@ -22,11 +22,13 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.watchAccount();
 
-    this.web3Service.searchValue.subscribe(async(searchValue) => {
+    this.web3Service.searchValue.subscribe(searchValue => {
       this.searchValue = searchValue;
     })
 
-    this.web3Service.metamaskReady.subscribe((metamaskReady) => {
+    if (!this.web3Service.requestNetwork) return this.openSnackBar('Request Network smart contracts are not deployed on this network.', 'Ok');
+
+    this.web3Service.metamaskReady.subscribe(metamaskReady => {
       if (!metamaskReady && this.metamaskReady != metamaskReady) {
         this.openSnackBar('You need to connect your Metamask wallet to create a Request.', 'Ok');
       }
@@ -35,7 +37,7 @@ export class AppComponent implements OnInit {
   }
 
   watchAccount() {
-    this.web3Service.accountsObservable.subscribe((accounts) => {
+    this.web3Service.accountsObservable.subscribe(accounts => {
       this.accounts = accounts;
       this.account = accounts[0];
       this.icon = this.account ? blockies({
@@ -59,10 +61,6 @@ export class AppComponent implements OnInit {
       this.router.navigate(['/search', this.searchValue]);
     else if (this.searchValue)
       this.router.navigate(['/request/requestId', this.searchValue]);
-  }
-
-  goHome() {
-    this.router.navigate(['/']);
   }
 
 }

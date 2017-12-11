@@ -21,10 +21,13 @@ export class Web3Service {
     window.addEventListener('load', event => {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
-      this.web3.eth.net.getId().then(networkId => {
-        // TODO detect wrong networkId
-        this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
-      });
+      try {
+        this.web3.eth.net.getId().
+        then(networkId => {
+          this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
+        }, err => {
+          console.log(err);
+        });
     });
   }
 
@@ -57,7 +60,6 @@ export class Web3Service {
         console.log('Observed new accounts');
         this.accountsObservable.next(accs);
         this.accounts = accs;
-        this.ready = true;
         this.metamaskReady.next(true);
       }
     });
@@ -73,30 +75,30 @@ export class Web3Service {
     console.log('RequestNetworkService createRequestAsPayee');
     let expectedAmountInWei = this.web3.utils.toWei(expectedAmount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, expectedAmountInWei, data).on('broadcasted', response => {
-      callback(response);
-    })
-    .then(response => {
-      response.request.transactionHash = response.transactionHash;
-      this.request.next(this.convertRequestAmountsFromWei(response.request));
-    }, err => {
-      console.log(err);
-      callback(err);
-    });
+        callback(response);
+      })
+      .then(response => {
+        response.request.transactionHash = response.transactionHash;
+        this.request.next(this.convertRequestAmountsFromWei(response.request));
+      }, err => {
+        console.log(err);
+        callback(err);
+      });
   }
 
 
   public cancel(requestId: string, callback ? ) {
     console.log('RequestNetworkService cancel');
     this.requestNetwork.requestEthereumService.cancel(requestId).on('broadcasted', response => {
-      callback(response);
-    })
-    .then(response => {
-      response.request.transactionHash = response.transactionHash;
-      this.request.next(this.convertRequestAmountsFromWei(response.request));
-    }, err => {
-      console.log(err);
-      callback(err);
-    });
+        callback(response);
+      })
+      .then(response => {
+        response.request.transactionHash = response.transactionHash;
+        this.request.next(this.convertRequestAmountsFromWei(response.request));
+      }, err => {
+        console.log(err);
+        callback(err);
+      });
   }
 
 
@@ -104,15 +106,15 @@ export class Web3Service {
     console.log('RequestNetworkService subtractAction');
     let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.subtractAction(requestId, amountInWei).on('broadcasted', response => {
-      callback(response);
-    })
-    .then(response => {
-      response.request.transactionHash = response.transactionHash;
-      this.request.next(this.convertRequestAmountsFromWei(response.request));
-    }, err => {
-      console.log(err);
-      callback(err);
-    });
+        callback(response);
+      })
+      .then(response => {
+        response.request.transactionHash = response.transactionHash;
+        this.request.next(this.convertRequestAmountsFromWei(response.request));
+      }, err => {
+        console.log(err);
+        callback(err);
+      });
 
   }
 
@@ -120,15 +122,15 @@ export class Web3Service {
   public accept(requestId: string, callback ? ) {
     console.log('RequestNetworkService accept');
     this.requestNetwork.requestEthereumService.accept(requestId).on('broadcasted', response => {
-      callback(response);
-    })
-    .then(response => {
-      response.request.transactionHash = response.transactionHash;
-      this.request.next(this.convertRequestAmountsFromWei(response.request));
-    }, err => {
-      console.log(err);
-      callback(err);
-    });
+        callback(response);
+      })
+      .then(response => {
+        response.request.transactionHash = response.transactionHash;
+        this.request.next(this.convertRequestAmountsFromWei(response.request));
+      }, err => {
+        console.log(err);
+        callback(err);
+      });
   }
 
 
@@ -136,15 +138,15 @@ export class Web3Service {
     console.log('RequestNetworkService pay');
     let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0).on('broadcasted', response => {
-      callback(response);
-    })
-    .then(response => {
-      response.request.transactionHash = response.transactionHash;
-      this.request.next(this.convertRequestAmountsFromWei(response.request));
-    }, err => {
-      console.log(err);
-      callback(err);
-    });
+        callback(response);
+      })
+      .then(response => {
+        response.request.transactionHash = response.transactionHash;
+        this.request.next(this.convertRequestAmountsFromWei(response.request));
+      }, err => {
+        console.log(err);
+        callback(err);
+      });
   }
 
 

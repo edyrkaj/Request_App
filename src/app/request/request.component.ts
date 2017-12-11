@@ -34,7 +34,7 @@ export class RequestComponent implements OnInit {
 
   async ngOnInit() {
     // wait for web3 to be instantiated
-    if (!this.web3Service || !this.web3Service.ready) {
+    if (!this.web3Service || !this.web3Service.accounts) {
       const delay = new Promise(resolve => setTimeout(resolve, 1000));
       await delay;
       return await this.ngOnInit();
@@ -53,9 +53,10 @@ export class RequestComponent implements OnInit {
     })
 
     // subscribe to transaction in progress
-    this.web3Service.request.subscribe(request => {
-     
+    this.web3Service.request.subscribe(async request => {
+
       if (this.txHash && request.requestId && (request.transactionHash == this.txHash || this.request && request.requestId == this.request.requestId))
+        // window.location.reload();
         this.setRequest(request);
     })
 

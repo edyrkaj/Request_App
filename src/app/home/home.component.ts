@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit {
 
   createRequest() {
     if (this.createLoading) return;
+    if (!this.web3Service.requestNetwork) return this.openSnackBar('Request Network smart contracts are not deployed on this network.', 'Ok');
     if (!this.account) return this.snackBar.open('You need to connect your Metamask wallet to create a Request.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
     if (this.account == this.payerFormControl.value) return this.snackBar.open('Payer\'s address must be different from yours.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
 
@@ -102,7 +103,7 @@ export class HomeComponent implements OnInit {
 
         this.router.navigate(['/request/txHash', response.transactionHash], { queryParams });
       } else if (response.message) {
-        this.snackBar.open(response.message, 'Ok', { duration: 10000 });
+        this.snackBar.open(response.message, 'Ok', { duration: 5000 });
       }
     });
   }
