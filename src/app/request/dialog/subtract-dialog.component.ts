@@ -3,15 +3,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
-  templateUrl: './update-dialog.component.html'
+  templateUrl: './subtract-dialog.component.html'
 })
-export class UpdateDialogComponent {
+export class SubtractDialogComponent {
   request;
-  updateForm: FormGroup;
-  subtractFormControl;
+  subtractForm: FormGroup;
+  subtractAmountFormControl;
   superiorToExpectedAmountValidator;
 
-  constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef < UpdateDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
+  constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef < SubtractDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
     this.request = data.request;
 
     this.superiorToExpectedAmountValidator = (control: FormControl) => {
@@ -21,10 +21,10 @@ export class UpdateDialogComponent {
 
 
   ngOnInit() {
-    this.subtractFormControl = new FormControl('', [Validators.required, , this.positiveNumberValidator, this.superiorToExpectedAmountValidator])
+    this.subtractAmountFormControl = new FormControl('', [Validators.required, , this.positiveNumberValidator, this.superiorToExpectedAmountValidator])
 
-    this.updateForm = this.formBuilder.group({
-      subtractFormControl: this.subtractFormControl,
+    this.subtractForm = this.formBuilder.group({
+      subtractAmountFormControl: this.subtractAmountFormControl,
     })
   }
 
@@ -35,7 +35,7 @@ export class UpdateDialogComponent {
 
 
   submit() {
-    this.dialogRef.close(this.subtractFormControl.value);
+    this.dialogRef.close(this.subtractAmountFormControl.value);
   }
 
 

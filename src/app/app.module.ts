@@ -9,7 +9,8 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { UtilModule } from './util/util.module';
 import { PayDialogComponent } from './request/dialog/pay-dialog.component';
-import { UpdateDialogComponent } from './request/dialog/update-dialog.component';
+import { SubtractDialogComponent } from './request/dialog/subtract-dialog.component';
+import { AdditionalDialogComponent } from './request/dialog/additional-dialog.component';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -24,7 +25,8 @@ import { SearchComponent } from './search/search.component';
     RequestComponent,
     SearchComponent,
     PayDialogComponent,
-    UpdateDialogComponent
+    SubtractDialogComponent,
+    AdditionalDialogComponent
   ],
   imports: [
     // angular
@@ -46,7 +48,8 @@ import { SearchComponent } from './search/search.component';
   entryComponents: [
     // dialog
     PayDialogComponent,
-    UpdateDialogComponent
+    SubtractDialogComponent,
+    AdditionalDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -114,7 +114,7 @@
                         <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
                           <span>Accept and pay later</span>
                         </button>
-                        <button mat-menu-item>
+                        <button (click)="additionalRequest()" mat-menu-item>
                           <span>Update the Request</span>
                         </button>
                       </mat-menu>

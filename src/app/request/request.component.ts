@@ -4,7 +4,9 @@ import { Web3Service } from '../util/web3.service';
 import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { PayDialogComponent } from './dialog/pay-dialog.component';
-import { UpdateDialogComponent } from './dialog/update-dialog.component';
+import { SubtractDialogComponent } from './dialog/subtract-dialog.component';
+import { AdditionalDialogComponent } from './dialog/additional-dialog.component';
+
 
 import blockies from 'blockies';
 
@@ -87,15 +89,16 @@ export class RequestComponent implements OnInit {
       let result = await this.web3Service.getRequestByTransactionHashAsync(this.txHash);
       if (result && result.requestId) {
         this.setRequest(result);
-      } else if (result.message) {
-        this.snackBar.open(result.message, 'Ok', { duration: 5000 });
       }
+      // else if (result.message) {
+      //   this.snackBar.open(result.message, 'Ok', { duration: 5000 });
+      // }
     }
   }
 
 
   setRequest(request) {
-    if (request.state && request.requestId) this.url = `${window.location.protocol}//${window.location.host}/request/requestId/${request.requestId}`;
+    if (request.state && request.requestId) this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}`;
     this.request = request;
     this.getBlockies();
     this.watchAccount();
@@ -142,7 +145,6 @@ export class RequestComponent implements OnInit {
   };
 
 
-
   cancelRequest() {
     this.web3Service.cancel(this.request.requestId, response => this.callbackTx(response));
   }
@@ -153,8 +155,8 @@ export class RequestComponent implements OnInit {
   }
 
 
-  updateRequest() {
-    let updateDialogRef = this.dialog.open(UpdateDialogComponent, {
+  subtractRequest() {
+    let subtractDialogRef = this.dialog.open(SubtractDialogComponent, {
       hasBackdrop: true,
       width: '300px',
       data: {
@@ -162,10 +164,29 @@ export class RequestComponent implements OnInit {
       }
     });
 
-    updateDialogRef
+    subtractDialogRef
       .afterClosed()
       .subscribe(subtractValue => {
-        this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
+        if (subtractValue)
+          this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
+      });
+  }
+
+
+  additionalRequest() {
+    let additionalDialogRef = this.dialog.open(AdditionalDialogComponent, {
+      hasBackdrop: true,
+      width: '300px',
+      data: {
+        request: this.request
+      }
+    });
+
+    additionalDialogRef
+      .afterClosed()
+      .subscribe(subtractValue => {
+        if (subtractValue)
+          this.web3Service.additionalAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
       });
   }
 
@@ -182,7 +203,8 @@ export class RequestComponent implements OnInit {
     payDialogRef
       .afterClosed()
       .subscribe(amountValue => {
-        this.web3Service.paymentAction(this.request.requestId, amountValue, response => this.callbackTx(response));
+        if (amountValue)
+          this.web3Service.paymentAction(this.request.requestId, amountValue, response => this.callbackTx(response));
       });
   }
 

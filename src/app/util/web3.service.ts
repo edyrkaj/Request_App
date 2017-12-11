@@ -103,6 +103,21 @@ export class Web3Service {
   }
 
 
+  public accept(requestId: string, callback ? ) {
+    console.log('RequestNetworkService accept');
+    this.requestNetwork.requestEthereumService.accept(requestId).on('broadcasted', response => {
+        callback(response);
+      })
+      .then(response => {
+        response.request.transactionHash = response.transactionHash;
+        this.request.next(this.convertRequestAmountsFromWei(response.request));
+      }, err => {
+        console.log(err);
+        callback(err);
+      });
+  }
+
+
   public subtractAction(requestId: string, amount: number, callback ? ) {
     console.log('RequestNetworkService subtractAction');
     let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
@@ -116,13 +131,13 @@ export class Web3Service {
         console.log(err);
         callback(err);
       });
-
   }
 
 
-  public accept(requestId: string, callback ? ) {
-    console.log('RequestNetworkService accept');
-    this.requestNetwork.requestEthereumService.accept(requestId).on('broadcasted', response => {
+  public additionalAction(requestId: string, amount: number, callback ? ) {
+    console.log('RequestNetworkService additionalAction');
+    let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
+    this.requestNetwork.requestEthereumService.additionalAction(requestId, amountInWei).on('broadcasted', response => {
         callback(response);
       })
       .then(response => {
