@@ -195,12 +195,11 @@ export class Web3Service {
 
 
   private convertRequestAmountsFromWei(request: any) {
-    const toBN = this.web3.utils.toBN;
     const fromWei = this.web3.utils.fromWei;
     if (request.expectedAmount)
-      request.expectedAmount = fromWei(toBN(request.expectedAmount.toString()), 'ether');
+      request.expectedAmount = fromWei(request.expectedAmount.toString(), 'ether');
     if (request.balance)
-      request.balance = fromWei(toBN(request.balance.toString()), 'ether');
+      request.balance = fromWei(request.balance.toString(), 'ether');
     return request;
   }
 
