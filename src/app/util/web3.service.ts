@@ -100,6 +100,22 @@ export class Web3Service {
       });
   }
 
+  public subtractAction(requestId: string, amount: number, callback ? ) {
+    console.log('RequestNetworkService subtractAction');
+    let amountInWei = this.web3.utils.toWei(amount.toString(), 'ether');
+    this.requestNetwork.requestEthereumService.subtractAction(requestId, amountInWei).on('broadcasted', response => {
+        callback(response);
+      })
+      .then(response => {
+        response.request.transactionHash = response.transactionHash;
+        this.request.next(this.convertRequestAmountsFromWei(response.request));
+      }, err => {
+        console.log(err);
+        callback(err);
+      });
+
+  }
+
 
   public async accept(requestId: string) {
     try {
@@ -124,8 +140,6 @@ export class Web3Service {
       return err;
     }
   }
-
-
 
 
   public async getRequestAsync(requestId: string) {
@@ -156,9 +170,9 @@ export class Web3Service {
     const toBN = this.web3.utils.toBN;
     const fromWei = this.web3.utils.fromWei;
     if (request.expectedAmount)
-      request.expectedAmount = fromWei(toBN(request.expectedAmount), 'ether');
+      request.expectedAmount = Number(fromWei(toBN(request.expectedAmount), 'ether'));
     if (request.balance)
-      request.balance = fromWei(toBN(request.balance), 'ether');
+      request.balance = Number(fromWei(toBN(request.balance), 'ether'));
     return request;
   }
 

@@ -4,6 +4,8 @@ import { Web3Service } from '../util/web3.service';
 import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { PayDialogComponent } from './dialog/pay-dialog.component';
+import { UpdateDialogComponent } from './dialog/update-dialog.component';
+
 import blockies from 'blockies';
 
 @Component({
@@ -55,7 +57,6 @@ export class RequestComponent implements OnInit {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
     }
 
-
     // if url with /txHash
     if (this.route.snapshot.params['txHash']) {
       this.txHash = this.route.snapshot.params['txHash'];
@@ -86,20 +87,10 @@ export class RequestComponent implements OnInit {
       let result = await this.web3Service.getRequestByTransactionHashAsync(this.txHash);
       if (result && result.requestId) {
         this.setRequest(result);
-      } else {
-        // this.watchTxHash();
-        // switch (result.message) {
-        //   case 'transaction not found':
-        //   this.message = 'transaction not found'
-        //     break;
-        //   default:
-        // this.watchTxHash();
-
-        //     break;
-        // }
+      } else if (result.message) {
+        this.snackBar.open(result.message, 'Ok', { duration: 5000 });
       }
     }
-
   }
 
 
@@ -144,17 +135,36 @@ export class RequestComponent implements OnInit {
     setTimeout(() => { this.copyUrlTxt = 'Copy url' }, 500);
   }
 
+  callbackTx(response) {
+    if (response.transactionHash) {
+      this.txHash = response.transactionHash;
+      this.snackBar.open('Transaction in progress', 'Ok', { duration: 3000 });
+    } else if (response.message) {
+      this.snackBar.open(response.message, 'Ok', { duration: 5000 });
+    }
+  };
+
+
 
   cancelRequest() {
-    this.web3Service.cancel(this.request.requestId, response => {
-      if(response.transactionHash) {
-        this.txHash = response.transactionHash;
-        this.snackBar.open('Transaction in progress', 'Ok', { duration: 3000 });
-      } else if (response.message) {
-        this.snackBar.open(response.message, 'Ok', { duration: 5000 });
+    this.web3Service.cancel(this.request.requestId, response => this.callbackTx(response))
+  }
+
+
+  updateRequest() {
+    let updateDialogRef = this.dialog.open(UpdateDialogComponent, {
+      hasBackdrop: true,
+      width: '300px',
+      data: {
+        request: this.request
       }
     });
 
+    updateDialogRef
+      .afterClosed()
+      .subscribe(subtractValue => {
+        this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response))
+      });
   }
 
 
@@ -182,5 +192,6 @@ export class RequestComponent implements OnInit {
         console.log('result');
       });
   }
+
 
 }
