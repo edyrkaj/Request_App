@@ -9,7 +9,7 @@ declare let window: any;
 @Injectable()
 export class Web3Service {
   private web3: Web3;
-  private requestNetwork: RequestNetwork;
+  public requestNetwork: RequestNetwork;
   public accounts: string[];
   public ready: boolean = false;
   public metamaskReady = new Subject < boolean > ();
@@ -21,13 +21,12 @@ export class Web3Service {
     window.addEventListener('load', event => {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
-      try {
-        this.web3.eth.net.getId().
-        then(networkId => {
-          this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
-        }, err => {
-          console.log(err);
-        });
+      this.web3.eth.net.getId().
+      then(networkId => {
+        this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
+      }, err => {
+        console.log(err);
+      });
     });
   }
 
