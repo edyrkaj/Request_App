@@ -31,7 +31,6 @@ export class RequestComponent implements OnInit {
     this.url = window.location.href;
   }
 
-
   async ngOnInit() {
     // wait for web3 to be instantiated
     if (!this.web3Service || !this.web3Service.accounts) {
@@ -53,8 +52,7 @@ export class RequestComponent implements OnInit {
     })
 
     // subscribe to transaction in progress
-    this.web3Service.request.subscribe(async request => {
-
+    this.web3Service.request.subscribe(request => {
       if (this.txHash && request.requestId && (request.transactionHash == this.txHash || this.request && request.requestId == this.request.requestId))
         // window.location.reload();
         this.setRequest(request);
@@ -123,12 +121,8 @@ export class RequestComponent implements OnInit {
 
 
   getBlockies() {
-    this.fromIcon = blockies({
-      seed: this.request.payee.toLowerCase(),
-    });
-    this.toIcon = blockies({
-      seed: this.request.payer.toLowerCase(),
-    });
+    this.fromIcon = blockies({ seed: this.request.payee.toLowerCase() });
+    this.toIcon = blockies({ seed: this.request.payer.toLowerCase() });
   }
 
 

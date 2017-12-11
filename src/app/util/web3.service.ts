@@ -25,7 +25,7 @@ export class Web3Service {
       then(networkId => {
         this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
       }, err => {
-        console.log(err);
+        console.error(err);
       });
     });
   }
@@ -34,7 +34,7 @@ export class Web3Service {
   private checkAndInstantiateWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
-      console.warn('Using web3 detected from external source. If you find that your accounts don\'t appear, ensure you\'ve configured that source properly.');
+      console.log('Using web3 detected from external source. If you find that your accounts don\'t appear, ensure you\'ve configured that source properly.');
       // Use Mist/MetaMask's provider
       this.web3 = new Web3(window.web3.currentProvider);
     } else {

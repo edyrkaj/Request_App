@@ -26,11 +26,11 @@ export class AppComponent implements OnInit {
       this.searchValue = searchValue;
     })
 
-    if (!this.web3Service.requestNetwork) return this.openSnackBar('Request Network smart contracts are not deployed on this network.', 'Ok');
+    if (!this.web3Service.requestNetwork) this.snackBar.open('Request Network smart contracts are not deployed on this network.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
 
     this.web3Service.metamaskReady.subscribe(metamaskReady => {
-      if (!metamaskReady && this.metamaskReady != metamaskReady) {
-        this.openSnackBar('You need to connect your Metamask wallet to create a Request.', 'Ok');
+      if (this.web3Service.requestNetwork && !metamaskReady && this.metamaskReady != metamaskReady) {
+        this.snackBar.open('You need to connect your Metamask wallet to create a Request.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
       }
       this.metamaskReady = metamaskReady;
     })
@@ -38,16 +38,17 @@ export class AppComponent implements OnInit {
 
   watchAccount() {
     this.web3Service.accountsObservable.subscribe(accounts => {
+      if (!accounts.length) return;
       this.accounts = accounts;
       this.account = accounts[0];
-      this.icon = this.account ? blockies({
-        seed: this.account.toLowerCase(),
-      }) : null;
+      this.icon = blockies({ seed: this.account.toLowerCase() });
     });
   }
 
-  openSnackBar(msg:string, ok:string) {
-    this.snackBar.open(msg, ok, {
+  openSnackBar() {
+    let msg = 'You need to connect your Metamask wallet to create a Request.'
+    if (!this.web3Service.requestNetwork) msg = 'Request Network smart contracts are not deployed on this network.';
+    this.snackBar.open(msg, 'Ok', {
       duration: 5000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
