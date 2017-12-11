@@ -84,7 +84,7 @@ export class Web3Service {
         response.request.transactionHash = response.transactionHash;
         this.request.next(this.convertRequestAmountsFromWei(response.request));
       }, err => {
-        console.log(err);
+        console.error(err);
         callback(err);
       });
   }
@@ -99,7 +99,7 @@ export class Web3Service {
         response.request.transactionHash = response.transactionHash;
         this.request.next(this.convertRequestAmountsFromWei(response.request));
       }, err => {
-        console.log(err);
+        console.error(err);
         callback(err);
       });
   }
@@ -114,7 +114,7 @@ export class Web3Service {
         response.request.transactionHash = response.transactionHash;
         this.request.next(this.convertRequestAmountsFromWei(response.request));
       }, err => {
-        console.log(err);
+        console.error(err);
         callback(err);
       });
   }
@@ -130,7 +130,7 @@ export class Web3Service {
         response.request.transactionHash = response.transactionHash;
         this.request.next(this.convertRequestAmountsFromWei(response.request));
       }, err => {
-        console.log(err);
+        console.error(err);
         callback(err);
       });
   }
@@ -146,7 +146,7 @@ export class Web3Service {
         response.request.transactionHash = response.transactionHash;
         this.request.next(this.convertRequestAmountsFromWei(response.request));
       }, err => {
-        console.log(err);
+        console.error(err);
         callback(err);
       });
   }
@@ -162,7 +162,7 @@ export class Web3Service {
         response.request.transactionHash = response.transactionHash;
         this.request.next(this.convertRequestAmountsFromWei(response.request));
       }, err => {
-        console.log(err);
+        console.error(err);
         callback(err);
       });
   }
@@ -172,7 +172,7 @@ export class Web3Service {
     try {
       console.log('RequestNetworkService getRequest');
       let result = await this.requestNetwork.requestCoreService.getRequest(requestId);
-      console.log('getRequest result: ', result);
+      console.log('getRequest by id result: ', result);
       return this.convertRequestAmountsFromWei(result)
     } catch (err) {
       console.log('Error: ', err.message);
@@ -185,6 +185,7 @@ export class Web3Service {
     try {
       console.log('RequestNetworkService getRequest');
       let result = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
+      console.log('getRequest by txHash result: ', result);
       return this.convertRequestAmountsFromWei(result)
     } catch (err) {
       console.log('Error: ', err.message);
@@ -197,9 +198,9 @@ export class Web3Service {
     const toBN = this.web3.utils.toBN;
     const fromWei = this.web3.utils.fromWei;
     if (request.expectedAmount)
-      request.expectedAmount = Number(fromWei(toBN(request.expectedAmount), 'ether'));
+      request.expectedAmount = fromWei(toBN(request.expectedAmount.toString()), 'ether');
     if (request.balance)
-      request.balance = Number(fromWei(toBN(request.balance), 'ether'));
+      request.balance = fromWei(toBN(request.balance.toString()), 'ether');
     return request;
   }
 
