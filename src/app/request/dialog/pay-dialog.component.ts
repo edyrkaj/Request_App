@@ -9,21 +9,18 @@ export class PayDialogComponent {
   request;
   payForm: FormGroup;
   amountFormControl = new FormControl('', [Validators.required]);
-  additionalsFormControl = new FormControl('');
 
   constructor(private formBuilder: FormBuilder, private dialogRef: MatDialogRef < PayDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
     this.request = data.request;
-    console.log(this.request);
   }
 
   ngOnInit() {
     this.payForm = this.formBuilder.group({
       amountFormControl: this.amountFormControl,
-      additionalsFormControl: this.additionalsFormControl
     })
   }
 
-  submit(form) {
-    this.dialogRef.close(form.value);
+  submit() {
+    this.dialogRef.close(this.amountFormControl.value);
   }
 }

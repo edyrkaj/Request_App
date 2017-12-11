@@ -1,11 +1,11 @@
-<form class="fc-primary" [formGroup]="payForm" (ngSubmit)="submit(payForm)">
+<form class="fc-primary" [formGroup]="payForm" (ngSubmit)="submit()">
   <h1 mat-dialog-title>Pay Request</h1>
   <mat-dialog-content>
     <div class="fs-12 d-flex justify-content-between mb-1">
       <div><strong>Initial amount</strong></div>
       <div>{{ request.expectedAmount }} <small>ETH</small></div>
     </div>
-    <div *ngIf="request.balance" class="fs-12 d-flex justify-content-between mb-1">
+    <div class="fs-12 d-flex justify-content-between mb-1">
       <div><strong>Already paid</strong></div>
       <div>{{ request.balance }} <small>ETH</small></div>
     </div>
@@ -19,10 +19,6 @@
       <mat-error *ngIf="amountFormControl.hasError('required')">
         amount is <strong>required</strong>
       </mat-error>
-      <span matSuffix><img class="currencyIcon" src="assets/cryptoIcons/ETH.png">&nbsp;ETH</span>
-    </mat-form-field>
-    <mat-form-field class="w-100">
-      <input matInput type="number" formControlName="additionalsFormControl" placeholder="tip ?">
       <span matSuffix><img class="currencyIcon" src="assets/cryptoIcons/ETH.png">&nbsp;ETH</span>
     </mat-form-field>
   </mat-dialog-content>

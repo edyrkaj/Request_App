@@ -45,7 +45,7 @@ export class RequestComponent implements OnInit {
       if (!searchValue) return;
       let result = await this.web3Service.getRequestAsync(searchValue);
 
-      if (!result || !result.requestId || result.creator === '0x0000000000000000000000000000000000000000') {
+      if (!result || !result.requestId || result.creator == '0x0000000000000000000000000000000000000000') {
         this.request = { 'requestId': null };
       } else {
         this.setRequest(result);
@@ -55,7 +55,7 @@ export class RequestComponent implements OnInit {
     // subscribe to transaction in progress
     this.web3Service.request.subscribe(request => {
      
-      if (this.txHash && request.requestId && (request.transactionHash === this.txHash || this.request && request.requestId == this.request.requestId))
+      if (this.txHash && request.requestId && (request.transactionHash == this.txHash || this.request && request.requestId == this.request.requestId))
         this.setRequest(request);
     })
 
@@ -117,7 +117,7 @@ export class RequestComponent implements OnInit {
 
 
   getRequestMode() {
-    return this.mode = this.account && this.account === this.request.payee ? 'payee' : this.account && this.account === this.request.payer ? 'payer' : 'none';
+    return this.mode = this.account && this.account == this.request.payee ? 'payee' : this.account && this.account == this.request.payer ? 'payer' : 'none';
   }
 
 
@@ -153,6 +153,11 @@ export class RequestComponent implements OnInit {
   }
 
 
+  acceptRequest() {
+    this.web3Service.accept(this.request.requestId, response => this.callbackTx(response));
+  }
+
+
   updateRequest() {
     let updateDialogRef = this.dialog.open(UpdateDialogComponent, {
       hasBackdrop: true,
@@ -167,11 +172,6 @@ export class RequestComponent implements OnInit {
       .subscribe(subtractValue => {
         this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
       });
-  }
-
-
-  acceptRequest() {
-    this.web3Service.accept(this.request.requestId, response => this.callbackTx(response));
   }
 
 

@@ -48,7 +48,7 @@ export class Web3Service {
   private refreshAccounts() {
     console.log('Refreshing accounts');
     this.web3.eth.getAccounts((err, accs) => {
-      if (err != null || accs.length === 0) {
+      if (err != null || accs.length == 0) {
         console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
         this.metamaskReady.next(false);
       }
