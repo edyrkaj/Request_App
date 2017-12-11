@@ -72,16 +72,16 @@
             </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 90px">
               <!-- VIEW MODE -->
-              <div *ngIf="!request.state; else ctaMode" class="d-flex flex-column justify-content-center centered fs-12 w-100 h-100">
-                <mat-icon class="mx-auto mb-1" color="accent">remove_red_eye</mat-icon>
+              <div *ngIf="!request.state; else ctaMode" class="centered fs-12 h-100">
+                <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                 <div class="fc-primary semi-bold">
                   <i>You are in view mode.<br/> You can’t interact with this Request right now.</i>
                 </div>
               </div>
               <ng-template #ctaMode>
                 <!-- STATE == CANCELED -->
-                <div *ngIf="request.state == 2; else ctaBlock" class="h-100 w-100 d-flex flex-column justify-content-center centered fs-12">
-                  <mat-icon class="mx-auto mb-1" color="warn">lock</mat-icon>
+                <div *ngIf="request.state == 2; else ctaBlock" class="h-100 centered fs-12">
+                  <mat-icon class="mx-auto mt-3" color="warn">lock</mat-icon>
                   <div class="semi-bold fc-warn"><i>This request has been cancelled.<br/>You can’t interact with it anymore.</i></div>
                 </div>
                 <!-- NORMAL STATES -->
@@ -124,8 +124,8 @@
                       </button>
                     </div>
                     <!-- ELSE -->
-                    <div *ngSwitchDefault class="d-flex flex-column justify-content-center centered fs-12 h-100">
-                      <mat-icon class="mx-auto mb-1" color="accent">remove_red_eye</mat-icon>
+                    <div *ngSwitchDefault class="fs-12 h-100 centered">
+                      <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                       <div class="fc-primary semi-bold">
                         <i>You are in view mode.<br/> You can’t interact with this Request right now.</i>
                       </div>

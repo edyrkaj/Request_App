@@ -76,9 +76,11 @@ export class Web3Service {
     console.log('RequestNetworkService createRequestAsPayee');
     let expectedAmountInWei = this.web3.utils.toWei(expectedAmount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, expectedAmountInWei, data).on('broadcasted', response => {
+        console.log('callback createRequestAsPayee: ', response);
         callback(response);
       })
       .then(response => {
+        console.log('resolve createRequestAsPayee: ', response);
         response.request.transactionHash = response.transactionHash;
         this.request.next(this.convertRequestAmountsFromWei(response.request));
       }, err => {
@@ -170,6 +172,7 @@ export class Web3Service {
     try {
       console.log('RequestNetworkService getRequest');
       let result = await this.requestNetwork.requestCoreService.getRequest(requestId);
+      console.log('getRequest result: ', result);
       return this.convertRequestAmountsFromWei(result)
     } catch (err) {
       console.log('Error: ', err.message);
