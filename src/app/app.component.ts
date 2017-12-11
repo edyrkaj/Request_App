@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
   accounts: string[];
   account: string;
   searchValue: string;
-  metamaskReady: boolean;
+  metamaskReady: boolean = false;
   requestNetworkReady: boolean;
   icon;
 
