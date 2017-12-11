@@ -11,8 +11,8 @@ export class Web3Service {
   private web3: Web3;
   public requestNetwork: RequestNetwork;
   public accounts: string[];
-  public ready: boolean = false;
   public metamaskReady = new Subject < boolean > ();
+  public requestNetworkReady = new Subject < boolean > ();
   public accountsObservable = new Subject < string[] > ();
   public searchValue = new Subject < string > ();
   public request = new Subject < any > ();
@@ -24,8 +24,10 @@ export class Web3Service {
       this.web3.eth.net.getId().
       then(networkId => {
         this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
+        this.requestNetworkReady.next(true);
       }, err => {
         console.error(err);
+        this.requestNetworkReady.next(false);
       });
     });
   }

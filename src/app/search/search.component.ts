@@ -16,7 +16,7 @@ export class SearchComponent implements OnInit {
 
   async ngOnInit() {
     // wait for web3 to be instantiated
-    if (!this.web3Service || !this.web3Service.ready) {
+    if (!this.web3Service || !this.web3Service.accounts) {
       const delay = new Promise(resolve => setTimeout(resolve, 1000));
       await delay;
       return await this.ngOnInit();
