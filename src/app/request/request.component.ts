@@ -55,7 +55,7 @@ export class RequestComponent implements OnInit {
     // subscribe to transaction in progress
     this.web3Service.request.subscribe(request => {
      
-      if (this.txHash && request.requestId && (request.transactionHash === this.txHash || this.request && request.requestId == this.request.requestId)
+      if (this.txHash && request.requestId && (request.transactionHash === this.txHash || this.request && request.requestId == this.request.requestId))
         this.setRequest(request);
     })
 
