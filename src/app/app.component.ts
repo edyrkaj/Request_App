@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
     if (this.searchValue && this.searchValue.length <= 42)
       this.router.navigate(['/search', this.searchValue]);
     else if (this.searchValue)
-      this.router.navigate(['/request', this.searchValue]);
+      this.router.navigate(['/request/requestId', this.searchValue]);
   }
 
   goHome() {

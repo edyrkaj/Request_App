@@ -63,11 +63,11 @@ export class HomeComponent implements OnInit {
 
   createRequest() {
     if (this.createLoading) return;
-    this.createLoading = true;
-
     if (!this.account) return this.snackBar.open('You need to connect your Metamask wallet to create a Request.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
     if (this.account == this.payerFormControl.value) return this.snackBar.open('Payer\'s address must be different from yours.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
 
+    this.createLoading = true;
+    
     if (!this.requestForm.valid) {
       if (this.expectedAmountFormControl.hasError('required')) {
         this.expectedAmountFormControl.markAsTouched();
