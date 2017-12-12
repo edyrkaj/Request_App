@@ -207,16 +207,18 @@ export class Web3Service {
 
 
   private convertRequestAmountsFromWei(request: any) {
+    const toBN = this.web3.utils.toBN;
+    const BN = this.web3.utils.BN;
     const fromWei = this.web3.utils.fromWei;
 
-    // var DECIMAL_REQ = this.web3.utils.(10).pow(18);
-
-
-    // if (request.expectedAmount)
-    //   request.expectedAmount = fromWei(request.expectedAmount.toString(), 'ether');
-    // if (request.balance)
-    //   request.balance = fromWei(request.balance.toString(), 'ether');
-    // return request;
+    let DECIMAL = new BN('10').pow(new BN('18'));
+    if (request.expectedAmount)
+      request.expectedAmount = toBN(request.expectedAmount.toString()).div(DECIMAL);
+      // request.expectedAmount = fromWei(toBN(request.expectedAmount.toString()), 'ether');
+    if (request.balance)
+      request.balance = toBN(request.balance.toString()).div(DECIMAL);
+      // request.balance = fromWei(toBN(request.balance.toString()), 'ether');
+    return request;
   }
 
 }
