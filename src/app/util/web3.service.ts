@@ -170,7 +170,7 @@ export class Web3Service {
 
   public async getRequestAsync(requestId: string) {
     try {
-      console.log('RequestNetworkService getRequest');
+      console.log('RequestNetworkService getRequest by id');
       let result = await this.requestNetwork.requestCoreService.getRequest(requestId);
       console.log('getRequest by id result: ', result);
       return this.convertRequestAmountsFromWei(result)
@@ -183,7 +183,7 @@ export class Web3Service {
 
   public async getRequestByTransactionHashAsync(requestId: string) {
     try {
-      console.log('RequestNetworkService getRequest');
+      console.log('RequestNetworkService getRequest by txHash');
       let result = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
       console.log('getRequest by txHash result: ', result);
       return this.convertRequestAmountsFromWei(result)
@@ -194,13 +194,29 @@ export class Web3Service {
   }
 
 
+  public async getRequestHistory(requestId: string) {
+    try {
+      console.log('RequestNetworkService getRequestHistory');
+      let result = await this.requestNetwork.requestEthereumService.getRequestHistory(requestId);
+      console.log('getRequestHistory result: ', result);
+    } catch (err) {
+      console.log('Error: ', err.message);
+      return err;
+    }
+  }
+
+
   private convertRequestAmountsFromWei(request: any) {
     const fromWei = this.web3.utils.fromWei;
-    if (request.expectedAmount)
-      request.expectedAmount = fromWei(request.expectedAmount.toString(), 'ether');
-    if (request.balance)
-      request.balance = fromWei(request.balance.toString(), 'ether');
-    return request;
+
+    // var DECIMAL_REQ = this.web3.utils.(10).pow(18);
+
+
+    // if (request.expectedAmount)
+    //   request.expectedAmount = fromWei(request.expectedAmount.toString(), 'ether');
+    // if (request.balance)
+    //   request.balance = fromWei(request.balance.toString(), 'ether');
+    // return request;
   }
 
 }

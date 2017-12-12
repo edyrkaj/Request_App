@@ -49,13 +49,14 @@ export class RequestComponent implements OnInit {
       if (!result || !result.requestId || result.creator == '0x0000000000000000000000000000000000000000') {
         this.request = { 'requestId': null };
       } else {
+        let history = await this.web3Service.getRequestHistory(result.requestId)
         this.setRequest(result);
       }
     })
 
     // subscribe to transaction in progress
     this.web3Service.request.subscribe(request => {
-      if (this.txHash && request.requestId && (request.transactionHash == this.txHash || this.request && request.requestId == this.request.requestId))
+      if (this.txHash && request && request.requestId && (request.transactionHash == this.txHash || this.request && this.request.requestId == request.requestId))
         this.setRequest(request);
     })
 
