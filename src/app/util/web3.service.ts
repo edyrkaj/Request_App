@@ -1,5 +1,6 @@
 import { Injectable, HostListener } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
+import { MatSnackBar } from '@angular/material';
 
 import Web3 from 'web3';
 import RequestNetwork from 'requestnetwork.js/dist/src/requestNetwork';
@@ -8,27 +9,50 @@ declare let window: any;
 
 @Injectable()
 export class Web3Service {
-  private web3: Web3;
+  public web3: Web3;
   public requestNetwork: RequestNetwork;
+
   public accounts: string[];
-  public metamaskReady = new Subject < boolean > ();
-  public requestNetworkReady = new Subject < boolean > ();
+  public metamaskConnected: boolean = true;
   public accountsObservable = new Subject < string[] > ();
   public searchValue = new Subject < string > ();
   public request = new Subject < any > ();
 
-  constructor() {
+  web3NotReadyMsg: string = 'Install Metamask in order to create or interact with a Request';
+  requestNetworkNotReadyMsg: string = 'Request Network smart contracts are not deployed on this network.'
+  metamaskNotReadyMsg: string = 'Connect your Metamask wallet to create or interact with a Request.';
+
+  constructor(public snackBar: MatSnackBar) {
     window.addEventListener('load', event => {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
+      if (!this.web3)
+        return this.openSnackBar(this.web3NotReadyMsg); // TODO remove return when lib has own web3 for reading blockchain
       this.web3.eth.net.getId().
       then(networkId => {
-        this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId)
-        this.requestNetworkReady.next(true);
+        try {
+          this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId);
+        } catch (err) {
+          if (this.web3) this.openSnackBar(this.requestNetworkNotReadyMsg);
+          console.log('Error: ', err.message);
+        }
       }, err => {
         console.error(err);
-        this.requestNetworkReady.next(false);
       });
+    });
+  }
+
+
+  public openSnackBar(msg?: string, ok ? : string, panelClass ? : string) {
+    if (!msg) {
+      msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg : !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
+    }
+
+    this.snackBar.open(msg, ok || 'Ok', {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: panelClass || 'warning-snackbar',
     });
   }
 
@@ -41,27 +65,31 @@ export class Web3Service {
       this.web3 = new Web3(window.web3.currentProvider);
     } else {
       console.log('No web3? You should consider trying MetaMask!');
-      console.warn('No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it\'s inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask');
-      // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-      this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+      // console.warn('No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it\'s inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask');
+      // this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     }
-    setInterval(() => this.refreshAccounts(), 500);
+    setInterval(() => this.refreshAccounts(), 1000);
   }
 
 
   private refreshAccounts() {
     console.log('Refreshing accounts');
+    if (!this.web3) return this.accountsObservable.next([]);
+
     this.web3.eth.getAccounts((err, accs) => {
       if (err != null || accs.length == 0) {
         console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
-        this.metamaskReady.next(false);
+        if (this.requestNetwork && this.metamaskConnected) {
+          this.metamaskConnected = false;
+          this.openSnackBar(this.metamaskNotReadyMsg);
+        }
       }
 
       if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
         console.log('Observed new accounts');
         this.accountsObservable.next(accs);
         this.accounts = accs;
-        this.metamaskReady.next(true);
+        if (accs.length) this.metamaskConnected = true;
       }
     });
   }
@@ -207,17 +235,13 @@ export class Web3Service {
 
 
   private convertRequestAmountsFromWei(request: any) {
-    const toBN = this.web3.utils.toBN;
     const BN = this.web3.utils.BN;
     const fromWei = this.web3.utils.fromWei;
-
-    let DECIMAL = new BN('10').pow(new BN('18'));
+    const DECIMAL = new BN('10').pow(new BN('18'));
     if (request.expectedAmount)
-      request.expectedAmount = toBN(request.expectedAmount.toString()).div(DECIMAL);
-      // request.expectedAmount = fromWei(toBN(request.expectedAmount.toString()), 'ether');
+      request.expectedAmount = request.expectedAmount.div(DECIMAL);
     if (request.balance)
-      request.balance = toBN(request.balance.toString()).div(DECIMAL);
-      // request.balance = fromWei(toBN(request.balance.toString()), 'ether');
+      request.balance = request.balance.div(DECIMAL);
     return request;
   }
 

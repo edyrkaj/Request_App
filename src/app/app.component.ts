@@ -11,12 +11,10 @@ import blockies from 'blockies';
 })
 export class AppComponent implements OnInit {
 
+  blockies = blockies;
   accounts: string[];
-  account: string;
+  account: string = 'loading';
   searchValue: string;
-  metamaskReady: boolean = false;
-  requestNetworkReady: boolean;
-  icon;
 
   constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {}
 
@@ -26,37 +24,12 @@ export class AppComponent implements OnInit {
     this.web3Service.searchValue.subscribe(searchValue => {
       this.searchValue = searchValue;
     })
-
-    this.web3Service.requestNetworkReady.subscribe(requestNetworkReady => {
-      if (!requestNetworkReady) this.snackBar.open('Request Network smart contracts are not deployed on this network.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
-      this.requestNetworkReady = requestNetworkReady;
-    });
-
-    this.web3Service.metamaskReady.subscribe(metamaskReady => {
-      if (this.requestNetworkReady && !metamaskReady && this.metamaskReady != metamaskReady) {
-        this.snackBar.open('You need to connect your Metamask wallet to create a Request.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
-      }
-      this.metamaskReady = metamaskReady;
-    })
   }
 
   watchAccount() {
     this.web3Service.accountsObservable.subscribe(accounts => {
-      if (!accounts.length) return;
       this.accounts = accounts;
       this.account = accounts[0];
-      this.icon = blockies({ seed: this.account.toLowerCase() });
-    });
-  }
-
-  openSnackBar() {
-    let msg = 'You need to connect your Metamask wallet to create a Request.'
-    if (!this.requestNetworkReady) msg = 'Request Network smart contracts are not deployed on this network.';
-    this.snackBar.open(msg, 'Ok', {
-      duration: 5000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-      panelClass: 'warning-snackbar',
     });
   }
 
