@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
     this.web3Service.setSearchValue(null);
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.watchAccount();
 
     this.requestForm = this.formBuilder.group({
@@ -46,6 +46,10 @@ export class HomeComponent implements OnInit {
     this.web3Service.accountsObservable.subscribe(accounts => {
       this.account = accounts[0];
     });
+  }
+
+  test() {
+    console.log(this.expectedAmountFormControl.value);
   }
 
   positiveNumberValidator(control: FormControl) {

@@ -24,6 +24,17 @@ a {
   cursor: pointer;
 }
 
+// CUSTOMIZE MAT-INPUT CSS
+input.mat-input-element, span.mat-select-value-text, textarea.mat-input-element, div.mat-input-suffix, div.mat-input-prefix {
+  color: $blue-grey;
+}
+.mat-input-placeholder.mat-form-field-placeholder, div.mat-hint, mat-hint.mat-hint {
+  color: rgba($blue-grey, 0.6);
+}
+.mat-input-underline.mat-form-field-underline {
+  background-color: rgba($blue-grey, 0.2);
+}
+
 .warning-snackbar {
   color: #F0A73A !important;
   background-color: #FDF1E0 !important;
@@ -70,7 +81,7 @@ button.no-focus-overlay .mat-button-focus-overlay {
 }
 
 mat-toolbar.mat-toolbar {
-  background: $grey-white;
+  background: $grey-whiter;
 }
 
 .img-fluid {
@@ -105,8 +116,8 @@ mat-toolbar.mat-toolbar {
   background: $primary;
 }
 
-.bg-grey-white {
-  background: $grey-white;
+.bg-grey-whiter {
+  background: $grey-whiter !important;
 }
 
 .bg-white {
@@ -208,7 +219,7 @@ code {
 
 input {
   &:-webkit-autofill {
-    -webkit-text-fill-color: inherit !important;
+    -webkit-text-fill-color: $blue-grey !important;
     -webkit-box-shadow: 0 0 0px 1000px transparent inset;
     transition: background-color 5000s ease-in-out 0s;
   }

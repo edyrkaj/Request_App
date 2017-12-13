@@ -29,7 +29,7 @@
                 </div>
               </div>
             </div>
-            <div class="bg-grey-white fc-blue-grey p-4 d-flex flex-wrap">
+            <div class="bg-grey-whiter fc-blue-grey p-4 d-flex flex-wrap">
               <div class="d-flex" style="flex: 1">
                 <div class="px-3">
                   <img *ngIf="fromIcon" [src]="fromIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
@@ -37,7 +37,7 @@
                 <div class="fs-14">
                   <div class="mb-1" style="opacity: 0.5">FROM</div>
                   <div class="semi-bold">ETH address</div>
-                  <div [matTooltip]="request.payer">{{request.payee.substring(0, 10)}}...{{request.payee.substring(32, 42)}}</div>
+                  <div [matTooltip]="request.payee">{{request.payee.substring(0, 10)}}...{{request.payee.substring(32, 42)}}</div>
                 </div>
               </div>
               <div class="d-flex" style="flex: 1">
@@ -47,7 +47,7 @@
                 <div class="fs-14">
                   <div class="mb-1" style="opacity: 0.5">TO</div>
                   <div class="semi-bold">ETH address</div>
-                  <div [matTooltip]="request.payee">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
+                  <div [matTooltip]="request.payer">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
                 </div>
               </div>
             </div>
@@ -89,7 +89,7 @@
                   <div class="h-100 w-100 fs-18" [ngSwitch]="mode">
                     <!-- PAYEE -->
                     <div *ngSwitchCase="'payee'" class="d-flex h-100">
-                      <button type="button" class="fs-18 bg-grey-white fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payeeActionsMenu">Actions&nbsp;
+                      <button type="button" class="fs-18 bg-grey-whiter fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payeeActionsMenu">Actions&nbsp;
                         <mat-icon>expand_more</mat-icon>
                       </button>
                       <mat-menu #payeeActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
@@ -104,7 +104,7 @@
                     </div>
                     <!-- PAYER -->
                     <div *ngSwitchCase="'payer'" class="d-flex h-100">
-                      <button type="button" class="fs-18 bg-grey-white fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payerActionsMenu">Actions&nbsp;
+                      <button type="button" class="fs-18 bg-grey-whiter fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payerActionsMenu">Actions&nbsp;
                         <mat-icon>expand_more</mat-icon>
                       </button>
                       <mat-menu #payerActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">

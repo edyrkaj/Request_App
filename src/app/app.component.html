@@ -1,13 +1,13 @@
 <div class=wrapper>
-  <header class="d-flex flex-wrap justify-content-between align-items-center fc-primary px-3 mat-elevation-z1">
+  <header class="d-flex flex-wrap justify-content-between align-items-center fc-primary px-3">
     <a routerLink="/" style="text-decoration: none" class="d-flex align-items-center">
       <img class="px-3 request-logo" src="assets/img/request-logo.png">
-      <span class="semi-bold">Request</span>
+      <span class="semi-bold">Request&nbsp;<sup><small><small>ALPHA TESTNET</small></small></sup></span>
     </a>
     <form class="ml-auto" (ngSubmit)="search()" #searchForm="ngForm">
       <mat-form-field class="mx-3" [style.width]="'400px'">
         <input matInput type="text" name="searchvalue" [(ngModel)]="searchValue" #searchvalue="ngModel" />
-        <button type="submit" matSuffix mat-icon-button color="primary">
+        <button type="submit" matSuffix mat-icon-button>
           <mat-icon>search</mat-icon>
         </button>
         <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>
@@ -46,23 +46,23 @@
       </a>
       <span><small>© Request.Network</small></span>
       <div class="d-flex justify-content-between">
-        <a target="_blank" href="https://www.facebook.com/Request-Network-140279756554525/">
-          <i class="fa fa-facebook" aria-hidden="true"></i>
-        </a>
-        <a target="_blank" href="https://t.me/requestnetwork">
-          <i class="fa fa-telegram" aria-hidden="true"></i>
+        <a target="_blank" href="https://blog.request.network">
+          <i class="fa fa-medium" aria-hidden="true"></i>
         </a>
         <a target="_blank" href="https://twitter.com/requestnetwork">
           <i class="fa fa-twitter" aria-hidden="true"></i>
         </a>
-        <a target="_blank" href="https://github.com/RequestNetwork/">
-          <i class="fa fa-github" aria-hidden="true"></i>
-        </a>
         <a target="_blank" href="https://www.reddit.com/r/RequestNetwork/">
           <i class="fa fa-reddit-alien" aria-hidden="true"></i>
         </a>
-        <a target="_blank" href="https://blog.request.network">
-          <i class="fa fa-medium" aria-hidden="true"></i>
+        <a target="_blank" href="https://t.me/requestnetwork">
+          <i class="fa fa-telegram" aria-hidden="true"></i>
+        </a>
+        <a target="_blank" href="https://github.com/RequestNetwork/">
+          <i class="fa fa-github" aria-hidden="true"></i>
+        </a>
+        <a target="_blank" href="https://www.facebook.com/Request-Network-140279756554525/">
+          <i class="fa fa-facebook" aria-hidden="true"></i>
         </a>
       </div>
     </div>

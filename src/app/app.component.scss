@@ -3,6 +3,7 @@
 
 header {
   z-index: 1;
+  border-bottom: 2px solid $grey-light;
   .request-logo {
     max-height: 36px;
   }
@@ -17,7 +18,7 @@ header {
   .content {
     flex: 1 0 auto;
     position: relative;
-    background: $grey-light;
+    background: $grey-white;
   }
 
   footer {
