@@ -2,13 +2,11 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
 import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import blockies from 'blockies';
 
 import { PayDialogComponent } from './dialog/pay-dialog.component';
 import { SubtractDialogComponent } from './dialog/subtract-dialog.component';
 import { AdditionalDialogComponent } from './dialog/additional-dialog.component';
-
-
-import blockies from 'blockies';
 
 @Component({
   selector: 'app-request',
@@ -16,18 +14,15 @@ import blockies from 'blockies';
   styleUrls: ['./request.component.scss'],
 })
 export class RequestComponent implements OnInit {
+  blockies = blockies;
+  objectKeys = Object.keys;
   account: string;
   mode: string;
   request: any;
-  fromIcon;
-  toIcon;
-  objectKeys = Object.keys;
   progress: number;
   url: string;
   copyUrlTxt: string = 'Copy url';
-  files = [];
   txHash: string;
-
 
   constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
     this.url = window.location.href;
@@ -58,6 +53,7 @@ export class RequestComponent implements OnInit {
     this.web3Service.request.subscribe(request => {
       if (this.txHash && request && request.requestId && (request.transactionHash == this.txHash || this.request && this.request.requestId == request.requestId))
         this.setRequest(request);
+        history.pushState(null, null, `/request/requestId/${this.request.requestId}`);
     })
 
     // if url with /requestId
@@ -71,9 +67,9 @@ export class RequestComponent implements OnInit {
       // if queryParams get Request from queryParams
       if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
         let queryRequest = {
-          requestId: 'waiting for blockchain response',
-          expectedAmount: this.route.snapshot.queryParams.expectedAmount,
-          balance: 0,
+          requestId: 'waiting for blockchain response...',
+          expectedAmount: new this.web3Service.BN(this.web3Service.toWei(this.route.snapshot.queryParams.expectedAmount)),
+          balance: new this.web3Service.BN(this.web3Service.toWei('0')),
           payer: this.route.snapshot.queryParams.payer,
           payee: this.route.snapshot.queryParams.payee,
           data: { data: {} }
@@ -100,7 +96,6 @@ export class RequestComponent implements OnInit {
   setRequest(request) {
     if (request.state && request.requestId) this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}`;
     this.request = request;
-    this.getBlockies();
     this.watchAccount();
     this.progress = 100 * this.request.balance / this.request.expectedAmount;
   }
@@ -120,12 +115,6 @@ export class RequestComponent implements OnInit {
 
   getRequestMode() {
     return this.mode = this.account && this.account == this.request.payee ? 'payee' : this.account && this.account == this.request.payer ? 'payer' : 'none';
-  }
-
-
-  getBlockies() {
-    this.fromIcon = blockies({ seed: this.request.payee.toLowerCase() });
-    this.toIcon = blockies({ seed: this.request.payer.toLowerCase() });
   }
 
 

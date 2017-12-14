@@ -16,8 +16,10 @@ export class HomeComponent implements OnInit {
   createLoading: boolean = false;
 
   requestForm: FormGroup;
-  expectedAmountFormControl = new FormControl('', [Validators.required, this.positiveNumberValidator]);
+  expectedAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.,][0-9]{0,18})?$')]);
   payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
+
+
   reasonFormControl = new FormControl('');
   dateFormControl = new FormControl('');
   // currency = new FormControl('ETH');
@@ -52,9 +54,9 @@ export class HomeComponent implements OnInit {
     console.log(this.expectedAmountFormControl.value);
   }
 
-  positiveNumberValidator(control: FormControl) {
-    return Number(control.value) < 0 ? { negativeNumber: true } : null;
-  }
+  // positiveNumberValidator(control: FormControl) {
+  //   return Number(control.value) < 0 ? { negativeNumber: true } : null;
+  // }
 
   // VALIDATOR
   // isPayeeAddress(account: string) {
@@ -66,9 +68,9 @@ export class HomeComponent implements OnInit {
 
   createRequest() {
     if (this.createLoading) return;
-    if (!this.web3Service.requestNetwork) return this.snackBar.open('Request Network smart contracts are not deployed on this network.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
-    if (!this.account) return this.snackBar.open('You need to connect your Metamask wallet to create a Request.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
-    if (this.account == this.payerFormControl.value) return this.snackBar.open('Payer\'s address must be different from yours.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
+    // if (!this.web3Service.requestNetwork) return this.snackBar.open('Request Network smart contracts are not deployed on this network.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
+    // if (!this.account) return this.snackBar.open('You need to connect your Metamask wallet to create a Request.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
+    // if (this.account == this.payerFormControl.value) return this.snackBar.open('Payer\'s address must be different from yours.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
 
     this.createLoading = true;
     
@@ -94,7 +96,7 @@ export class HomeComponent implements OnInit {
 
     this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), response => {
       this.createLoading = false;
-      if (response.transactionHash) {
+      if (response && response.transactionHash) {
         this.snackBar.open('Transaction in progress', 'Ok', { duration: 3000 });
         
         let queryParams = {
@@ -105,7 +107,7 @@ export class HomeComponent implements OnInit {
         Object.keys(data).forEach(key => queryParams[key] = data[key])
 
         this.router.navigate(['/request/txHash', response.transactionHash], { queryParams });
-      } else if (response.message) {
+      } else if (response && response.message) {
         this.snackBar.open(response.message, 'Ok', { duration: 5000 });
       }
     });

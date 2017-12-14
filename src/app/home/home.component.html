@@ -9,21 +9,23 @@
       <mat-card class="p-0 br-7 sh-blue">
         <div class="d-flex bg-primary p-4 btr-7">
           <img class="px-3" [style.max-height]="'50px'" src="assets/img/request-logo.png">
-          <div class="ml-auto">
-            <div class="fc-white semi-bold text-right">New Request</div>
-            <div class="fc-white" [style.opacity]="'0.51'"><i>{{date | date: 'fullDate'}}</i></div>
+          <div class="fc-white ml-auto text-right">
+            <h4 class="fs-18 semi-bold">New Request</h4>
+            <div class="fs-14" [style.opacity]="'0.5'">
+              <i>{{date | date: 'fullDate'}}</i>
+            </div>
           </div>
         </div>
         <form [formGroup]="requestForm" (ngSubmit)="createRequest()">
           <div class="p-4 mb-5">
             <div class="d-flex w-100">
               <mat-form-field class="w-100">
-                <input matInput type="number" placeholder="Request amount" [formControl]="expectedAmountFormControl">
+                <input matInput type="text" placeholder="Request amount" [formControl]="expectedAmountFormControl">
                 <mat-error *ngIf="expectedAmountFormControl.hasError('required')">
                   amount is <strong>required</strong>
                 </mat-error>
-                <mat-error *ngIf="expectedAmountFormControl.hasError('negativeNumber')">
-                  amount must be a <strong>positive number</strong>
+                <mat-error *ngIf="expectedAmountFormControl.hasError('pattern')">
+                  amount must be a <strong>positive number</strong> with maximum <strong>18 decimals</strong>
                 </mat-error>
                 <span matSuffix><img class="currencyIcon" src="assets/cryptoIcons/ETH.png">&nbsp;ETH</span>
               </mat-form-field>

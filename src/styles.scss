@@ -3,6 +3,7 @@
 
 @import '~bootstrap/scss/bootstrap-reboot';
 @import '~bootstrap/scss/bootstrap-grid';
+@import '~bootstrap/scss/popover';
 @import '~bootstrap/scss/utilities';
 
 @import '~font-awesome/scss/font-awesome';
@@ -22,15 +23,49 @@ body {
 
 a {
   cursor: pointer;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+// CUSTOMIZE POPOVER
+.popover .arrow {
+  display: none;
+}
+
+.mat-tooltip {
+  transform-origin: center top 0px;
+  transform: scale(1);
+}
+
+.popover {
+  color: #fff;
+  border-radius: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
+  background: rgba(97, 97, 97, 0.9);
+  font-size: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border: none;
+  font-weight: 300;
 }
 
 // CUSTOMIZE MAT-INPUT CSS
-input.mat-input-element, span.mat-select-value-text, textarea.mat-input-element, div.mat-input-suffix, div.mat-input-prefix {
+input.mat-input-element,
+span.mat-select-value-text,
+textarea.mat-input-element,
+div.mat-input-suffix,
+div.mat-input-prefix {
   color: $blue-grey;
 }
-.mat-input-placeholder.mat-form-field-placeholder, div.mat-hint, mat-hint.mat-hint {
+
+.mat-input-placeholder.mat-form-field-placeholder,
+div.mat-hint,
+mat-hint.mat-hint {
   color: rgba($blue-grey, 0.6);
 }
+
 .mat-input-underline.mat-form-field-underline {
   background-color: rgba($blue-grey, 0.2);
 }

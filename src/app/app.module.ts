@@ -3,6 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
+import { PopoverModule } from 'ngx-popover';
 
 import { SharedModule } from './shared/shared.module';
 
@@ -16,6 +17,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { RequestComponent } from './request/request.component';
 import { SearchComponent } from './search/search.component';
+
 
 
 @NgModule({
@@ -37,6 +39,7 @@ import { SearchComponent } from './search/search.component';
 
     // Feature Modules
     ClipboardModule,
+    PopoverModule,
 
     // features
     SharedModule,

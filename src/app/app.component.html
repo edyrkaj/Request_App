@@ -21,7 +21,7 @@
             <mat-option *ngFor="let account of accounts" [value]="account">{{ account }}</mat-option>
           </mat-select>
           <small matPrefix>
-        <img *ngIf="account" [src]="account ? blockies({ seed: account.toLowerCase() }).toDataURL() : ''" style="position: relative; top: -6px; width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />
+        <img *ngIf="account" [src]="blockies({ seed: account.toLowerCase() }).toDataURL()" style="position: relative; top: -6px; width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />
         <mat-icon *ngIf="!account">account_circle</mat-icon>
         &nbsp;
       </small>

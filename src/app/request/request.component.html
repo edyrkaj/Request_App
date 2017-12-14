@@ -13,7 +13,10 @@
       </div>
       <ng-template #requestBlock>
         <div class="col-md-3">
-          <button mat-button class="url-box fc-blue-grey fs-12 px-3" disabled>{{url}}</button>
+          <!-- <div popover="{{url}}" popoverPlacement="top" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true" [popoverAnimation]="true">
+</div>
+ -->
+          <input mat-button class="url-box fc-blue-grey fs-12 px-3 w-100" [value]="url" disabled>
           <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
           <hr style="border-top: 1px solid #617B9F; opacity: 0.2">
         </div>
@@ -21,33 +24,38 @@
           <mat-card class="p-0 br-7 sh-blue">
             <div class="d-flex bg-primary p-4 btr-7">
               <img class="px-3" style="max-height: 75px;" src="assets/img/request-logo.png">
-              <div class="ml-auto text-right px-3">
-                <h4 class="fc-white semi-bold fs-18">{{request.data.data.date | date: 'fullDate'}}</h4>
-                <div class="fc-white fs-14">
-                  <span *ngIf="request.state; else waitingTemplate"><i>Request Id: {{request.requestId}}</i></span>
+              <div class="ml-auto text-right px-3 fc-white">
+                <h4 class="semi-bold fs-18">
+                  <span *ngIf="request.state; else waitingTemplate" popover="{{request.requestId}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">Request Id: {{request.requestId.substring(0, 5)}}...{{request.requestId.substring(56, 66)}}</span>
                   <ng-template #waitingTemplate><span><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;{{request.requestId}}</span></ng-template>
+                </h4>
+                <div class="fs-14" [style.opacity]="'0.5'">
+                  <i>{{request.data.data.date | date: 'fullDate'}}</i>
+                </div>
+                <div *ngIf="txHash">
+                  <i><a class="fs-14" style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">{{web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10)}}...</a></i>
                 </div>
               </div>
             </div>
             <div class="bg-grey-whiter fc-blue-grey p-4 d-flex flex-wrap">
-              <div class="d-flex" style="flex: 1">
+              <div class="d-flex mb-3 m-lg-0" style="flex: 1">
                 <div class="px-3">
-                  <img *ngIf="fromIcon" [src]="fromIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
+                  <img *ngIf="request.payee" [src]="blockies({ seed: request.payee.toLowerCase() }).toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
                 <div class="fs-14">
                   <div class="mb-1" style="opacity: 0.5">FROM</div>
                   <div class="semi-bold">ETH address</div>
-                  <div [matTooltip]="request.payee">{{request.payee.substring(0, 10)}}...{{request.payee.substring(32, 42)}}</div>
+                  <div popover="{{request.payee}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">{{request.payee.substring(0, 10)}}...{{request.payee.substring(32, 42)}}</div>
                 </div>
               </div>
               <div class="d-flex" style="flex: 1">
                 <div class="px-3">
-                  <img *ngIf="toIcon" [src]="toIcon.toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
+                  <img *ngIf="request.payer" [src]="blockies({ seed: request.payer.toLowerCase() }).toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
                 <div class="fs-14">
                   <div class="mb-1" style="opacity: 0.5">TO</div>
                   <div class="semi-bold">ETH address</div>
-                  <div [matTooltip]="request.payer">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
+                  <div popover="{{request.payee}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
                 </div>
               </div>
             </div>
@@ -60,22 +68,22 @@
             <div class="d-flex">
               <div class="ml-auto d-inline-block semi-bold fc-primary px-5 py-4" style="background: #DFE5EC">
                 <div class="fs-14">AMOUNT</div>
-                <div class="fs-24">{{request.expectedAmount}} ETH</div>
+                <div class="fs-24">{{web3Service.fromWei(request.expectedAmount)}} ETH</div>
               </div>
             </div>
             <div class="p-5">
               <div class="fc-blue-grey fs-12 mx-auto w-50 centered">
                 <div><strong>{{progress | number: '1.0-2'}}%</strong> of the Request has been paid</div>
                 <mat-progress-bar class="my-1" mode="determinate" [value]="progress"></mat-progress-bar>
-                <div><strong>{{ request.expectedAmount - request.balance }} ETH</strong> remains to be paid</div>
+                <div><strong>{{ web3Service.fromWei(request.expectedAmount.sub(request.balance)) }} ETH</strong> remains to be paid</div>
               </div>
             </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 90px">
-              <!-- VIEW MODE -->
+              <!-- VIEW MODE / BROADCASTING-->
               <div *ngIf="!request.state; else ctaMode" class="centered fs-12 h-100">
                 <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                 <div class="fc-primary semi-bold">
-                  <i>You are in view mode.<br/> You can’t interact with this Request right now.</i>
+                  <i>You are in view mode.<br/> Synchronizing the request with the blockchain can take between 1sec and a couple of minutes. You can already share the request via the URL.</i>
                 </div>
               </div>
               <ng-template #ctaMode>
@@ -127,7 +135,7 @@
                     <div *ngSwitchDefault class="fs-12 h-100 centered">
                       <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                       <div class="fc-primary semi-bold">
-                        <i>You are in view mode.<br/> You can’t interact with this Request right now.</i>
+                        <i>You are in view mode.<br/> Connect your metamask account as the payer or payee to interact with this Request.</i>
                       </div>
                     </div>
                   </div>
