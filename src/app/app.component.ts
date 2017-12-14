@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Web3Service } from './util/web3.service'
-import { MatSnackBar } from '@angular/material';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import blockies from 'blockies';
 
 @Component({
@@ -14,15 +14,21 @@ export class AppComponent implements OnInit {
   blockies = blockies;
   accounts: string[];
   account: string = 'loading';
-  searchValue: string;
+  searchForm: FormGroup;
+  searchValueFormControl: FormControl;
 
-  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {}
+  constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.watchAccount();
 
+    this.searchValueFormControl = new FormControl('', [Validators.required])
+    this.searchForm = this.formBuilder.group({
+      searchValueFormControl: this.searchValueFormControl
+    })
+
     this.web3Service.searchValue.subscribe(searchValue => {
-      this.searchValue = searchValue;
+      this.searchValueFormControl.setValue(searchValue);
     })
   }
 
@@ -33,12 +39,12 @@ export class AppComponent implements OnInit {
     });
   }
 
-  search() {
-    this.web3Service.setSearchValue(this.searchValue);
-    if (this.searchValue && this.searchValue.length <= 42)
-      this.router.navigate(['/search', this.searchValue]);
-    else if (this.searchValue)
-      this.router.navigate(['/request/requestId', this.searchValue]);
+  search(searchValue) {
+    this.web3Service.setSearchValue(searchValue);
+    if (searchValue && searchValue.length <= 42)
+      this.router.navigate(['/search', searchValue]);
+    else if (searchValue)
+      this.router.navigate(['/request/requestId', searchValue]);
   }
 
 }

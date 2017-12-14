@@ -11,10 +11,13 @@ declare let window: any;
 export class Web3Service {
   private web3: Web3;
   private requestNetwork: RequestNetwork;
+  private infuraNodeUrl = 'https://rinkeby.infura.io/BQBjfSi5EKSCQQpXebO';
+  private metamaskConnected: boolean = true;
+
 
   public etherscanUrl: string;
   public accounts: string[];
-  private metamaskConnected: boolean = true;
+  public ready: boolean = false;
 
   public accountsObservable = new Subject < string[] > ();
   public searchValue = new Subject < string > ();
@@ -24,7 +27,7 @@ export class Web3Service {
   public toWei;
   public BN;
 
-  web3NotReadyMsg: string = 'Install Metamask in order to create or interact with a Request';
+  web3NotReadyMsg: string = 'Error when trying to instanciate web3.';
   requestNetworkNotReadyMsg: string = 'Request Network smart contracts are not deployed on this network.'
   metamaskNotReadyMsg: string = 'Connect your Metamask wallet to create or interact with a Request.';
 
@@ -32,23 +35,6 @@ export class Web3Service {
     window.addEventListener('load', event => {
       console.log('web3service instantiate web3');
       this.checkAndInstantiateWeb3();
-      if (!this.web3)
-        return this.openSnackBar(this.web3NotReadyMsg); // TODO remove return when lib has own web3 for reading blockchain
-      this.fromWei = this.web3.utils.fromWei;
-      this.toWei = this.web3.utils.toWei;
-      this.BN = mixed => new this.web3.utils.BN(mixed);
-      this.web3.eth.net.getId().
-      then(networkId => {
-        try {
-          this.setEtherscanUrl(networkId);
-          this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId);
-        } catch (err) {
-          if (this.web3) this.openSnackBar(this.requestNetworkNotReadyMsg);
-          console.log('Error: ', err.message);
-        }
-      }, err => {
-        console.error('Error:', err);
-      });
     });
   }
 
@@ -79,6 +65,7 @@ export class Web3Service {
     return stop;
   }
 
+
   public openSnackBar(msg ? : string, ok ? : string, panelClass ? : string) {
     if (!msg) {
       msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg : !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
@@ -98,21 +85,36 @@ export class Web3Service {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
       console.log('Using web3 detected from external source. If you find that your accounts don\'t appear, ensure you\'ve configured that source properly.');
-      // Use Mist/MetaMask's provider
       this.web3 = new Web3(window.web3.currentProvider);
+
+      // Start requestnetwork Library
+      this.web3.eth.net.getId().then(
+        networkId => {
+          try {
+            this.setEtherscanUrl(networkId);
+            this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId);
+          } catch (err) {
+            if (this.web3) this.openSnackBar(this.requestNetworkNotReadyMsg);
+            console.log('Error: ', err.message);
+          }
+        }, err => {
+          console.error('Error:', err);
+        });
     } else {
-      console.log('No web3? You should consider trying MetaMask!');
-      // console.warn('No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it\'s inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask');
-      // this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+      console.warn(`No web3 detected. Falling back to ${this.infuraNodeUrl}.`);
+      this.web3 = new Web3(new Web3.providers.HttpProvider(this.infuraNodeUrl));
+      this.requestNetwork = new RequestNetwork(this.web3.givenProvider, 4);
     }
+
+    this.fromWei = this.web3.utils.fromWei;
+    this.toWei = this.web3.utils.toWei;
+    this.BN = mixed => new this.web3.utils.BN(mixed);
+
     setInterval(() => this.refreshAccounts(), 1000);
   }
 
 
   private refreshAccounts() {
-    console.log('Refreshing accounts');
-    if (!this.web3) return this.accountsObservable.next([]);
-
     this.web3.eth.getAccounts((err, accs) => {
       if (err != null || accs.length == 0) {
         console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
@@ -120,6 +122,7 @@ export class Web3Service {
           this.metamaskConnected = false;
           this.openSnackBar(this.metamaskNotReadyMsg);
         }
+        return this.accountsObservable.next(accs);
       }
 
       if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
@@ -128,12 +131,22 @@ export class Web3Service {
         this.accounts = accs;
         if (accs.length) this.metamaskConnected = true;
       }
+
+      this.ready = true;
     });
   }
 
 
-  public setSearchValue(searchValue: string) {
+  public async setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
+    if (!searchValue) return;
+    
+    let result = await this.getRequestAsync(searchValue);
+
+    if (!result || !result.requestId || result.creator == '0x0000000000000000000000000000000000000000')
+      this.request.next({ 'requestId': null });
+    else
+      this.request.next(result);
   }
 
 
@@ -143,10 +156,10 @@ export class Web3Service {
     console.log('RequestNetworkService createRequestAsPayee');
     let expectedAmountInWei = this.toWei(expectedAmount, 'ether');
     this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, expectedAmountInWei, data).on('broadcasted', response => {
-        console.log('callback createRequestAsPayee: ', response);
-        callback(response);
-      })
-      .then(response => {
+      console.log('callback createRequestAsPayee: ', response);
+      callback(response);
+    }).then(
+      response => {
         console.log('resolve createRequestAsPayee: ', response);
         response.request.transactionHash = response.transactionHash;
         this.request.next(response.request);
@@ -162,9 +175,9 @@ export class Web3Service {
 
     console.log('RequestNetworkService cancel');
     this.requestNetwork.requestEthereumService.cancel(requestId).on('broadcasted', response => {
-        callback(response);
-      })
-      .then(response => {
+      callback(response);
+    }).then(
+      response => {
         response.request.transactionHash = response.transactionHash;
         this.request.next(response.request);
       }, err => {
@@ -179,9 +192,9 @@ export class Web3Service {
 
     console.log('RequestNetworkService accept');
     this.requestNetwork.requestEthereumService.accept(requestId).on('broadcasted', response => {
-        callback(response);
-      })
-      .then(response => {
+      callback(response);
+    }).then(
+      response => {
         response.request.transactionHash = response.transactionHash;
         this.request.next(response.request);
       }, err => {
@@ -197,9 +210,9 @@ export class Web3Service {
     console.log('RequestNetworkService subtractAction');
     let amountInWei = this.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.subtractAction(requestId, amountInWei).on('broadcasted', response => {
-        callback(response);
-      })
-      .then(response => {
+      callback(response);
+    }).then(
+      response => {
         response.request.transactionHash = response.transactionHash;
         this.request.next(response.request);
       }, err => {
@@ -215,9 +228,9 @@ export class Web3Service {
     console.log('RequestNetworkService additionalAction');
     let amountInWei = this.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.additionalAction(requestId, amountInWei).on('broadcasted', response => {
-        callback(response);
-      })
-      .then(response => {
+      callback(response);
+    }).then(
+      response => {
         response.request.transactionHash = response.transactionHash;
         this.request.next(response.request);
       }, err => {
@@ -233,9 +246,9 @@ export class Web3Service {
     console.log('RequestNetworkService pay');
     let amountInWei = this.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0).on('broadcasted', response => {
-        callback(response);
-      })
-      .then(response => {
+      callback(response);
+    }).then(
+      response => {
         response.request.transactionHash = response.transactionHash;
         this.request.next(response.request);
       }, err => {

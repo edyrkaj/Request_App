@@ -4,9 +4,9 @@
       <img class="px-3 request-logo" src="assets/img/request-logo.png">
       <span class="semi-bold">Request&nbsp;<sup><small><small>ALPHA TESTNET</small></small></sup></span>
     </a>
-    <form class="ml-auto" (ngSubmit)="search()" #searchForm="ngForm">
+    <form class="ml-auto" [formGroup]="searchForm" (ngSubmit)="search(searchValueFormControl.value)">
       <mat-form-field class="mx-3" [style.width]="'400px'">
-        <input matInput type="text" name="searchvalue" [(ngModel)]="searchValue" #searchvalue="ngModel" />
+        <input matInput type="text" formControlName="searchValueFormControl">
         <button type="submit" matSuffix mat-icon-button>
           <mat-icon>search</mat-icon>
         </button>

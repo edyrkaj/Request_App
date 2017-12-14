@@ -24,45 +24,29 @@ export class RequestComponent implements OnInit {
   copyUrlTxt: string = 'Copy url';
   txHash: string;
 
-  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(public snackBar: MatSnackBar, public web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
     this.url = window.location.href;
   }
 
   async ngOnInit() {
     // wait for web3 to be instantiated
-    if (!this.web3Service || !this.web3Service.accounts) {
+    if (!this.web3Service || !this.web3Service.ready) {
       const delay = new Promise(resolve => setTimeout(resolve, 1000));
       await delay;
       return await this.ngOnInit();
     }
 
-    // subscribe to searchBar queries
-    this.web3Service.searchValue.subscribe(async searchValue => {
-      if (!searchValue) return;
-      let result = await this.web3Service.getRequestAsync(searchValue);
-
-      if (!result || !result.requestId || result.creator == '0x0000000000000000000000000000000000000000') {
-        this.request = { 'requestId': null };
-      } else {
-        let history = await this.web3Service.getRequestHistory(result.requestId)
-        this.setRequest(result);
-      }
-    })
-
     // subscribe to transaction in progress
     this.web3Service.request.subscribe(request => {
-      if (this.txHash && request && request.requestId && (request.transactionHash == this.txHash || this.request && this.request.requestId == request.requestId))
-        this.setRequest(request);
+      // if (this.txHash && request && request.requestId && (request.transactionHash == this.txHash || this.request && this.request.requestId == request.requestId)) {
+      this.setRequest(request);
+      if (request.requestId)
         history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
     })
 
-    // if url with /requestId
     if (this.route.snapshot.params['requestId']) {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
-    }
-
-    // if url with /txHash
-    if (this.route.snapshot.params['txHash']) {
+    } else if (this.route.snapshot.params['txHash']) {
       this.txHash = this.route.snapshot.params['txHash'];
       // if queryParams get Request from queryParams
       if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
@@ -87,9 +71,6 @@ export class RequestComponent implements OnInit {
         this.setRequest(result);
         history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
       }
-      // else if (result.message) {
-      //   this.snackBar.open(result.message, 'Ok', { duration: 5000 });
-      // }
     }
   }
 

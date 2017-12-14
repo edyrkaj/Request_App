@@ -11,7 +11,7 @@ export class PayDialogComponent {
   payForm: FormGroup;
   amountFormControl: FormControl;
 
-  constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private dialogRef: MatDialogRef < PayDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
+  constructor(public web3Service: Web3Service, private formBuilder: FormBuilder, private dialogRef: MatDialogRef < PayDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
     this.request = data.request;
   }
 
