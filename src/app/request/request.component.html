@@ -117,15 +117,14 @@
                           Decline this Request
                         </button>
                         <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
-                          <span>Accept and pay later</span>
+                          <span>Accept & pay later</span>
                         </button>
                         <button (click)="additionalRequest()" mat-menu-item>
                           <span>Update the Request</span>
                         </button>
                       </mat-menu>
                       <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="payRequest()">
-                        <mat-icon>lock</mat-icon>
-                        <span>Pay now</span>
+                        <span>{{request.state != 1 ? 'Accept & pay now': 'Pay now'}}</span>
                       </button>
                     </div>
                     <!-- ELSE -->

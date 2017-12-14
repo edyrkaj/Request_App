@@ -148,7 +148,7 @@ export class RequestComponent implements OnInit {
   subtractRequest() {
     let subtractDialogRef = this.dialog.open(SubtractDialogComponent, {
       hasBackdrop: true,
-      width: '300px',
+      width: '350px',
       data: {
         request: this.request
       }
@@ -166,7 +166,7 @@ export class RequestComponent implements OnInit {
   additionalRequest() {
     let additionalDialogRef = this.dialog.open(AdditionalDialogComponent, {
       hasBackdrop: true,
-      width: '300px',
+      width: '350px',
       data: {
         request: this.request
       }
@@ -184,7 +184,7 @@ export class RequestComponent implements OnInit {
   payRequest() {
     let payDialogRef = this.dialog.open(PayDialogComponent, {
       hasBackdrop: true,
-      width: '300px',
+      width: '350px',
       data: {
         request: this.request
       }
