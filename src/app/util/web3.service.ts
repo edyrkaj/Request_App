@@ -36,7 +36,7 @@ export class Web3Service {
         return this.openSnackBar(this.web3NotReadyMsg); // TODO remove return when lib has own web3 for reading blockchain
       this.fromWei = this.web3.utils.fromWei;
       this.toWei = this.web3.utils.toWei;
-      this.BN = this.web3.utils.BN;
+      this.BN = mixed => new this.web3.utils.BN(mixed);
       this.web3.eth.net.getId().
       then(networkId => {
         try {

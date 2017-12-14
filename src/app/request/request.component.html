@@ -13,9 +13,6 @@
       </div>
       <ng-template #requestBlock>
         <div class="col-md-3">
-          <!-- <div popover="{{url}}" popoverPlacement="top" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true" [popoverAnimation]="true">
-</div>
- -->
           <input mat-button class="url-box fc-blue-grey fs-12 px-3 w-100" [value]="url" disabled>
           <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
           <hr style="border-top: 1px solid #617B9F; opacity: 0.2">
@@ -43,7 +40,7 @@
                   <img *ngIf="request.payee" [src]="blockies({ seed: request.payee.toLowerCase() }).toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
                 <div class="fs-14">
-                  <div class="mb-1" style="opacity: 0.5">FROM</div>
+                  <div class="mb-1" [style.opacity]="'0.5'">FROM</div>
                   <div class="semi-bold">ETH address</div>
                   <div popover="{{request.payee}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">{{request.payee.substring(0, 10)}}...{{request.payee.substring(32, 42)}}</div>
                 </div>
@@ -53,7 +50,7 @@
                   <img *ngIf="request.payer" [src]="blockies({ seed: request.payer.toLowerCase() }).toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
                 <div class="fs-14">
-                  <div class="mb-1" style="opacity: 0.5">TO</div>
+                  <div class="mb-1" [style.opacity]="'0.5'">TO</div>
                   <div class="semi-bold">ETH address</div>
                   <div popover="{{request.payee}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
                 </div>
@@ -78,12 +75,12 @@
                 <div><strong>{{ web3Service.fromWei(request.expectedAmount.sub(request.balance)) }} ETH</strong> remains to be paid</div>
               </div>
             </div>
-            <mat-toolbar class="p-0 bbr-7 cta-toolbar" style="height: 90px">
+            <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'90px'">
               <!-- VIEW MODE / BROADCASTING-->
               <div *ngIf="!request.state; else ctaMode" class="centered fs-12 h-100">
                 <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                 <div class="fc-primary semi-bold">
-                  <i>You are in view mode.<br/> Synchronizing the request with the blockchain can take between 1sec and a couple of minutes. You can already share the request via the URL.</i>
+                  <i>You are in view mode.<br/> Synchronizing the request with the blockchain can take between 1sec and a couple of minutes.</i>
                 </div>
               </div>
               <ng-template #ctaMode>

@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   createLoading: boolean = false;
 
   requestForm: FormGroup;
-  expectedAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.,][0-9]{0,18})?$')]);
+  expectedAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')]);
   payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
 
 
@@ -68,9 +68,6 @@ export class HomeComponent implements OnInit {
 
   createRequest() {
     if (this.createLoading) return;
-    // if (!this.web3Service.requestNetwork) return this.snackBar.open('Request Network smart contracts are not deployed on this network.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
-    // if (!this.account) return this.snackBar.open('You need to connect your Metamask wallet to create a Request.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
-    // if (this.account == this.payerFormControl.value) return this.snackBar.open('Payer\'s address must be different from yours.', 'Ok', { duration: 10000, horizontalPosition: 'right', verticalPosition: 'top', panelClass: 'warning-snackbar' });
 
     this.createLoading = true;
     

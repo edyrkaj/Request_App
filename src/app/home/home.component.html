@@ -48,9 +48,6 @@
               <mat-error *ngIf="payerFormControl.hasError('pattern')">
                 ETH address format <strong>not valid</strong>
               </mat-error>
-              <!--               <mat-error *ngIf="account && payerFormControl.value.toLowerCase() == account.toLowerCase() && payerFormControl.hasError('is42')">
-                payer's address has to be different from payee's
-              </mat-error> -->
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
               <textarea matInput maxlength="256" rows="1" placeholder="Reason (optional)" [formControl]="reasonFormControl"></textarea>

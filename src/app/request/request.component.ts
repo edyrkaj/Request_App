@@ -36,7 +36,7 @@ export class RequestComponent implements OnInit {
       return await this.ngOnInit();
     }
 
-    // subscribe to searchbar queries
+    // subscribe to searchBar queries
     this.web3Service.searchValue.subscribe(async searchValue => {
       if (!searchValue) return;
       let result = await this.web3Service.getRequestAsync(searchValue);
@@ -53,7 +53,7 @@ export class RequestComponent implements OnInit {
     this.web3Service.request.subscribe(request => {
       if (this.txHash && request && request.requestId && (request.transactionHash == this.txHash || this.request && this.request.requestId == request.requestId))
         this.setRequest(request);
-        history.pushState(null, null, `/request/requestId/${this.request.requestId}`);
+        history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
     })
 
     // if url with /requestId
@@ -68,8 +68,8 @@ export class RequestComponent implements OnInit {
       if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
         let queryRequest = {
           requestId: 'waiting for blockchain response...',
-          expectedAmount: new this.web3Service.BN(this.web3Service.toWei(this.route.snapshot.queryParams.expectedAmount)),
-          balance: new this.web3Service.BN(this.web3Service.toWei('0')),
+          expectedAmount: this.web3Service.BN(this.web3Service.toWei(this.route.snapshot.queryParams.expectedAmount)),
+          balance: this.web3Service.BN(this.web3Service.toWei('0')),
           payer: this.route.snapshot.queryParams.payer,
           payee: this.route.snapshot.queryParams.payee,
           data: { data: {} }
@@ -85,6 +85,7 @@ export class RequestComponent implements OnInit {
       let result = await this.web3Service.getRequestByTransactionHashAsync(this.txHash);
       if (result && result.requestId) {
         this.setRequest(result);
+        history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
       }
       // else if (result.message) {
       //   this.snackBar.open(result.message, 'Ok', { duration: 5000 });
