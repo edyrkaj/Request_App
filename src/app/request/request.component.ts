@@ -4,9 +4,9 @@ import { Web3Service } from '../util/web3.service';
 import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import blockies from 'blockies';
 
-import { PayDialogComponent } from './dialog/pay-dialog.component';
-import { SubtractDialogComponent } from './dialog/subtract-dialog.component';
-import { AdditionalDialogComponent } from './dialog/additional-dialog.component';
+import { PayDialogComponent } from '../util/dialogs/pay-dialog.component';
+import { SubtractDialogComponent } from '../util/dialogs/subtract-dialog.component';
+import { AdditionalDialogComponent } from '../util/dialogs/additional-dialog.component';
 
 @Component({
   selector: 'app-request',

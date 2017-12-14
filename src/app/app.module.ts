@@ -1,7 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
 import { PopoverModule } from 'ngx-popover';
 
@@ -9,15 +6,16 @@ import { SharedModule } from './shared/shared.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { UtilModule } from './util/util.module';
-import { PayDialogComponent } from './request/dialog/pay-dialog.component';
-import { SubtractDialogComponent } from './request/dialog/subtract-dialog.component';
-import { AdditionalDialogComponent } from './request/dialog/additional-dialog.component';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { RequestComponent } from './request/request.component';
 import { SearchComponent } from './search/search.component';
 
+import { BasicDialogComponent } from './util/dialogs/basic-dialog.component';
+import { PayDialogComponent } from './util/dialogs/pay-dialog.component';
+import { SubtractDialogComponent } from './util/dialogs/subtract-dialog.component';
+import { AdditionalDialogComponent } from './util/dialogs/additional-dialog.component';
 
 
 @NgModule({
@@ -26,17 +24,13 @@ import { SearchComponent } from './search/search.component';
     HomeComponent,
     RequestComponent,
     SearchComponent,
+
+    BasicDialogComponent,
     PayDialogComponent,
     SubtractDialogComponent,
     AdditionalDialogComponent
   ],
   imports: [
-    // angular
-    BrowserAnimationsModule,
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-
     // Feature Modules
     ClipboardModule,
     PopoverModule,
@@ -49,12 +43,12 @@ import { SearchComponent } from './search/search.component';
     AppRoutingModule,
   ],
   entryComponents: [
-    // dialog
+    BasicDialogComponent,
     PayDialogComponent,
     SubtractDialogComponent,
     AdditionalDialogComponent
   ],
-  providers: [],
+  providers: [UtilModule, ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

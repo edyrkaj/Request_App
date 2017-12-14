@@ -6,16 +6,14 @@ import { Web3Service } from '../../util/web3.service'
 @Component({
   templateUrl: './additional-dialog.component.html'
 })
-export class AdditionalDialogComponent {
+export class AdditionalDialogComponent implements OnInit {
   request;
   additionalForm: FormGroup;
   additionalAmountFormControl: FormControl;
-  superiorToExpectedAmountValidator;
 
   constructor(public web3Service: Web3Service, private formBuilder: FormBuilder, private dialogRef: MatDialogRef < AdditionalDialogComponent > , @Inject(MAT_DIALOG_DATA) private data: any) {
     this.request = data.request;
   }
-
 
   ngOnInit() {
     this.additionalAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')])

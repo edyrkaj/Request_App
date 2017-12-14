@@ -110,6 +110,7 @@ export class Web3Service {
     this.toWei = this.web3.utils.toWei;
     this.BN = mixed => new this.web3.utils.BN(mixed);
 
+    this.ready = true;
     setInterval(() => this.refreshAccounts(), 1000);
   }
 
@@ -131,8 +132,6 @@ export class Web3Service {
         this.accounts = accs;
         if (accs.length) this.metamaskConnected = true;
       }
-
-      this.ready = true;
     });
   }
 
@@ -140,7 +139,7 @@ export class Web3Service {
   public async setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
     if (!searchValue) return;
-    
+
     let result = await this.getRequestAsync(searchValue);
 
     if (!result || !result.requestId || result.creator == '0x0000000000000000000000000000000000000000')
@@ -295,17 +294,5 @@ export class Web3Service {
     }
   }
 
-
-  // private convertRequestAmountsFromWei(request: any) {
-  //   const fromWei = this.web3.utils.fromWei;
-  //   const BN = this.web3.utils.BN;
-  //   const toBN = this.web3.utils.toBN;
-  //   const DECIMAL = new BN('10').pow(new BN('18'));
-  //   if (request.expectedAmount)
-  //     request.expectedAmount = fromWei(request.expectedAmount);
-  //   if (request.balance)
-  //     request.balance = fromWei(request.balance);
-  //   return request;
-  // }
 
 }

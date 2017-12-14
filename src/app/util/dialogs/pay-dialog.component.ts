@@ -6,7 +6,7 @@ import { Web3Service } from '../../util/web3.service'
 @Component({
   templateUrl: './pay-dialog.component.html'
 })
-export class PayDialogComponent {
+export class PayDialogComponent implements OnInit {
   request;
   payForm: FormGroup;
   amountFormControl: FormControl;

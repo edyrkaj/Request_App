@@ -16,22 +16,26 @@ export class HomeComponent implements OnInit {
   createLoading: boolean = false;
 
   requestForm: FormGroup;
-  expectedAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')]);
-  payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
-
-
-  reasonFormControl = new FormControl('');
-  dateFormControl = new FormControl('');
+  expectedAmountFormControl: FormControl;
+  payerFormControl: FormControl;
+  reasonFormControl: FormControl;
+  dateFormControl: FormControl;
   // currency = new FormControl('ETH');
   // currencies = [{ name: 'ether', iso: 'ETH' }];
 
-  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {
-    setInterval(() => { this.date = new Date().getTime() }, 1000);
-    this.web3Service.setSearchValue(null);
-  }
+  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {}
 
   ngOnInit() {
+    setInterval(_ => { this.date = new Date().getTime() }, 1000);
+
+    this.web3Service.setSearchValue(null);
+
     this.watchAccount();
+
+    this.expectedAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')]);,
+    this.payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);,
+    this.dateFormControl = new FormControl('');,
+    this.reasonFormControl = new FormControl('');,
 
     this.requestForm = this.formBuilder.group({
       expectedAmount: this.expectedAmountFormControl,
@@ -41,6 +45,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
+
   watchAccount() {
     if (!this.account && this.web3Service.accounts) {
       this.account = this.web3Service.accounts[0];
@@ -48,10 +53,6 @@ export class HomeComponent implements OnInit {
     this.web3Service.accountsObservable.subscribe(accounts => {
       this.account = accounts[0];
     });
-  }
-
-  test() {
-    console.log(this.expectedAmountFormControl.value);
   }
 
   // positiveNumberValidator(control: FormControl) {
@@ -70,7 +71,7 @@ export class HomeComponent implements OnInit {
     if (this.createLoading) return;
 
     this.createLoading = true;
-    
+
     if (!this.requestForm.valid) {
       if (this.expectedAmountFormControl.hasError('required')) {
         this.expectedAmountFormControl.markAsTouched();
@@ -95,7 +96,7 @@ export class HomeComponent implements OnInit {
       this.createLoading = false;
       if (response && response.transactionHash) {
         this.snackBar.open('Transaction in progress', 'Ok', { duration: 3000 });
-        
+
         let queryParams = {
           expectedAmount: this.expectedAmountFormControl.value,
           payer: this.payerFormControl.value,
