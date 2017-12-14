@@ -17,7 +17,7 @@ export class PayDialogComponent {
 
 
   ngOnInit() {
-    this.amountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$'])
+    this.amountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')])
     this.payForm = this.formBuilder.group({
       amountFormControl: this.amountFormControl,
     })

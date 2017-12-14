@@ -18,7 +18,7 @@ export class AdditionalDialogComponent {
 
 
   ngOnInit() {
-    this.additionalAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$'])
+    this.additionalAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')])
     this.additionalForm = this.formBuilder.group({
       additionalAmountFormControl: this.additionalAmountFormControl
     })
