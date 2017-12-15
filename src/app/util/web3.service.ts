@@ -145,7 +145,7 @@ export class Web3Service {
     if (!request || !request.requestId || request.creator == '0x0000000000000000000000000000000000000000')
       this.request.next({ 'requestId': null });
     else
-      this.setRequestWithStatus(request);
+      await this.setRequestWithStatus(request);
   }
 
 
@@ -165,9 +165,7 @@ export class Web3Service {
       request.status = 'created';
     }
 
-    let history = await this.getRequestHistory(request.requestId);
-    request.history = history;
-
+    request.history = await this.getRequestHistory(request.requestId);
     this.request.next(request);
   }
 
@@ -181,10 +179,10 @@ export class Web3Service {
       console.log('callback createRequestAsPayee: ', response);
       callback(response);
     }).then(
-      response => {
+      async response => {
         console.log('resolve createRequestAsPayee: ', response);
         response.request.transactionHash = response.transactionHash;
-        this.setRequestWithStatus(response.request);
+        await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -199,9 +197,9 @@ export class Web3Service {
     this.requestNetwork.requestEthereumService.cancel(requestId).on('broadcasted', response => {
       callback(response);
     }).then(
-      response => {
+      async response => {
         response.request.transactionHash = response.transactionHash;
-        this.setRequestWithStatus(response.request);
+        await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -216,9 +214,9 @@ export class Web3Service {
     this.requestNetwork.requestEthereumService.accept(requestId).on('broadcasted', response => {
       callback(response);
     }).then(
-      response => {
+      async response => {
         response.request.transactionHash = response.transactionHash;
-        this.setRequestWithStatus(response.request);
+        await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -234,9 +232,9 @@ export class Web3Service {
     this.requestNetwork.requestEthereumService.subtractAction(requestId, amountInWei).on('broadcasted', response => {
       callback(response);
     }).then(
-      response => {
+      async response => {
         response.request.transactionHash = response.transactionHash;
-        this.setRequestWithStatus(response.request);
+        await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -252,9 +250,9 @@ export class Web3Service {
     this.requestNetwork.requestEthereumService.additionalAction(requestId, amountInWei).on('broadcasted', response => {
       callback(response);
     }).then(
-      response => {
+      async response => {
         response.request.transactionHash = response.transactionHash;
-        this.setRequestWithStatus(response.request);
+        await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -270,9 +268,9 @@ export class Web3Service {
     this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0).on('broadcasted', response => {
       callback(response);
     }).then(
-      response => {
+      async response => {
         response.request.transactionHash = response.transactionHash;
-        this.setRequestWithStatus(response.request);
+        await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);

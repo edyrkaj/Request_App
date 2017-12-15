@@ -86,7 +86,7 @@
                 <mat-progress-bar class="my-1" mode="determinate" [value]="progress"></mat-progress-bar>
                 <div [ngSwitch]="request.status">
                   <span *ngSwitchCase="'overpaid'"><strong>{{ web3Service.fromWei(request.expectedAmount.sub(request.balance).abs()) }} ETH</strong> overpaid</span>
-                  <span *ngSwitchCase="'complete'"></span>
+                  <span *ngSwitchCase="'complete'">&nbsp;</span>
                   <span *ngSwitchDefault><strong>{{ web3Service.fromWei(request.expectedAmount.sub(request.balance)) }} ETH</strong> remains to be paid</span>
                 </div>
               </div>
