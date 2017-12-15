@@ -12,7 +12,7 @@
     <hr style="border-top: 1px solid #617B9F; opacity: 0.2">
     <div class="fs-12 d-flex justify-content-between mb-3">
       <div><strong>Remains</strong></div>
-      <div>{{ request.balance != 0 ? web3Service.fromWei(request.expectedAmount.sub(web3Service.fromWei(request.balance))) : web3Service.fromWei(request.expectedAmount) }}<small>&nbsp;ETH</small></div>
+      <div>{{ web3Service.fromWei(request.expectedAmount.sub(request.balance)) }}<small>&nbsp;ETH</small></div>
     </div>
     <mat-form-field class="w-100">
       <input matInput type="text" formControlName="amountFormControl" placeholder="amount">

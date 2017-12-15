@@ -17,7 +17,7 @@ export class PayDialogComponent implements OnInit {
 
 
   ngOnInit() {
-    this.amountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')])
+    this.amountFormControl = new FormControl(this.web3Service.fromWei(this.request.expectedAmount.sub(this.request.balance)), [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')])
     this.payForm = this.formBuilder.group({
       amountFormControl: this.amountFormControl,
     })
@@ -25,8 +25,7 @@ export class PayDialogComponent implements OnInit {
 
 
   setMax() {
-    console.log('test');
-    this.amountFormControl.setValue(this.web3Service.fromWei(this.request.expectedAmount));
+    this.amountFormControl.setValue(this.web3Service.fromWei(this.request.expectedAmount.sub(this.request.balance)));
   }
 
 

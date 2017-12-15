@@ -7,9 +7,9 @@
       <div>{{ web3Service.fromWei(request.expectedAmount) }}&nbsp;<small>ETH</small></div>
     </div>
     <mat-form-field class="w-100">
-      <input matInput type="text" formControlName="additionalAmountFormControl" placeholder="amount to subtract" autocomplete="off">
+      <input matInput type="text" formControlName="additionalAmountFormControl" placeholder="amount to add" autocomplete="off">
       <mat-error *ngIf="additionalAmountFormControl.hasError('required')">
-        amount to subtract is <strong>required</strong>
+        amount to add is <strong>required</strong>
       </mat-error>
       <mat-error *ngIf="additionalAmountFormControl.hasError('pattern')">
         must be a <strong>positive number</strong> with maximum <strong>18 decimals</strong>
