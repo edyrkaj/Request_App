@@ -16,11 +16,12 @@ export class SubtractDialogComponent implements OnInit {
     this.request = data.request;
   }
 
+
   ngOnInit() {
     this.superiorToExpectedAmountValidator = (control: FormControl) => {
       if (!control.value) return null;
       control.markAsTouched();
-      return !isNaN(control.value) && this.request.expectedAmount.sub(this.web3Service.BN(this.web3Service.toWei(control.value.toString()))) <= 0 ? { superiorNumber: true } : null;
+      return !isNaN(control.value) && this.request.expectedAmount.lte(this.web3Service.BN(this.web3Service.toWei(control.value.toString()))) ? { superiorNumber: true } : null;
     }
 
     this.subtractAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$'), this.superiorToExpectedAmountValidator])

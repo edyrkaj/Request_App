@@ -108,7 +108,7 @@ export class RequestComponent implements OnInit {
   callbackTx(response) {
     if (response.transactionHash) {
       this.txHash = response.transactionHash;
-      this.web3Service.openSnackBar('Transaction in progress', 'Ok', 'success-snackbar');
+      this.web3Service.openSnackBar('Transaction in progress.', 'Ok', 'success-snackbar');
     } else if (response.message) {
       this.web3Service.openSnackBar(response.message);
     }

@@ -15,6 +15,7 @@ export class AdditionalDialogComponent implements OnInit {
     this.request = data.request;
   }
 
+
   ngOnInit() {
     this.additionalAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')])
     this.additionalForm = this.formBuilder.group({

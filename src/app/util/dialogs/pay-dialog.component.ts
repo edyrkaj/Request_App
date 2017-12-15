@@ -23,6 +23,7 @@ export class PayDialogComponent implements OnInit {
     })
   }
 
+
   setMax() {
     console.log('test');
     this.amountFormControl.setValue(this.web3Service.fromWei(this.request.expectedAmount));
