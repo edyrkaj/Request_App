@@ -38,13 +38,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     // wait for web3 to be instantiated
-    if (!this.web3Service || !this.web3Service.ready) {
-      const delay = new Promise(resolve => setTimeout(resolve, 1000));
-      await delay;
-      return await this.ngAfterViewInit();
-    }
+    // if (!this.web3Service || !this.web3Service.ready) {
+    //   const delay = new Promise(resolve => setTimeout(resolve, 1000));
+    //   await delay;
+    //   return await this.ngAfterViewInit();
+    // }
 
-    // UNCOMMENT FOR PROD
     // this.dialog.open(BasicDialogComponent, {
     //   hasBackdrop: true,
     //   width: '300px',
@@ -66,11 +65,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   search(searchValue) {
-    this.web3Service.setSearchValue(searchValue);
-    if (searchValue && searchValue.length <= 42)
-      this.router.navigate(['/search', searchValue]);
-    else if (searchValue)
-      this.router.navigate(['/request/requestId', searchValue]);
-  }
+  //  this.web3Service.setSearchValue(searchValue);
+  //   if (searchValue && searchValue.length <= 42)
+  //     this.router.navigate(['/search', searchValue]);
+  //   else if (searchValue)
+  //     this.router.navigate(['/request/requestId', searchValue]);
+  // }
 
 }

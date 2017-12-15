@@ -101,7 +101,7 @@ export class RequestComponent implements OnInit {
 
   copyToClipboard() {
     this.copyUrlTxt = 'Copied!';
-    setTimeout(() => { this.copyUrlTxt = 'Copy url' }, 500);
+    setTimeout(() => { this.copyUrlTxt = 'Copy url & share' }, 500);
   }
 
 

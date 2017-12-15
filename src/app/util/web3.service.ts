@@ -299,8 +299,14 @@ export class Web3Service {
     console.log('RequestNetworkService getRequestHistory');
     let history = await this.requestNetwork.requestCoreService.getRequestHistory(requestId);
     console.log('getRequestHistory result: ', history);
-    return history
+    return history;
   }
 
+    public async getRequestsByAddress(requestId: string) {
+    console.log('RequestNetworkService getRequestsByAddress');
+    let requests = await this.requestNetwork.requestCoreService.getRequestsByAddress(requestId);
+    console.log('getRequestsByAddress result: ', requests;);
+    return requests;
+  }
 
 }
