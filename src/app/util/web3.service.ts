@@ -121,14 +121,14 @@ export class Web3Service {
   }
 
 
-  public openSnackBar(msg ? : string, ok ? : string, panelClass ? : string) {
+  public openSnackBar(msg ? : string, ok ? : string, panelClass ? : string, duration ? : number) {
     if (!msg) {
       msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg : !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
       if (msg == '') return;
     }
 
     this.snackBar.open(msg, ok || 'Ok', {
-      duration: 5000,
+      duration: duration || 5000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
       panelClass: panelClass || 'warning-snackbar',

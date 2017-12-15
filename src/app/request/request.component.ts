@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
-import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import blockies from 'blockies';
 
 import { PayDialogComponent } from '../util/dialogs/pay-dialog.component';
@@ -24,7 +24,7 @@ export class RequestComponent implements OnInit {
   copyUrlTxt: string = 'Copy url';
   txHash: string;
 
-  constructor(public snackBar: MatSnackBar, public web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(public web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
     this.url = window.location.href;
   }
 
@@ -108,9 +108,9 @@ export class RequestComponent implements OnInit {
   callbackTx(response) {
     if (response.transactionHash) {
       this.txHash = response.transactionHash;
-      this.snackBar.open('Transaction in progress', 'Ok', { duration: 3000 });
+      this.web3Service.openSnackBar('Transaction in progress', 'Ok', 'success-snackbar');
     } else if (response.message) {
-      this.snackBar.open(response.message, 'Ok', { duration: 5000 });
+      this.web3Service.openSnackBar(response.message);
     }
   };
 

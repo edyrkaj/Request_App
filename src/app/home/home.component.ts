@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
 import { Web3Service } from '../util/web3.service';
 
 @Component({
@@ -23,10 +22,11 @@ export class HomeComponent implements OnInit {
   // currency = new FormControl('ETH');
   // currencies = [{ name: 'ether', iso: 'ETH' }];
 
-  constructor(public snackBar: MatSnackBar, private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {}
+  constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {}
+
 
   ngOnInit() {
-    setInterval(_ => { this.date = new Date().getTime() }, 1000);
+    setInterval(_ => { this.date = new Date().getTime() }, 5000);
 
     this.web3Service.setSearchValue(null);
 
@@ -84,7 +84,7 @@ export class HomeComponent implements OnInit {
       this.createLoading = false;
       return this.formDisabled = true;
     }
-    this.requestForm.controls['date'].setValue(this.date);
+    this.dateFormControl.setValue(this.date);
 
     let data = {};
     Object.keys(this.requestForm.value).forEach(key => {
@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
     this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), response => {
       this.createLoading = false;
       if (response && response.transactionHash) {
-        this.snackBar.open('Transaction in progress', 'Ok', { duration: 3000 });
+        this.web3Service.openSnackBar('Transaction in progress', 'Ok', 'success-snackbar');
 
         let queryParams = {
           expectedAmount: this.expectedAmountFormControl.value,
@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit {
 
         this.router.navigate(['/request/txHash', response.transactionHash], { queryParams });
       } else if (response && response.message) {
-        this.snackBar.open(response.message, 'Ok', { duration: 5000 });
+        this.web3Service.openSnackBar(response.message);
       }
     });
   }

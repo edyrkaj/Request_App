@@ -75,7 +75,7 @@
               </div>
             </div>
             <div class="d-flex">
-              <div class="ml-auto d-inline-block semi-bold fc-primary px-5 py-4" style="background: #DFE5EC">
+              <div class="ml-auto d-inline-block semi-bold fc-primary px-5 py-3" style="background: #DFE5EC">
                 <div class="fs-14">AMOUNT</div>
                 <div class="fs-24">{{web3Service.fromWei(request.expectedAmount)}} ETH</div>
               </div>
@@ -89,7 +89,7 @@
             </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'90px'">
               <!-- VIEW MODE / BROADCASTING-->
-              <div *ngIf="!request.state; else ctaMode" class="text-center fs-12 h-100">
+              <div *ngIf="!request.state; else ctaMode" class="text-center fs-12 lh-14 h-100">
                 <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                 <div class="fc-primary semi-bold">
                   <i>You are in view mode.<br/> Synchronizing the request with the blockchain can take between 1sec and a couple of minutes.</i>
@@ -97,7 +97,7 @@
               </div>
               <ng-template #ctaMode>
                 <!-- STATE == CANCELED -->
-                <div *ngIf="request.state == 2; else ctaBlock" class="h-100 text-center fs-12">
+                <div *ngIf="request.state == 2; else ctaBlock" class="text-center fs-12 lh-14 h-100">
                   <mat-icon class="mx-auto mt-3" color="warn">lock</mat-icon>
                   <div class="semi-bold fc-warn"><i>This request has been cancelled.<br/>You can’t interact with it anymore.</i></div>
                 </div>
@@ -140,7 +140,7 @@
                       </button>
                     </div>
                     <!-- ELSE -->
-                    <div *ngSwitchDefault class="fs-12 h-100 text-center">
+                    <div *ngSwitchDefault class="text-center fs-12 lh-14 h-100">
                       <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                       <div class="fc-primary semi-bold">
                         <i>You are in view mode.<br/> Connect your metamask account as the payer or payee to interact with this Request.</i>

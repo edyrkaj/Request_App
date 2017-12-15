@@ -56,6 +56,15 @@ a {
   }
 }
 
+.success-snackbar {
+  color: #55ACE6 !important;
+  background-color: #ECF6FC !important;
+  border: 1px solid #C0E0F6 !important;
+  button {
+    color: #55ACE6;
+  }
+}
+
 .mat-simple-snackbar {
   overflow: hidden;
 }
@@ -207,8 +216,12 @@ mat-hint.mat-hint {
   font-weight: 500;
 }
 
+.lh-14 {
+  line-height: 14px;
+}
+
 .lh-18 {
-  line-height:18px;
+  line-height: 18px;
 }
 
 // BORDERS & SHADOW

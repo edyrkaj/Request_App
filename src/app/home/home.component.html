@@ -40,7 +40,7 @@
               </mat-form-field> -->
             </div>
             <mat-form-field class="w-100">
-              <input matInput maxlength="42" placeholder="Request from (Payer’s ETH address)" [formControl]="payerFormControl">
+              <input matInput maxlength="42" placeholder="Payer's ETH address" [formControl]="payerFormControl">
               <mat-error *ngIf="payerFormControl.hasError('required')">
                 payer's ETH address is <strong>required</strong>
               </mat-error>
