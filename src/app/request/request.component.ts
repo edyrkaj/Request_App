@@ -39,12 +39,12 @@ export class RequestComponent implements OnInit {
     this.web3Service.request.subscribe(async request => {
       this.setRequest(request);
       if (request.requestId) {
-        history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
+        // history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
       }
     })
 
     if (this.route.snapshot.params['requestId']) {
-      this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
+      setTimeout(_ => this.web3Service.setSearchValue(this.route.snapshot.params['requestId']));
     } else if (this.route.snapshot.params['txHash']) {
       this.txHash = this.route.snapshot.params['txHash'];
       // if queryParams get Request from queryParams

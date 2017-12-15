@@ -141,6 +141,7 @@ export class Web3Service {
     // if requestId
     if (searchValue && searchValue.length > 42) {
       let request = await this.getRequestAsync(searchValue);
+      console.log(request);
       if (!request || !request.requestId || request.creator == '0x0000000000000000000000000000000000000000')
         this.request.next({ 'requestId': null });
       else
@@ -281,32 +282,47 @@ export class Web3Service {
 
   public async getRequestAsync(requestId: string) {
     console.log('RequestNetworkService getRequest by id');
-    let request = await this.requestNetwork.requestCoreService.getRequest(requestId);
-    console.log('getRequest by id result: ', request);
-    return request;
+    try {
+      let request = await this.requestNetwork.requestCoreService.getRequest(requestId);
+      return request;
+    } catch (err) {
+      console.log('Error: ', err.message);
+      return err;
+    }
   }
-
 
   public async getRequestByTransactionHashAsync(requestId: string) {
     console.log('RequestNetworkService getRequest by txHash');
-    let request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
-    console.log('getRequest by txHash result: ', request);
-    return request;
+    try {
+      let request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
+      return request;
+    } catch (err) {
+      console.log('Error: ', err.message);
+      return err;
+    }
   }
 
 
   public async getRequestHistory(requestId: string) {
     console.log('RequestNetworkService getRequestHistory');
-    let history = await this.requestNetwork.requestCoreService.getRequestHistory(requestId);
-    console.log('getRequestHistory result: ', history);
-    return history;
+    try {
+      let history = await this.requestNetwork.requestCoreService.getRequestHistory(requestId);
+      return history;
+    } catch (err) {
+      console.log('Error: ', err.message);
+      return err;
+    }
   }
 
   public async getRequestsByAddress(requestId: string) {
     console.log('RequestNetworkService getRequestsByAddress');
-    let requests = await this.requestNetwork.requestCoreService.getRequestsByAddress(requestId);
-    console.log('getRequestsByAddress result: ', requests);
-    return requests;
+    try {
+      let requests = await this.requestNetwork.requestCoreService.getRequestsByAddress(requestId);
+      return requests;
+    } catch (err) {
+      console.log('Error: ', err.message);
+      return err;
+    }
   }
 
 }
