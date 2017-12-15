@@ -32,10 +32,10 @@ export class HomeComponent implements OnInit {
 
     this.watchAccount();
 
-    this.expectedAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')]);,
-    this.payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);,
-    this.dateFormControl = new FormControl('');,
-    this.reasonFormControl = new FormControl('');,
+    this.expectedAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')]);
+    this.payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
+    this.dateFormControl = new FormControl('');
+    this.reasonFormControl = new FormControl('');
 
     this.requestForm = this.formBuilder.group({
       expectedAmount: this.expectedAmountFormControl,
