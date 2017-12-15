@@ -172,6 +172,7 @@ export class Web3Service {
 
   public createRequestAsPayee(payer: string, expectedAmount: string, data: string, callback ? ) {
     if (this.watchDog()) return callback();
+    if (!this.web3.utils.isAddress(payer)) return callback({ message: 'payer\'s address is not a valid Ethereum address' });
 
     console.log('RequestNetworkService createRequestAsPayee');
     let expectedAmountInWei = this.toWei(expectedAmount, 'ether');
