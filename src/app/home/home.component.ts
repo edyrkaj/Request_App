@@ -27,8 +27,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     setInterval(_ => { this.date = new Date().getTime() }, 5000);
-
-    this.web3Service.setSearchValue(null);
+    setTimeout(_ => this.web3Service.setSearchValue(''));
 
     this.watchAccount();
 

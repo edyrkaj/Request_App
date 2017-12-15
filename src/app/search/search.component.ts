@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
 import { MatTableDataSource } from '@angular/material';
@@ -8,8 +8,9 @@ import { MatTableDataSource } from '@angular/material';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   searchValue: string;
+  subscription;
   dataSource;
 
   constructor(private web3Service: Web3Service, private router: Router, private route: ActivatedRoute) {}
@@ -22,9 +23,9 @@ export class SearchComponent implements OnInit {
       return await this.ngOnInit();
     }
 
-    this.web3Service.searchValue.subscribe(async (searchValue) => {
+    this.subscription = this.web3Service.searchValue.subscribe(async searchValue => {
       this.searchValue = searchValue;
-      await this.listRequest();
+      await this.listRequest(searchValue);
     })
 
     if (this.route.snapshot.params['searchValue']) {
@@ -33,11 +34,12 @@ export class SearchComponent implements OnInit {
   }
 
 
-  async listRequest() {
-    // let result = await this.web3Service.getRequest(this.searchValue);
-    let result = await this.web3Service.getRequestAsync('0x7dfe757ecd65cbd7922a9c0161e935dd7fdbcc0e999689c7d31633896b1fc60b');
-    // this.dataSource = new MatTableDataSource([result]);
-    console.log(this.dataSource)
+  async listRequest(address) {
+    let result = await this.web3Service.getRequestsByAddress(address);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }

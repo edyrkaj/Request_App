@@ -36,7 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
 
-  async ngAfterViewInit() {
+  ngAfterViewInit() {
     // wait for web3 to be instantiated
     // if (!this.web3Service || !this.web3Service.ready) {
     //   const delay = new Promise(resolve => setTimeout(resolve, 1000));
