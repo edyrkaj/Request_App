@@ -4,7 +4,7 @@
       <img class="px-3 request-logo" src="assets/img/request-logo.png">
       <span class="semi-bold">Request&nbsp;<sup><small><small>ALPHA TESTNET</small></small></sup></span>
     </a>
-    <form class="ml-auto" [formGroup]="searchForm" (ngSubmit)="search(searchValueFormControl.value)">
+    <form class="mx-auto" [formGroup]="searchForm" (ngSubmit)="search(searchValueFormControl.value)">
       <mat-form-field class="mx-3" [style.width]="'400px'">
         <input matInput type="text" formControlName="searchValueFormControl">
         <button type="submit" matSuffix mat-icon-button>
@@ -13,12 +13,14 @@
         <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>
       </mat-form-field>
     </form>
-    <div class="mx-3" [style.width]="'427px'">
+    <div class="mx-3" [style.width]="'210px'">
       <i *ngIf="account == 'loading'; else accountBlock" class="fa fa-circle-o-notch fa-spin pull-right mr-3"></i>
       <ng-template #accountBlock>
         <mat-form-field *ngIf="accounts.length; else connectAccount" floatPlaceholder="never" class="w-100">
           <mat-select name="account" placeholder="select account" [(ngModel)]="account">
-            <mat-option *ngFor="let account of accounts" [value]="account">{{ account }}</mat-option>
+            <mat-option class="px-2" *ngFor="let account of accounts" [value]="account"><small>
+              {{ account }}
+            </small></mat-option>
           </mat-select>
           <small matPrefix>
         <img *ngIf="account" [src]="blockies({ seed: account.toLowerCase() }).toDataURL()" style="position: relative; top: -6px; width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />

@@ -39,48 +39,6 @@ export class Web3Service {
   }
 
 
-  private setEtherscanUrl(networkId) {
-    switch (networkId) {
-      case 1:
-        this.etherscanUrl = 'https://etherscan.io/';
-        break;
-      case 3:
-        this.etherscanUrl = 'https://ropsten.etherscan.io/';
-        break;
-      case 4:
-        this.etherscanUrl = 'https://rinkeby.etherscan.io/';
-        break;
-      case 42:
-        this.etherscanUrl = 'https://kovan.etherscan.io/';
-        break;
-      default:
-        break;
-    }
-  }
-
-
-  private watchDog() {
-    let stop = !this.web3 || !this.requestNetwork || !this.metamaskConnected;
-    if (stop) this.openSnackBar();
-    return stop;
-  }
-
-
-  public openSnackBar(msg ? : string, ok ? : string, panelClass ? : string) {
-    if (!msg) {
-      msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg : !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
-      if (msg == '') return;
-    }
-
-    this.snackBar.open(msg, ok || 'Ok', {
-      duration: 5000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-      panelClass: panelClass || 'warning-snackbar',
-    });
-  }
-
-
   private checkAndInstantiateWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
@@ -136,16 +94,81 @@ export class Web3Service {
   }
 
 
+  private setEtherscanUrl(networkId) {
+    switch (networkId) {
+      case 1:
+        this.etherscanUrl = 'https://etherscan.io/';
+        break;
+      case 3:
+        this.etherscanUrl = 'https://ropsten.etherscan.io/';
+        break;
+      case 4:
+        this.etherscanUrl = 'https://rinkeby.etherscan.io/';
+        break;
+      case 42:
+        this.etherscanUrl = 'https://kovan.etherscan.io/';
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  private watchDog() {
+    let stop = !this.web3 || !this.requestNetwork || !this.metamaskConnected;
+    if (stop) this.openSnackBar();
+    return stop;
+  }
+
+
+  public openSnackBar(msg ? : string, ok ? : string, panelClass ? : string) {
+    if (!msg) {
+      msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg : !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
+      if (msg == '') return;
+    }
+
+    this.snackBar.open(msg, ok || 'Ok', {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: panelClass || 'warning-snackbar',
+    });
+  }
+
+
   public async setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
     if (!searchValue) return;
 
-    let result = await this.getRequestAsync(searchValue);
+    let request = await this.getRequestAsync(searchValue);
 
-    if (!result || !result.requestId || result.creator == '0x0000000000000000000000000000000000000000')
+    if (!request || !request.requestId || request.creator == '0x0000000000000000000000000000000000000000')
       this.request.next({ 'requestId': null });
     else
-      this.request.next(result);
+      this.setRequestWithStatus(request);
+  }
+
+
+  public async setRequestWithStatus(request) {
+    if (request.state == 2)
+      request.status = 'cancelled';
+    else if (request.state == 1) {
+      if (request.balance != 0 && request.balance < request.expectedAmount)
+        request.status = 'in progress';
+      else if (request.balance == request.expectedAmount)
+        request.status = 'complete';
+      else if (request.balance > request.expectedAmount)
+        request.status = 'overpaid';
+      else
+        request.status = 'accepted'
+    } else {
+      request.status = 'created';
+    }
+
+    let history = await this.getRequestHistory(request.requestId);
+    request.history = history;
+
+    this.request.next(request);
   }
 
 
@@ -161,7 +184,7 @@ export class Web3Service {
       response => {
         console.log('resolve createRequestAsPayee: ', response);
         response.request.transactionHash = response.transactionHash;
-        this.request.next(response.request);
+        this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -178,7 +201,7 @@ export class Web3Service {
     }).then(
       response => {
         response.request.transactionHash = response.transactionHash;
-        this.request.next(response.request);
+        this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -195,7 +218,7 @@ export class Web3Service {
     }).then(
       response => {
         response.request.transactionHash = response.transactionHash;
-        this.request.next(response.request);
+        this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -213,7 +236,7 @@ export class Web3Service {
     }).then(
       response => {
         response.request.transactionHash = response.transactionHash;
-        this.request.next(response.request);
+        this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -231,7 +254,7 @@ export class Web3Service {
     }).then(
       response => {
         response.request.transactionHash = response.transactionHash;
-        this.request.next(response.request);
+        this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -249,7 +272,7 @@ export class Web3Service {
     }).then(
       response => {
         response.request.transactionHash = response.transactionHash;
-        this.request.next(response.request);
+        this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
         callback(err);
@@ -258,40 +281,26 @@ export class Web3Service {
 
 
   public async getRequestAsync(requestId: string) {
-    try {
-      console.log('RequestNetworkService getRequest by id');
-      let request = await this.requestNetwork.requestCoreService.getRequest(requestId);
-      console.log('getRequest by id result: ', request);
-      return request;
-    } catch (err) {
-      console.log('Error: ', err.message);
-      return err;
-    }
+    console.log('RequestNetworkService getRequest by id');
+    let request = await this.requestNetwork.requestCoreService.getRequest(requestId);
+    console.log('getRequest by id result: ', request);
+    return request;
   }
 
 
   public async getRequestByTransactionHashAsync(requestId: string) {
-    try {
-      console.log('RequestNetworkService getRequest by txHash');
-      let request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
-      console.log('getRequest by txHash result: ', request);
-      return request;
-    } catch (err) {
-      console.log('Error: ', err.message);
-      return err;
-    }
+    console.log('RequestNetworkService getRequest by txHash');
+    let request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
+    console.log('getRequest by txHash result: ', request);
+    return request;
   }
 
 
   public async getRequestHistory(requestId: string) {
-    try {
-      console.log('RequestNetworkService getRequestHistory');
-      let request = await this.requestNetwork.requestCoreService.getRequestHistory(requestId);
-      console.log('getRequestHistory result: ', request);
-    } catch (err) {
-      console.log('Error: ', err.message);
-      return err;
-    }
+    console.log('RequestNetworkService getRequestHistory');
+    let history = await this.requestNetwork.requestCoreService.getRequestHistory(requestId);
+    console.log('getRequestHistory result: ', history);
+    return history
   }
 
 

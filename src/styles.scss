@@ -21,11 +21,84 @@ body {
   margin: 0;
 }
 
+* {
+  &:active,
+   :focus {
+    outline: none !important;
+  }
+}
+
 a {
   cursor: pointer;
   &:hover {
     text-decoration: none;
   }
+}
+
+.status {
+  border-radius: 2px;
+  border: 1px solid white;
+}
+
+.currencyIcon {
+  max-height: 16px;
+  max-width: 16px;
+  position: relative;
+  top: -2px;
+}
+
+.warning-snackbar {
+  color: #F0A73A !important;
+  background-color: #FDF1E0 !important;
+  border: 1px solid #F9DCB0 !important;
+  button {
+    color: #F0A73A;
+  }
+}
+
+.mat-simple-snackbar {
+  overflow: hidden;
+}
+
+mat-toolbar.cta-toolbar {
+   :first-child {
+    border-bottom-left-radius: 7px;
+    flex: 1;
+  }
+   :last-child {
+    border-bottom-right-radius: 7px;
+    flex: 1;
+  }
+  button {
+    border-radius: 0;
+    box-shadow: none !important;
+    height: 100%;
+  }
+}
+
+.actionsMenu {
+  box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+  max-width: none !important;
+  width: 25.25vw;
+  min-width: 185px !important;
+  top: 64px;
+  .mat-menu-item {
+    color: $blue-grey;
+    padding: 0 3rem;
+  }
+}
+
+button.no-focus-overlay .mat-button-focus-overlay {
+  background-color: transparent;
+}
+
+mat-toolbar.mat-toolbar {
+  background: $grey-whiter;
+}
+
+.img-fluid {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 // CUSTOMIZE POPOVER
@@ -70,64 +143,6 @@ mat-hint.mat-hint {
   background-color: rgba($blue-grey, 0.2);
 }
 
-.warning-snackbar {
-  color: #F0A73A !important;
-  background-color: #FDF1E0 !important;
-  border: 1px solid #F9DCB0 !important;
-  button {
-    color: #F0A73A;
-  }
-}
-
-mat-toolbar.cta-toolbar {
-   :first-child {
-    border-bottom-left-radius: 7px;
-    flex: 1;
-  }
-   :last-child {
-    border-bottom-right-radius: 7px;
-    flex: 1;
-  }
-  button {
-    border-radius: 0;
-    box-shadow: none !important;
-    height: 100%;
-  }
-}
-
-.mat-simple-snackbar {
-  overflow: hidden;
-}
-
-.actionsMenu {
-  box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
-  max-width: none !important;
-  width: 25.25vw;
-  min-width: 185px !important;
-  top: 64px;
-  .mat-menu-item {
-    color: $blue-grey;
-    padding: 0 3rem;
-  }
-}
-
-button.no-focus-overlay .mat-button-focus-overlay {
-  background-color: transparent;
-}
-
-mat-toolbar.mat-toolbar {
-  background: $grey-whiter;
-}
-
-.img-fluid {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.text-right {
-  text-align: right;
-}
-
 // FONT COLORS
 .fc-primary {
   color: $primary;
@@ -148,7 +163,6 @@ mat-toolbar.mat-toolbar {
 .fc-blue-grey {
   color: $blue-grey !important;
 }
-
 
 // BACKGROUND COLORS
 .bg-primary {
@@ -171,33 +185,31 @@ mat-toolbar.mat-toolbar {
 // FONT SIZE & WEIGHT
 .fs-12 {
   font-size: 12px !important;
-  line-height: 14px;
 }
 
 .fs-14 {
   font-size: 14px !important;
-  line-height: 18px;
 }
 
 .fs-16 {
   font-size: 16px !important;
-  line-height: 20px;
 }
 
 .fs-18 {
   font-size: 18px !important;
-  line-height: 22px;
 }
 
 .fs-24 {
   font-size: 24px !important;
-  line-height: 28px;
 }
 
 .semi-bold {
   font-weight: 500;
 }
 
+.lh-18 {
+  line-height:18px;
+}
 
 // BORDERS & SHADOW
 .sh-blue {
@@ -226,36 +238,7 @@ mat-toolbar.mat-toolbar {
   border-bottom-left-radius: 7px !important;
 }
 
-// OTHERS
-.currencyIcon {
-  max-height: 16px;
-  max-width: 16px;
-  position: relative;
-  top: -2px;
-}
-
-.centered {
-  text-align: center;
-}
-
-* {
-  &:active,
-   :focus {
-    outline: none !important;
-  }
-}
-
-label {
-  margin: 0;
-}
-
-code {
-  white-space: nowrap;
-  border-radius: 10px;
-  padding: 0 8px 1px 8px;
-}
-
-
+// fix chrome autofill theme
 input {
   &:-webkit-autofill {
     -webkit-text-fill-color: $blue-grey !important;
@@ -264,14 +247,14 @@ input {
   }
 }
 
-//remove number input spinners
+// remove number input spinners
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-//Supports Mozilla
+// supports Mozilla
 input[type=number] {
   -moz-appearance: textfield;
 }

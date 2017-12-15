@@ -35,5 +35,5 @@ export class SubtractDialogComponent implements OnInit {
     this.dialogRef.close(this.subtractAmountFormControl.value);
   }
 
-
+  
 }

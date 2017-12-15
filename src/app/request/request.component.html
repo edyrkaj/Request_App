@@ -4,7 +4,7 @@
       <mat-spinner class="mx-auto"></mat-spinner>
     </div>
     <ng-template #resultBlock>
-      <div class="col-12 centered" *ngIf="!request || !request.requestId; else requestBlock">
+      <div class="col-12 text-center" *ngIf="!request || !request.requestId; else requestBlock">
         <img class="mx-auto" src="assets/img/searching.png" style="max-width: 120px;">
         <h1 class="my-3">Oops</h1>
         <p>Sorry, we couldn’t find any matches for this Request ID.</p>
@@ -16,6 +16,15 @@
           <input mat-button class="url-box fc-blue-grey fs-12 px-3 w-100" [value]="url" disabled>
           <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
           <hr style="border-top: 1px solid #617B9F; opacity: 0.2">
+          <div class="fc-blue-grey" *ngIf="request.history">
+            <p class="semi-bold">
+              History
+            </p>
+            <div *ngFor="let e of request.history" class="fs-14 d-flex justify-content-between">
+              <span>{{e.name}}</span>
+              <span>{{e._meta.blockNumber}}</span>
+            </div>
+          </div>
         </div>
         <div class="ml-auto col-md-8">
           <mat-card class="p-0 br-7 sh-blue">
@@ -29,8 +38,11 @@
                 <div class="fs-14" [style.opacity]="'0.5'">
                   <i>{{request.data.data.date | date: 'fullDate'}}</i>
                 </div>
-                <div *ngIf="txHash">
-                  <i><a class="fs-14" style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank">{{web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10)}}...</a></i>
+                <div class="mt-1">
+                  <a *ngIf="txHash" class="fs-14" style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank"><i>{{web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10)}}...</i></a>&nbsp;
+                  <span *ngIf="request.status" class="status fs-12 fc-white px-2 py-1">
+                    {{request.status}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -39,7 +51,7 @@
                 <div class="px-3">
                   <img *ngIf="request.payee" [src]="blockies({ seed: request.payee.toLowerCase() }).toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
-                <div class="fs-14">
+                <div class="fs-14 lh-18">
                   <div class="mb-1" [style.opacity]="'0.5'">FROM</div>
                   <div class="semi-bold">ETH address</div>
                   <div popover="{{request.payee}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">{{request.payee.substring(0, 10)}}...{{request.payee.substring(32, 42)}}</div>
@@ -49,10 +61,10 @@
                 <div class="px-3">
                   <img *ngIf="request.payer" [src]="blockies({ seed: request.payer.toLowerCase() }).toDataURL()" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 25px" />
                 </div>
-                <div class="fs-14">
+                <div class="fs-14 lh-18">
                   <div class="mb-1" [style.opacity]="'0.5'">TO</div>
                   <div class="semi-bold">ETH address</div>
-                  <div popover="{{request.payee}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
+                  <div popover="{{request.payer}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">{{request.payer.substring(0, 10)}}...{{request.payer.substring(32, 42)}}</div>
                 </div>
               </div>
             </div>
@@ -69,7 +81,7 @@
               </div>
             </div>
             <div class="p-5">
-              <div class="fc-blue-grey fs-12 mx-auto w-50 centered">
+              <div class="fc-blue-grey fs-12 mx-auto w-50 text-center">
                 <div><strong>{{progress | number: '1.0-2'}}%</strong> of the Request has been paid</div>
                 <mat-progress-bar class="my-1" mode="determinate" [value]="progress"></mat-progress-bar>
                 <div><strong>{{ web3Service.fromWei(request.expectedAmount.sub(request.balance)) }} ETH</strong> remains to be paid</div>
@@ -77,7 +89,7 @@
             </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'90px'">
               <!-- VIEW MODE / BROADCASTING-->
-              <div *ngIf="!request.state; else ctaMode" class="centered fs-12 h-100">
+              <div *ngIf="!request.state; else ctaMode" class="text-center fs-12 h-100">
                 <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                 <div class="fc-primary semi-bold">
                   <i>You are in view mode.<br/> Synchronizing the request with the blockchain can take between 1sec and a couple of minutes.</i>
@@ -85,7 +97,7 @@
               </div>
               <ng-template #ctaMode>
                 <!-- STATE == CANCELED -->
-                <div *ngIf="request.state == 2; else ctaBlock" class="h-100 centered fs-12">
+                <div *ngIf="request.state == 2; else ctaBlock" class="h-100 text-center fs-12">
                   <mat-icon class="mx-auto mt-3" color="warn">lock</mat-icon>
                   <div class="semi-bold fc-warn"><i>This request has been cancelled.<br/>You can’t interact with it anymore.</i></div>
                 </div>
@@ -128,7 +140,7 @@
                       </button>
                     </div>
                     <!-- ELSE -->
-                    <div *ngSwitchDefault class="fs-12 h-100 centered">
+                    <div *ngSwitchDefault class="fs-12 h-100 text-center">
                       <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                       <div class="fc-primary semi-bold">
                         <i>You are in view mode.<br/> Connect your metamask account as the payer or payee to interact with this Request.</i>

@@ -36,12 +36,11 @@ export class RequestComponent implements OnInit {
       return await this.ngOnInit();
     }
 
-    // subscribe to transaction in progress
-    this.web3Service.request.subscribe(request => {
-      // if (this.txHash && request && request.requestId && (request.transactionHash == this.txHash || this.request && this.request.requestId == request.requestId)) {
+    this.web3Service.request.subscribe(async request => {
       this.setRequest(request);
-      if (request.requestId)
+      if (request.requestId) {
         history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
+      }
     })
 
     if (this.route.snapshot.params['requestId']) {
