@@ -7,7 +7,7 @@
     <form class="mx-auto" [formGroup]="searchForm" (ngSubmit)="search(searchValueFormControl.value)">
       <mat-form-field class="mx-3" [style.width]="'400px'">
         <input matInput type="text" formControlName="searchValueFormControl">
-        <button type="submit" matSuffix mat-icon-button>
+        <button type="submit" matSuffix mat-icon-button [disabled]="!searchValueFormControl.value">
           <mat-icon>search</mat-icon>
         </button>
         <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>

@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Web3Service } from './util/web3.service'
 import { BasicDialogComponent } from './util/dialogs/basic-dialog.component';
 import blockies from 'blockies';
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.watchAccount();
 
-    this.searchValueFormControl = new FormControl('', [Validators.required])
+    this.searchValueFormControl = new FormControl('')
     this.searchForm = this.formBuilder.group({
       searchValueFormControl: this.searchValueFormControl
     })
@@ -65,11 +65,23 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   search(searchValue) {
-  //  this.web3Service.setSearchValue(searchValue);
-  //   if (searchValue && searchValue.length <= 42)
-  //     this.router.navigate(['/search', searchValue]);
-  //   else if (searchValue)
-  //     this.router.navigate(['/request/requestId', searchValue]);
-  // }
+    if (this.router.routerState.snapshot.url.startsWith('/request')) {
+      if (searchValue.length <= 42)
+        this.router.navigate(['/search', searchValue]);
+      else
+        this.web3Service.setSearchValue(searchValue);
+    } else if (this.router.routerState.snapshot.url.startsWith('/search')) {
+      if (searchValue.length > 42)
+        this.router.navigate(['/request/requestId', searchValue]);
+      else
+        this.web3Service.setSearchValue(searchValue);
+    } else {
+      if (searchValue.length == 42)
+        this.router.navigate(['/search', searchValue]);
+      else if (searchValue.length > 42)
+        this.router.navigate(['/request/requestId', searchValue]);
+    }
+  }
+
 
 }

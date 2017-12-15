@@ -137,15 +137,14 @@ export class Web3Service {
 
 
   public async setSearchValue(searchValue: string) {
-    this.searchValue.next(searchValue);
-    if (!searchValue) return;
-
-    let request = await this.getRequestAsync(searchValue);
-
-    if (!request || !request.requestId || request.creator == '0x0000000000000000000000000000000000000000')
-      this.request.next({ 'requestId': null });
-    else
-      await this.setRequestWithStatus(request);
+    this.searchValue.next(searchValue)
+    if (searchValue && searchValue.length > 42) {
+      let request = await this.getRequestAsync(searchValue);
+      if (!request || !request.requestId || request.creator == '0x0000000000000000000000000000000000000000')
+        this.request.next({ 'requestId': null });
+      else
+        await this.setRequestWithStatus(request);
+    }
   }
 
 
@@ -302,10 +301,10 @@ export class Web3Service {
     return history;
   }
 
-    public async getRequestsByAddress(requestId: string) {
+  public async getRequestsByAddress(requestId: string) {
     console.log('RequestNetworkService getRequestsByAddress');
     let requests = await this.requestNetwork.requestCoreService.getRequestsByAddress(requestId);
-    console.log('getRequestsByAddress result: ', requests;);
+    console.log('getRequestsByAddress result: ', requests);
     return requests;
   }
 
