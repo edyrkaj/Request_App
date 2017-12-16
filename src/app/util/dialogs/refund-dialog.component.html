@@ -1,0 +1,28 @@
+<form class="fc-primary" [formGroup]="refundForm" (ngSubmit)="submit()">
+  <h1 mat-dialog-title>Refund Request</h1>
+  <mat-dialog-content>
+    <div class="fs-12 d-flex justify-content-between mb-1">
+      <div><strong>Already paid</strong></div>
+      <div>{{ web3Service.fromWei(request.balance) }}<small>&nbsp;ETH</small></div>
+    </div>
+    <mat-form-field class="w-100">
+      <input matInput type="text" formControlName="refundFormControl" placeholder="amount to refund">
+      <mat-error *ngIf="refundFormControl.hasError('required')">
+        amount is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="refundFormControl.hasError('pattern')">
+        must be a <strong>positive number</strong> with maximum <strong>18 decimals</strong>
+      </mat-error>
+      <span matSuffix><img class="currencyIcon" src="assets/cryptoIcons/ETH.png">&nbsp;ETH&nbsp;<a (click)="setMax()" class="fs-12 fc-accent">max</a>
+      </span>
+    </mat-form-field>
+    <div class="fs-12 d-flex justify-content-between my-3">
+      <div><strong>Will remain</strong></div>
+      <div>{{ refundFormControl.value && refundFormControl.valid ? web3Service.fromWei(request.balance.sub(web3Service.BN(web3Service.toWei(refundFormControl.value)))) : '...' }}&nbsp;<small>ETH</small></div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="mt-3 d-flex justify-content-around w-100">
+    <button class="col-5" mat-raised-button type="button" mat-dialog-close>Cancel</button>
+    <button class="col-5" mat-raised-button type="submit" [disabled]="!refundForm.valid" color="accent">Pay</button>
+  </mat-dialog-actions>
+</form>

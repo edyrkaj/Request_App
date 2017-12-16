@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Web3Service } from '../util/web3.service';
@@ -8,7 +8,7 @@ import { Web3Service } from '../util/web3.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   date: number = new Date().getTime();
   formDisabled: boolean = false;
   account: string;

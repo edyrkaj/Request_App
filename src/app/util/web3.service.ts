@@ -285,6 +285,23 @@ export class Web3Service {
       });
   }
 
+  public refundAction(requestId: string, amount: string, callback ? ) {
+    if (this.watchDog()) return callback();
+
+    console.log('RequestNetworkService refund');
+    let amountInWei = this.toWei(amount.toString(), 'ether');
+    this.requestNetwork.requestEthereumService.refundAction(requestId, amountInWei, 0).on('broadcasted', response => {
+      callback(response);
+    }).then(
+      async response => {
+        response.request.transactionHash = response.transactionHash;
+        await this.setRequestWithStatus(response.request);
+      }, err => {
+        console.log('Error:', err);
+        callback(err);
+      });
+  }
+
 
   public async getRequestAsync(requestId: string) {
     console.log('RequestNetworkService getRequest by id');

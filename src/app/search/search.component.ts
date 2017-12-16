@@ -22,7 +22,6 @@ export class SearchComponent {
 
   async ngOnInit() {
     setInterval(_ => { this.date = new Date().getTime() }, 60000);
-
     // wait for web3 to be instantiated
     if (!this.web3Service || !this.web3Service.ready) {
       const delay = new Promise(resolve => setTimeout(resolve, 1000));
@@ -35,8 +34,10 @@ export class SearchComponent {
       this.dataSource.data = [];
       let resultsList = await this.web3Service.getRequestsByAddress(searchValue);
       if (!resultsList || !resultsList.asPayer || !resultsList.asPayee) return this.dataSource.data = [];
-      let requests = resultsList.asPayer.concat(resultsList.asPayee);
-      this.dataSource.data = requests;
+      // let requests = resultsList.asPayer.concat(resultsList.asPayee);
+      let requests = resultsList.asPayer;
+      this.dataSource = new MatTableDataSource(requests);
+      // this.dataSource.data = new MatTableDataSource(requests);
       // await this.getRequestsFromIds(requests);
     });
 

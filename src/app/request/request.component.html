@@ -115,7 +115,7 @@
                         <button (click)="cancelRequest()" [disabled]="request.balance > 0" mat-menu-item>
                           Cancel this Request
                         </button>
-                        <button *ngIf="request.balance != 0" mat-menu-item>
+                        <button (click)="refundRequest()" *ngIf="request.balance != 0" mat-menu-item>
                           <span>Refund</span>
                         </button>
                       </mat-menu>

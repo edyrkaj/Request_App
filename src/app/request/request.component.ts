@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -7,13 +7,15 @@ import blockies from 'blockies';
 import { PayDialogComponent } from '../util/dialogs/pay-dialog.component';
 import { SubtractDialogComponent } from '../util/dialogs/subtract-dialog.component';
 import { AdditionalDialogComponent } from '../util/dialogs/additional-dialog.component';
+import { RefundDialogComponent } from '../util/dialogs/refund-dialog.component';
+
 
 @Component({
   selector: 'app-request',
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.scss'],
 })
-export class RequestComponent implements OnInit {
+export class RequestComponent {
   blockies = blockies;
   objectKeys = Object.keys;
   account: string;
@@ -23,6 +25,7 @@ export class RequestComponent implements OnInit {
   url: string;
   copyUrlTxt: string = 'Copy url';
   txHash: string;
+  subscription;
 
 
   constructor(public web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {}
@@ -39,8 +42,8 @@ export class RequestComponent implements OnInit {
     }
     this.watchAccount();
 
-    this.web3Service.request.subscribe(async request => {
-      if (!this.request || this.request.requestId == request.id || request.newSearch) {
+    this.subscription = this.web3Service.request.subscribe(async request => {
+      if (!this.request || this.request.requestId.startsWith('waiting') || this.request.requestId == request.id || request.newSearch) {
         this.setRequest(request);
         if (request && request.requestId) {
           history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
@@ -184,6 +187,29 @@ export class RequestComponent implements OnInit {
         if (amountValue)
           this.web3Service.paymentAction(this.request.requestId, amountValue, response => this.callbackTx(response));
       });
+  }
+
+
+  refundRequest() {
+    let refundDialogRef = this.dialog.open(RefundDialogComponent, {
+      hasBackdrop: true,
+      width: '350px',
+      data: {
+        request: this.request
+      }
+    });
+
+    refundDialogRef
+      .afterClosed()
+      .subscribe(amountValue => {
+        if (amountValue)
+          this.web3Service.refundAction(this.request.requestId, amountValue, response => this.callbackTx(response));
+      });
+  }
+
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 

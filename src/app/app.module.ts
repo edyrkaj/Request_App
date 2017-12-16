@@ -16,6 +16,7 @@ import { BasicDialogComponent } from './util/dialogs/basic-dialog.component';
 import { PayDialogComponent } from './util/dialogs/pay-dialog.component';
 import { SubtractDialogComponent } from './util/dialogs/subtract-dialog.component';
 import { AdditionalDialogComponent } from './util/dialogs/additional-dialog.component';
+import { RefundDialogComponent } from './util/dialogs/refund-dialog.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { AdditionalDialogComponent } from './util/dialogs/additional-dialog.comp
     BasicDialogComponent,
     PayDialogComponent,
     SubtractDialogComponent,
-    AdditionalDialogComponent
+    AdditionalDialogComponent,
+    RefundDialogComponent
   ],
   imports: [
     // Feature Modules
@@ -46,7 +48,8 @@ import { AdditionalDialogComponent } from './util/dialogs/additional-dialog.comp
     BasicDialogComponent,
     PayDialogComponent,
     SubtractDialogComponent,
-    AdditionalDialogComponent
+    AdditionalDialogComponent,
+    RefundDialogComponent
   ],
   providers: [UtilModule, ],
   bootstrap: [AppComponent]
