@@ -140,10 +140,10 @@ export class Web3Service {
     this.searchValue.next(searchValue)
     // if requestId
     if (searchValue && searchValue.length > 42) {
+      this.request.next(null);
       let request = await this.getRequestAsync(searchValue);
-      console.log(request);
-      if (!request || !request.requestId || request.creator == '0x0000000000000000000000000000000000000000')
-        this.request.next({ 'requestId': null });
+      if (!request || !request.requestId)
+        this.request.next({ requestId: searchValue });
       else
         await this.setRequestWithStatus(request);
     }

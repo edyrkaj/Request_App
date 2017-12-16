@@ -1,23 +1,28 @@
 <div class="fc-primary container">
   <div class="row my-5">
-    <!--     <div>
-      <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-      </mat-form-field>
-    </div> -->
-    <mat-spinner class="mx-auto" *ngIf="!dataSource || dataSource.length < 1; else tableBlock"></mat-spinner>
+    <div class="col-12 fs-20 mb-4">
+      <span *ngIf="searchValue" class="semi-bold">ETH address:</span>&nbsp;<span>{{ searchValue }}</span>
+    </div>
+    <mat-spinner class="mx-auto" *ngIf="!dataSource || !dataSource.data.length; else tableBlock"></mat-spinner>
     <ng-template #tableBlock>
-      <mat-table class="d-flex flex-column" [dataSource]="dataSource" matSort>
-        <!-- ID Column -->
-        <ng-container matColumnDef="requestId">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
-          <mat-cell *matCellDef="let request">{{request.requestId}}test</mat-cell>
-        </ng-container>
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;">
-        </mat-row>
-      </mat-table>
-      <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator> -->
+      <div class="col-md-3">&nbsp;</div>
+      <div class="col-md-9 d-flex flex-column">
+        <mat-table #table matSort [dataSource]="dataSource">
+          <!-- ID Column -->
+          <ng-container matColumnDef="requestId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+            <mat-cell *matCellDef="let request">{{request.requestId.substring(0,4)}}...{{request.requestId.substring(62,66)}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="_meta.timestamp">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Age </mat-header-cell>
+            <mat-cell *matCellDef="let request">{{date - request._meta.timestamp}}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;">
+          </mat-row>
+        </mat-table>
+        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+      </div>
     </ng-template>
   </div>
 </div>

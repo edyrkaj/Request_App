@@ -24,9 +24,11 @@ export class RequestComponent implements OnInit {
   copyUrlTxt: string = 'Copy url';
   txHash: string;
 
+
   constructor(public web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
     this.url = window.location.href;
   }
+
 
   async ngOnInit() {
     // wait for web3 to be instantiated
@@ -35,11 +37,12 @@ export class RequestComponent implements OnInit {
       await delay;
       return await this.ngOnInit();
     }
+    this.watchAccount();
 
     this.web3Service.request.subscribe(async request => {
       this.setRequest(request);
-      if (request.requestId) {
-        // history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
+      if (request && request.requestId) {
+        history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
       }
     })
 
@@ -75,17 +78,17 @@ export class RequestComponent implements OnInit {
 
 
   setRequest(request) {
-    if (request.state && request.requestId) this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}`;
+    this.url = request && request.state && request.requestId ? `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}` : '';
     this.request = request;
-    this.watchAccount();
-    this.progress = 100 * this.request.balance / this.request.expectedAmount;
+    this.getRequestMode()
+    if (request)
+      this.progress = 100 * this.request.balance / this.request.expectedAmount;
   }
 
 
   watchAccount() {
     if (!this.account && this.web3Service.accounts) {
       this.account = this.web3Service.accounts[0];
-      this.getRequestMode()
     }
     this.web3Service.accountsObservable.subscribe(accounts => {
       this.account = accounts[0];
@@ -95,7 +98,8 @@ export class RequestComponent implements OnInit {
 
 
   getRequestMode() {
-    return this.mode = this.account && this.account == this.request.payee ? 'payee' : this.account && this.account == this.request.payer ? 'payer' : 'none';
+    console.log('request:', this.request)
+    return this.mode = this.request && this.account == this.request.payee ? 'payee' : this.request && this.account == this.request.payer ? 'payer' : 'none';
   }
 
 
