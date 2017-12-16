@@ -12,7 +12,7 @@ export class SearchComponent {
   date: number = new Date().getTime();
   searchValue: string;
   subscription;
-  displayedColumns = ['requestId', '_meta.timestamp'];
+  displayedColumns = ['requestId', '_meta.timestamp', 'request.payee', 'request.payer', 'request.expectedAmount', 'request.balance', 'request.status'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -22,7 +22,7 @@ export class SearchComponent {
 
   async ngOnInit() {
     setInterval(_ => { this.date = new Date().getTime() }, 60000);
-    
+
     // wait for web3 to be instantiated
     if (!this.web3Service || !this.web3Service.ready) {
       const delay = new Promise(resolve => setTimeout(resolve, 1000));
@@ -32,6 +32,7 @@ export class SearchComponent {
 
     this.subscription = this.web3Service.searchValue.subscribe(async searchValue => {
       this.searchValue = searchValue;
+      this.dataSource.data = [];
       let resultsList = await this.web3Service.getRequestsByAddress(searchValue);
       if (!resultsList || !resultsList.asPayer || !resultsList.asPayee) return this.dataSource.data = [];
       let requests = resultsList.asPayer.concat(resultsList.asPayee);
@@ -47,6 +48,7 @@ export class SearchComponent {
   async getRequestsFromIds(requests) {
     for (let request of requests) {
       request.request = await this.web3Service.getRequestAsync(request.requestId);
+      // this.dataSource.data.push(request);
     }
   }
 

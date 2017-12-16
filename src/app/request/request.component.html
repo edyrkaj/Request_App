@@ -4,7 +4,7 @@
       <mat-spinner class="mx-auto"></mat-spinner>
     </div>
     <ng-template #resultBlock>
-      <div class="col-12 text-center" *ngIf="!request.state; else requestBlock">
+      <div class="col-12 text-center" *ngIf="!request.expectedAmount; else requestBlock">
         <img class="mx-auto" src="assets/img/searching.png" style="max-width: 120px;">
         <h1 class="my-3">Oops</h1>
         <p>Sorry, we couldn’t find any matches for this Request ID.</p>

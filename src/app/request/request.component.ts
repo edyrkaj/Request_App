@@ -25,12 +25,12 @@ export class RequestComponent implements OnInit {
   txHash: string;
 
 
-  constructor(public web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {
-    this.url = window.location.href;
-  }
+  constructor(public web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {}
 
 
   async ngOnInit() {
+    this.url = window.location.href;
+
     // wait for web3 to be instantiated
     if (!this.web3Service || !this.web3Service.ready) {
       const delay = new Promise(resolve => setTimeout(resolve, 1000));
@@ -41,7 +41,7 @@ export class RequestComponent implements OnInit {
 
     this.web3Service.request.subscribe(async request => {
       this.setRequest(request);
-      if (request && request.requestId) {
+      if (request && request.requestId && request.state) {
         history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
       }
     })
@@ -78,7 +78,9 @@ export class RequestComponent implements OnInit {
 
 
   setRequest(request) {
-    this.url = request && request.state && request.requestId ? `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}` : '';
+    if (request && request.state && request.requestId) {
+      this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}`;
+    }
     this.request = request;
     this.getRequestMode()
     if (request)

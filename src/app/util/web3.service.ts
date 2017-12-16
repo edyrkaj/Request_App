@@ -150,7 +150,14 @@ export class Web3Service {
   }
 
 
-  public async setRequestWithStatus(request) {
+  private async setRequestWithStatus(request) {
+    this.setRequestStatus(request);
+    request.history = await this.getRequestHistory(request.requestId);
+    this.request.next(request);
+  }
+
+
+  private setRequestStatus(request) {
     if (request.state == 2)
       request.status = 'cancelled';
     else if (request.state == 1) {
@@ -165,9 +172,6 @@ export class Web3Service {
     } else {
       request.status = 'created';
     }
-
-    request.history = await this.getRequestHistory(request.requestId);
-    this.request.next(request);
   }
 
 
@@ -284,6 +288,7 @@ export class Web3Service {
     console.log('RequestNetworkService getRequest by id');
     try {
       let request = await this.requestNetwork.requestCoreService.getRequest(requestId);
+      this.setRequestStatus(request);
       return request;
     } catch (err) {
       console.log('Error: ', err.message);
@@ -295,6 +300,7 @@ export class Web3Service {
     console.log('RequestNetworkService getRequest by txHash');
     try {
       let request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
+      this.setRequestStatus(request);
       return request;
     } catch (err) {
       console.log('Error: ', err.message);
