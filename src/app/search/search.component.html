@@ -13,36 +13,8 @@
             <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
             <mat-cell *matCellDef="let request">{{ request.requestId.substring(0,4)}}...{{ request.requestId.substring(62,66) }}</mat-cell>
           </ng-container>
-          <!-- Age Column -->
-          <ng-container matColumnDef="_meta.timestamp">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Age </mat-header-cell>
-            <mat-cell *matCellDef="let request">{{ date - request._meta.timestamp }}</mat-cell>
-          </ng-container>
-          <!-- From Column -->
-          <ng-container matColumnDef="request.payee">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> From </mat-header-cell>
-            <mat-cell *matCellDef="let request">{{ request.payee }}</mat-cell>
-          </ng-container>
-          <!-- To Column -->
-          <ng-container matColumnDef="request.payer">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> To </mat-header-cell>
-            <mat-cell *matCellDef="let request">{{ request.payer }}</mat-cell>
-          </ng-container>
-          <!-- Amount Column -->
-          <ng-container matColumnDef="request.expectedAmount">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
-            <mat-cell *matCellDef="let request">{{ request.expectedAmount }}</mat-cell>
-          </ng-container>
-          <!-- Amount Received Column -->
-          <ng-container matColumnDef="request.balance">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Amount Received</mat-header-cell>
-            <mat-cell *matCellDef="let request">{{ request.balance }}</mat-cell>
-          </ng-container>
-          <!-- Status Column -->
-          <ng-container matColumnDef="request.status">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
-            <mat-cell *matCellDef="let request">{{ request.status }}</mat-cell>
-          </ng-container>
+          
+          
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;">
           </mat-row>

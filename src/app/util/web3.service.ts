@@ -143,9 +143,11 @@ export class Web3Service {
       this.request.next(null);
       let request = await this.getRequestAsync(searchValue);
       if (!request || !request.requestId)
-        this.request.next({ requestId: searchValue });
-      else
+        this.request.next({ requestId: searchValue, newSearch: true });
+      else {
+        request.newSearch = true;
         await this.setRequestWithStatus(request);
+      }
     }
   }
 

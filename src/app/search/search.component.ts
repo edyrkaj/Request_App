@@ -12,7 +12,7 @@ export class SearchComponent {
   date: number = new Date().getTime();
   searchValue: string;
   subscription;
-  displayedColumns = ['requestId', '_meta.timestamp', 'request.payee', 'request.payer', 'request.expectedAmount', 'request.balance', 'request.status'];
+  displayedColumns = ['requestId'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -36,8 +36,8 @@ export class SearchComponent {
       let resultsList = await this.web3Service.getRequestsByAddress(searchValue);
       if (!resultsList || !resultsList.asPayer || !resultsList.asPayee) return this.dataSource.data = [];
       let requests = resultsList.asPayer.concat(resultsList.asPayee);
-      await this.getRequestsFromIds(requests);
       this.dataSource.data = requests;
+      // await this.getRequestsFromIds(requests);
     });
 
     if (this.route.snapshot.params['searchValue']) {
