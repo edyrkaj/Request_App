@@ -54,17 +54,6 @@ export class HomeComponent {
     });
   }
 
-  // positiveNumberValidator(control: FormControl) {
-  //   return Number(control.value) < 0 ? { negativeNumber: true } : null;
-  // }
-
-  // VALIDATOR
-  // isPayeeAddress(account: string) {
-  // return (input: FormControl) {
-  //   const isPayeeAddress = this.account && input.value.toLowerCase() == this.account.toLowerCase();
-  //   return isPayeeAddress ? { isPayeeAddress: true } : null;
-  //   }
-  // }
 
   createRequest() {
     if (this.createLoading) return;

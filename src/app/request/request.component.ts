@@ -82,6 +82,17 @@ export class RequestComponent {
   }
 
 
+  getAgeFromTimeStamp(timestamp) {
+    const date = new Date().getTime();
+    const _days = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60 * 24));
+    const _daysTxt = _days == 1 ? `${_days} day ` : _days > 1 ? `${_days} days ` : '';
+    const _hours = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60) % 24);
+    const _hoursTxt = _days == 1 ? `${_hours} hr ` : _hours > 1 ? `${_hours} hrs ` : '';
+    const _minutes = Math.floor((date - timestamp * 1000) / (1000 * 60) % 60);
+    const _minutesTxt = _minutes == 1 ? `${_minutes} min ` : _minutes > 1 ? `${_minutes} mins ` : '';
+    return `${_daysTxt}${_hoursTxt}${_minutesTxt}ago`;
+  }
+
   setRequest(request) {
     if (request && request.state && request.requestId) {
       this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}`;

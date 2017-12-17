@@ -332,7 +332,7 @@ export class Web3Service {
     console.log('RequestNetworkService getRequestHistory');
     try {
       let history = await this.requestNetwork.requestCoreService.getRequestHistory(requestId);
-      return history;
+      return history.sort((a,b) => b._meta.timestamp - a._meta.timestamp);
     } catch (err) {
       console.log('Error: ', err.message);
       return err;

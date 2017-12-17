@@ -14,11 +14,11 @@
       </mat-form-field>
     </form>
     <div class="mx-3" [style.width]="'210px'">
-      <i *ngIf="account == 'loading'; else accountBlock" class="fa fa-circle-o-notch fa-spin pull-right mr-3"></i>
+      <mat-spinner class="pull-right mr-3" [diameter]="20" *ngIf="account == 'loading'; else accountBlock"></mat-spinner>
       <ng-template #accountBlock>
         <mat-form-field *ngIf="accounts.length; else connectAccount" floatPlaceholder="never" class="w-100">
           <mat-select name="account" placeholder="select account" [(ngModel)]="account">
-            <mat-option class="px-2" *ngFor="let account of accounts" [value]="account"><small>
+            <mat-option class="px-1" *ngFor="let account of accounts" [value]="account"><small>
               {{ account }}
             </small></mat-option>
           </mat-select>

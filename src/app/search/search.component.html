@@ -11,25 +11,31 @@
         <!-- ID Column -->
         <ng-container matColumnDef="requestId">
           <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
-          <mat-cell *matCellDef="let req"><a routerLink="/request/requestId/{{req.requestId}}" class="fc-accent">{{ req.requestId.substring(0,4)}}...{{ req.requestId.substring(62,66) }}</a></mat-cell>
+          <mat-cell *matCellDef="let req"><a routerLink="/request/requestId/{{req.requestId}}" class="fc-accent">{{ req.requestId.substring(0,5)}}...{{ req.requestId.substring(61,66) }}</a></mat-cell>
         </ng-container>
         <!-- Age Column -->
         <ng-container matColumnDef="_meta.timestamp">
           <mat-header-cell *matHeaderCellDef mat-sort-header> Age </mat-header-cell>
-          <mat-cell *matCellDef="let req">{{ req._meta.timestamp }}</mat-cell>
+          <mat-cell *matCellDef="let req">{{ getAgeFromTimeStamp( req._meta.timestamp) }}</mat-cell>
         </ng-container>
         <!-- From Column -->
         <ng-container matColumnDef="request.payee">
           <mat-header-cell *matHeaderCellDef mat-sort-header> From </mat-header-cell>
           <mat-cell *matCellDef="let req">
-            <span *ngIf="req.request">{{ req.request.payee.substring(0, 5) }}...{{req.request.payee.substring(37, 42) }}</span>
+            <div *ngIf="req.request">
+              <a routerLink="/search/{{req.request.payee}}" *ngIf="req.request.payee == searchValue; else payeeSpan" class="fc-accent">{{ req.request.payee.substring(0, 5) }}...{{req.request.payee.substring(37, 42) }}</a>
+              <ng-template #payeeSpan><span *ngIf="req.request">{{ req.request.payee.substring(0, 5) }}...{{req.request.payee.substring(37, 42) }}</span></ng-template>
+            </div>
           </mat-cell>
         </ng-container>
         <!-- To Column -->
         <ng-container matColumnDef="request.payer">
           <mat-header-cell *matHeaderCellDef mat-sort-header> To </mat-header-cell>
           <mat-cell *matCellDef="let req">
-            <span *ngIf="req.request">{{ req.request.payer.substring(0, 5) }}...{{req.request.payer.substring(37, 42) }}</span>
+            <div *ngIf="req.request">
+              <a routerLink="" *ngIf="req.request.payer == searchValue; else payerSpan" class="fc-accent">{{ req.request.payer.substring(0, 5) }}...{{req.request.payer.substring(37, 42) }}</a>
+              <ng-template #payerSpan><span *ngIf="req.request">{{ req.request.payer.substring(0, 5) }}...{{req.request.payer.substring(37, 42) }}</span></ng-template>
+            </div>
           </mat-cell>
         </ng-container>
         <!-- Amount Column -->
@@ -57,7 +63,7 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;">
         </mat-row>
       </mat-table>
-      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
     </div>
   </div>
 </div>
