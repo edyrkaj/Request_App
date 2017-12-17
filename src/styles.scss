@@ -42,7 +42,7 @@ a {
 }
 .status-cancelled {
   @extend .status;
-  background-color: grey;
+  background-color: $warn;
 }
 .status-in-progress {
   @extend .status;
@@ -50,11 +50,11 @@ a {
 }
 .status-complete {
   @extend .status;
-  background-color: green;
+  background-color: $green;
 }
 .status-overpaid {
   @extend .status;
-  background-color: $green;
+  background-color: $purple;
 }
 .status-accepted {
   @extend .status;
