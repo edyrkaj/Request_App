@@ -12,8 +12,9 @@ export class SearchComponent {
   date: number = new Date().getTime();
   searchValue: string;
   subscription;
-  displayedColumns = ['requestId'];
+  displayedColumns = ['requestId', '_meta.timestamp', 'request.payee', 'request.payer', 'request.expectedAmount', 'request.balance', 'request.status'];
   dataSource = new MatTableDataSource();
+  loading: boolean = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -30,15 +31,14 @@ export class SearchComponent {
     }
 
     this.subscription = this.web3Service.searchValue.subscribe(async searchValue => {
+      this.loading = true;
       this.searchValue = searchValue;
-      this.dataSource.data = [];
       let resultsList = await this.web3Service.getRequestsByAddress(searchValue);
       if (!resultsList || !resultsList.asPayer || !resultsList.asPayee) return this.dataSource.data = [];
-      // let requests = resultsList.asPayer.concat(resultsList.asPayee);
-      let requests = resultsList.asPayer;
-      this.dataSource = new MatTableDataSource(requests);
-      // this.dataSource.data = new MatTableDataSource(requests);
-      // await this.getRequestsFromIds(requests);
+      let requests = resultsList.asPayer.concat(resultsList.asPayee).sort(req => req._meta.timestamp);
+      this.dataSource.data = requests;
+      await this.getRequestsFromIds(requests);
+      this.loading = false;
     });
 
     if (this.route.snapshot.params['searchValue']) {
@@ -49,7 +49,6 @@ export class SearchComponent {
   async getRequestsFromIds(requests) {
     for (let request of requests) {
       request.request = await this.web3Service.getRequestAsync(request.requestId);
-      // this.dataSource.data.push(request);
     }
   }
 

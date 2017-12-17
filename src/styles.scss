@@ -36,8 +36,33 @@ a {
 }
 
 .status {
-  border-radius: 2px;
-  border: 1px solid white;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  color: white;
+}
+.status-cancelled {
+  @extend .status;
+  background-color: grey;
+}
+.status-in-progress {
+  @extend .status;
+  background-color: $accent;
+}
+.status-complete {
+  @extend .status;
+  background-color: green;
+}
+.status-overpaid {
+  @extend .status;
+  background-color: $green;
+}
+.status-accepted {
+  @extend .status;
+  background-color: $primary;
+}
+.status-created {
+  @extend .status;
+  background-color: $orange
 }
 
 .currencyIcon {

@@ -1,4 +1,11 @@
+@import 'variables';
+
 .mat-table {
   overflow: auto;
   max-height: 500px;
+  font-weight: 400;
+}
+
+.mat-cell, .mat-header-cell {
+	color: $primary;
 }

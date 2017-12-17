@@ -40,7 +40,7 @@
                 </div>
                 <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14" style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank"><i>{{web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10)}}...</i></a>
-                  <span *ngIf="request.status" class="status fs-12 fc-white px-2 py-1">&nbsp;{{request.status}}</span>
+                  <span *ngIf="request.status" class="status fs-12" [style.border]="'1px solid white;'">&nbsp;{{request.status}}</span>
                 </div>
               </div>
             </div>
