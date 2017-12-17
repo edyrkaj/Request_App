@@ -25,7 +25,7 @@ export class RefundDialogComponent implements OnInit {
 
 
   setMax() {
-    this.refundFormControl.setValue(this.web3Service.fromWei(this.request.balance);
+    this.refundFormControl.setValue(this.web3Service.fromWei(this.request.balance));
   }
 
 

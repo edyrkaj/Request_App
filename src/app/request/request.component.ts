@@ -43,7 +43,7 @@ export class RequestComponent {
     this.watchAccount();
 
     this.subscription = this.web3Service.request.subscribe(async request => {
-      if (!this.request || this.request.requestId.startsWith('waiting') || this.request.requestId == request.id || request.newSearch) {
+      if (!this.request || !request || this.request.requestId.startsWith('waiting') || this.request.requestId == request.requestId || request.newSearch) {
         this.setRequest(request);
         if (request && request.requestId) {
           history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);

@@ -21,8 +21,8 @@
               History
             </p>
             <div *ngFor="let e of request.history" class="fs-14 d-flex justify-content-between">
-              <span>{{e.name}}</span>
-              <span>{{e._meta.blockNumber}}</span>
+              <span>{{e.name}}: </span>
+              <span>block {{e._meta.blockNumber}}</span>
             </div>
           </div>
         </div>
