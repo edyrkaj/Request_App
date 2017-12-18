@@ -99,7 +99,7 @@ mat-toolbar.cta-toolbar {
     border-bottom-left-radius: 7px;
     flex: 1;
   }
-   :last-child {
+  button:last-child {
     border-bottom-right-radius: 7px;
     flex: 1;
   }

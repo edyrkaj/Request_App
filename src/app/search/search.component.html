@@ -23,7 +23,7 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header> From </mat-header-cell>
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
-              <a routerLink="/search/{{req.request.payee}}" *ngIf="req.request.payee != searchValue; else payeeSpan" class="fc-accent">{{ req.request.payee.substring(0, 5) }}...{{req.request.payee.substring(37, 42) }}</a>
+              <a (click)="web3Service.setSearchValue(req.request.payee)" *ngIf="req.request.payee != searchValue; else payeeSpan" class="fc-accent">{{ req.request.payee.substring(0, 5) }}...{{req.request.payee.substring(37, 42) }}</a>
               <ng-template #payeeSpan><span *ngIf="req.request">{{ req.request.payee.substring(0, 5) }}...{{req.request.payee.substring(37, 42) }}</span></ng-template>
             </div>
           </mat-cell>
@@ -33,7 +33,7 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header> To </mat-header-cell>
           <mat-cell *matCellDef="let req">
             <div *ngIf="req.request">
-              <a routerLink="/search/{{req.request.payer}}" *ngIf="req.request.payer != searchValue; else payerSpan" class="fc-accent">{{ req.request.payer.substring(0, 5) }}...{{req.request.payer.substring(37, 42) }}</a>
+              <a (click)="web3Service.setSearchValue(req.request.payer)" *ngIf="req.request.payer != searchValue; else payerSpan" class="fc-accent">{{ req.request.payer.substring(0, 5) }}...{{req.request.payer.substring(37, 42) }}</a>
               <ng-template #payerSpan><span *ngIf="req.request">{{ req.request.payer.substring(0, 5) }}...{{req.request.payer.substring(37, 42) }}</span></ng-template>
             </div>
           </mat-cell>

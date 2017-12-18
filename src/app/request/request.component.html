@@ -107,37 +107,40 @@
                 <ng-template #ctaBlock>
                   <div class="h-100 w-100 fs-18" [ngSwitch]="mode">
                     <!-- PAYEE -->
+                    <mat-menu #payeeActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
+                      <button (click)="cancelRequest()" [disabled]="request.balance > 0" mat-menu-item>
+                        Cancel this Request
+                      </button>
+                      <button (click)="refundRequest()" *ngIf="request.balance != 0" mat-menu-item>
+                        <span>Refund</span>
+                      </button>
+                    </mat-menu>
                     <div *ngSwitchCase="'payee'" class="d-flex h-100">
                       <button type="button" class="fs-18 bg-grey-whiter fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payeeActionsMenu">Actions&nbsp;
                         <mat-icon>expand_more</mat-icon>
                       </button>
-                      <mat-menu #payeeActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
-                        <button (click)="cancelRequest()" [disabled]="request.balance > 0" mat-menu-item>
-                          Cancel this Request
-                        </button>
-                        <button (click)="refundRequest()" *ngIf="request.balance != 0" mat-menu-item>
-                          <span>Refund</span>
-                        </button>
-                      </mat-menu>
                       <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="subtractRequest()">Update the Request</button>
                     </div>
                     <!-- PAYER -->
+                    <mat-menu #payerActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
+                      <button (click)="cancelRequest()" *ngIf="request.state == 0" mat-menu-item>
+                        Decline this Request
+                      </button>
+                      <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
+                        <span>Accept & pay later</span>
+                      </button>
+                      <button (click)="additionalRequest()" mat-menu-item>
+                        <span>Update the Request</span>
+                      </button>
+                      <button (click)="payRequest()" *ngIf="request.status == 'complete' || request.status == 'overpaid'" mat-menu-item>
+                        <span>Pay more</span>
+                      </button>
+                    </mat-menu>
                     <div *ngSwitchCase="'payer'" class="d-flex h-100">
                       <button type="button" class="fs-18 bg-grey-whiter fc-blue-grey" mat-raised-button [matMenuTriggerFor]="payerActionsMenu">Actions&nbsp;
                         <mat-icon>expand_more</mat-icon>
                       </button>
-                      <mat-menu #payerActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
-                        <button (click)="cancelRequest()" *ngIf="request.state == 0" mat-menu-item>
-                          Decline this Request
-                        </button>
-                        <button (click)="acceptRequest()" *ngIf="request.state != 1" mat-menu-item>
-                          <span>Accept & pay later</span>
-                        </button>
-                        <button (click)="additionalRequest()" mat-menu-item>
-                          <span>Update the Request</span>
-                        </button>
-                      </mat-menu>
-                      <button class="ml-auto fs-18 no-focus-overlay" mat-raised-button color="accent" (click)="payRequest()">
+                      <button class="ml-auto fs-18 no-focus-overlay" *ngIf="request.status != 'complete' && request.status != 'overpaid'" mat-raised-button color="accent" (click)="payRequest()">
                         <span>{{request.state != 1 ? 'Accept & Pay': 'Pay'}}</span>
                       </button>
                     </div>
