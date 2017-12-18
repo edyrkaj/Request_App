@@ -19,7 +19,7 @@ export class AppComponent {
   searchForm: FormGroup;
   searchValueFormControl: FormControl;
 
-  constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {}
+  constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, public router: Router, private route: ActivatedRoute, private dialog: MatDialog) {}
 
 
   ngOnInit() {

@@ -4,8 +4,8 @@
       <img class="px-3 request-logo" src="assets/img/request-logo.png">
       <span class="semi-bold">Request&nbsp;<sup><small><small>ALPHA TESTNET</small></small></sup></span>
     </a>
-    <form class="mx-auto" [formGroup]="searchForm" (ngSubmit)="search(searchValueFormControl.value)">
-      <mat-form-field class="mx-3" [style.width]="'400px'">
+    <form [formGroup]="searchForm" (ngSubmit)="search(searchValueFormControl.value)">
+      <mat-form-field class="mx-3 searchBar">
         <input matInput type="text" formControlName="searchValueFormControl">
         <button type="submit" matSuffix mat-icon-button [disabled]="!searchValueFormControl.value">
           <mat-icon>search</mat-icon>
@@ -13,7 +13,7 @@
         <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>
       </mat-form-field>
     </form>
-    <div class="mx-3" [style.width]="'210px'">
+    <div class="mr-3" [style.width]="'210px'">
       <mat-spinner class="pull-right mr-3" [diameter]="20" *ngIf="account == 'loading'; else accountBlock"></mat-spinner>
       <ng-template #accountBlock>
         <mat-form-field *ngIf="accounts.length; else connectAccount" floatPlaceholder="never" class="w-100">
@@ -68,7 +68,7 @@
         </a>
       </div>
     </div>
-    <div class="ml-auto d-flex">
+    <div class="ml-auto d-flex flex-wrap">
       <div class="footer-column">
         <span class="my-3 semi-bold">Protocol</span>
         <a href="https://github.com/RequestNetwork/" target="_blank">Github</a>

@@ -21,6 +21,12 @@ header {
     background: $grey-white;
   }
 
+  .searchBar {
+    @media (min-width: 576px) {
+      width: 400px;
+    }
+  }
+
   footer {
     background: $primary;
     color: #fff;
@@ -33,15 +39,15 @@ header {
     }
 
     .footer-column {
-     display:flex;
-     flex-direction: column;
-     margin-left: 3rem;
-     margin-right: 3rem;
-     a {
-      color: white;
-      font-size: 14px;
-      margin-bottom: 0.5rem;
-     }
+      display: flex;
+      flex-direction: column;
+      margin-left: 3rem;
+      margin-right: 3rem;
+      a {
+        color: white;
+        font-size: 14px;
+        margin-bottom: 0.5rem;
+      }
     }
   }
 }
