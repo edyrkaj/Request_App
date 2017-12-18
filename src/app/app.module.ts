@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { UtilModule } from './util/util.module';
 
 import { AppComponent } from './app.component';
+import { ContactComponent } from './contact/contact.component';
 import { HomeComponent } from './home/home.component';
 import { RequestComponent } from './request/request.component';
 import { SearchComponent } from './search/search.component';
@@ -22,6 +23,7 @@ import { RefundDialogComponent } from './util/dialogs/refund-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
+    ContactComponent,
     HomeComponent,
     RequestComponent,
     SearchComponent,
@@ -30,7 +32,7 @@ import { RefundDialogComponent } from './util/dialogs/refund-dialog.component';
     PayDialogComponent,
     SubtractDialogComponent,
     AdditionalDialogComponent,
-    RefundDialogComponent
+    RefundDialogComponent,
   ],
   imports: [
     // Feature Modules

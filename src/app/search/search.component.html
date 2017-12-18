@@ -55,8 +55,8 @@
         <!-- Status Column -->
         <ng-container matColumnDef="request.status">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
-          <mat-cell *matCellDef="let req">
-            <span *ngIf="req.request" class="status status-{{req.request.status.replace(' ','-')}}">{{ req.request.status }}</span>
+          <mat-cell *matCellDef="let req" class="text-center">
+            <span *ngIf="req.request" class="status-{{req.request.status.replace(' ','-')}}">{{ req.request.status }}</span>
           </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

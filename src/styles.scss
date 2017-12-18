@@ -42,11 +42,11 @@ a {
 }
 .status-cancelled {
   @extend .status;
-  background-color: $warn;
+  background-color: #ED6852;
 }
 .status-in-progress {
   @extend .status;
-  background-color: $accent;
+  background-color: #8AB4FA;
 }
 .status-complete {
   @extend .status;
@@ -58,11 +58,11 @@ a {
 }
 .status-accepted {
   @extend .status;
-  background-color: $primary;
+  background-color: #406278;
 }
 .status-created {
   @extend .status;
-  background-color: $orange
+  background-color: $orange;
 }
 
 .currencyIcon {

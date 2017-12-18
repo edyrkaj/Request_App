@@ -163,14 +163,14 @@ export class Web3Service {
     if (request.state == 2)
       request.status = 'cancelled';
     else if (request.state == 1) {
-      if (request.balance.lt(request.expectedAmount))
+      if (request.balance.isZero())
+        request.status = 'accepted'
+      else if (request.balance.lt(request.expectedAmount))
         request.status = 'in progress';
       else if (request.balance.eq(request.expectedAmount))
         request.status = 'complete';
       else if (request.balance.gt(request.expectedAmount))
         request.status = 'overpaid';
-      else
-        request.status = 'accepted'
     } else {
       request.status = 'created';
     }
