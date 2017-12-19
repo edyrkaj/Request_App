@@ -38,28 +38,36 @@ a {
 .status {
   border-radius: 4px;
   padding: 0.25rem 0.5rem;
+  font-weight: 400;
+  line-height: 22px;
   color: white;
 }
+
 .status-cancelled {
   @extend .status;
   background-color: #ED6852;
 }
+
 .status-in-progress {
   @extend .status;
   background-color: #8AB4FA;
 }
+
 .status-complete {
   @extend .status;
   background-color: $green;
 }
+
 .status-overpaid {
   @extend .status;
   background-color: $purple;
 }
+
 .status-accepted {
   @extend .status;
   background-color: #406278;
 }
+
 .status-created {
   @extend .status;
   background-color: $orange;

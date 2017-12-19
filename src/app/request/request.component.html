@@ -21,8 +21,8 @@
               History
             </p>
             <div *ngFor="let e of request.history" class="fs-12 d-flex justify-content-between">
-              <span>{{e.name}} </span>
-              <span>{{getAgeFromTimeStamp(e._meta.timestamp)}}</span>
+              <span>{{ spaceBeforeCapital(e.name) }} </span>
+              <span>{{ getAgeFromTimeStamp(e._meta.timestamp) }}</span>
             </div>
           </div>
         </div>

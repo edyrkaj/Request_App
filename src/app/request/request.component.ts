@@ -93,6 +93,10 @@ export class RequestComponent {
     return msg ? `${msg}ago` : '';
   }
 
+  spaceBeforeCapital(name) {
+    return name.replace(/([A-Z])/g, ' $1').trim();
+  }
+
   setRequest(request) {
     if (request && request.state && request.requestId) {
       this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}`;

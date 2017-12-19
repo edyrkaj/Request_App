@@ -10,3 +10,10 @@
   font-size: 12px;
 	color: $primary;
 }
+
+.text-center.mat-header-cell {
+	display: flex;
+	.mat-sort-header-container {
+		margin: auto;
+	}
+}

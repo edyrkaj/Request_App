@@ -65,6 +65,7 @@ export class AppComponent {
 
 
   search(searchValue) {
+    searchValue = searchValue.split(' ').join('');
     if (this.router.routerState.snapshot.url.startsWith('/request')) {
       if (searchValue.length <= 42)
         this.router.navigate(['/search', searchValue]);

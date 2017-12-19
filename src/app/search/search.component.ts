@@ -69,7 +69,7 @@ export class SearchComponent {
     msg += _days == 1 ? `${_hours} hr ` : _hours > 1 ? `${_hours} hrs ` : '';
     const _minutes = Math.floor(time / (1000 * 60) % 60);
     msg += _minutes == 1 ? `${_minutes} min ` : _minutes > 1 ? `${_minutes} mins ` : '';
-    return msg ? `${msg}ago` : '';
+    return false && msg ? `${msg}ago` : 'less than 1 min ago';
   }
 
 
