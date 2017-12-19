@@ -1,11 +1,15 @@
+<img src="https://request.network/assets/img/request-logo.png" width="50px" >
+
+---
 # Request_App
 
-A basic dapp to interact with RequestNetwork.js library and Request Network Smart-Contract.
+A basic angular dapp using web3.js and RequestNetwork.js for interacting with Request Network Smart-Contract.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0.
 
 ## Install Dependencies
 
+You need at least node v8.9.0 and npm 5.5.1 to run this project
 Run `npm i` to install all the dependencies listed in package.json
 
 ## Development server
