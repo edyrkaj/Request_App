@@ -9,8 +9,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Install Dependencies
 
-You need at least node v8.9.0 and npm 5.5.1 to run this project
-Run `npm i` to install all the dependencies listed in package.json
+You need at least node v8.9.0 and npm 5.5.1 to run this project. Run `npm i` to install all the dependencies listed in package.json
 
 ## Development server
 

@@ -1,23 +1,25 @@
 import { Injectable, HostListener } from '@angular/core';
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
 import { MatSnackBar } from '@angular/material';
 
 import Web3 from 'web3';
-import RequestNetwork from 'requestnetwork.js/dist/src/requestNetwork';
+import RequestNetwork from '@requestnetwork/request-network.js/dist/src/requestNetwork';
 
+/* beautify preserve:start */
 declare let window: any;
+/* beautify preserve:end */
 
 @Injectable()
 export class Web3Service {
   private web3: Web3;
   private requestNetwork: RequestNetwork;
   private infuraNodeUrl = 'https://rinkeby.infura.io/BQBjfSi5EKSCQQpXebO';
-  private metamaskConnected: boolean = true;
+  private metamaskConnected = true;
 
 
   public etherscanUrl: string;
   public accounts: string[];
-  public ready: boolean = false;
+  public ready = false;
 
   public accountsObservable = new Subject < string[] > ();
   public searchValue = new Subject < string > ();
@@ -27,9 +29,9 @@ export class Web3Service {
   public toWei;
   public BN;
 
-  web3NotReadyMsg: string = 'Error when trying to instanciate web3.';
-  requestNetworkNotReadyMsg: string = 'Request Network smart contracts are not deployed on this network.'
-  metamaskNotReadyMsg: string = 'Connect your Metamask wallet to create or interact with a Request.';
+  web3NotReadyMsg = 'Error when trying to instanciate web3.';
+  requestNetworkNotReadyMsg = 'Request Network smart contracts are not deployed on this network.';
+  metamaskNotReadyMsg = 'Connect your Metamask wallet to create or interact with a Request.';
 
   constructor(public snackBar: MatSnackBar) {
     window.addEventListener('load', event => {
@@ -42,7 +44,8 @@ export class Web3Service {
   private checkAndInstantiateWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
-      console.log('Using web3 detected from external source. If you find that your accounts don\'t appear, ensure you\'ve configured that source properly.');
+      console.log(`Using web3 detected from external source. If you find that your accounts don\'t
+         appear, ensure you\'ve configured that source properly.`);
       this.web3 = new Web3(window.web3.currentProvider);
 
       // Start requestnetwork Library
@@ -52,7 +55,7 @@ export class Web3Service {
             this.setEtherscanUrl(networkId);
             this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId);
           } catch (err) {
-            if (this.web3) this.openSnackBar(this.requestNetworkNotReadyMsg);
+            if (this.web3) { this.openSnackBar(this.requestNetworkNotReadyMsg); }
             console.log('Error: ', err.message);
           }
         }, err => {
@@ -75,7 +78,7 @@ export class Web3Service {
 
   private refreshAccounts() {
     this.web3.eth.getAccounts((err, accs) => {
-      if (err != null || accs.length == 0) {
+      if (err != null || accs.length === 0) {
         console.warn('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
         if (this.requestNetwork && this.metamaskConnected) {
           this.metamaskConnected = false;
@@ -88,7 +91,7 @@ export class Web3Service {
         console.log('Observed new accounts');
         this.accountsObservable.next(accs);
         this.accounts = accs;
-        if (accs.length) this.metamaskConnected = true;
+        if (accs.length) { this.metamaskConnected = true; }
       }
     });
   }
@@ -115,16 +118,18 @@ export class Web3Service {
 
 
   private watchDog() {
-    let stop = !this.web3 || !this.requestNetwork || !this.metamaskConnected;
-    if (stop) this.openSnackBar();
+    const stop = !this.web3 || !this.requestNetwork || !this.metamaskConnected;
+    if (stop) { this.openSnackBar(); }
     return stop;
   }
 
-
-  public openSnackBar(msg ? : string, ok ? : string, panelClass ? : string, duration ? : number) {
+  /* beautify preserve:start */
+  public openSnackBar(msg ?: string, ok ?: string, panelClass ?: string, duration ?: number) {
+  /* beautify preserve:end */
     if (!msg) {
-      msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg : !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
-      if (msg == '') return;
+      msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg :
+        !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
+      if (msg === '') { return; }
     }
 
     this.snackBar.open(msg, ok || 'Ok', {
@@ -137,14 +142,14 @@ export class Web3Service {
 
 
   public async setSearchValue(searchValue: string) {
-    this.searchValue.next(searchValue)
+    this.searchValue.next(searchValue);
     // if requestId
     if (searchValue && searchValue.length > 42) {
       this.request.next(null);
-      let request = await this.getRequestAsync(searchValue);
-      if (!request || !request.requestId)
+      const request = await this.getRequestAsync(searchValue);
+      if (!request || !request.requestId) {
         this.request.next({ requestId: searchValue, newSearch: true });
-      else {
+      } else {
         request.newSearch = true;
         await this.setRequestWithStatus(request);
       }
@@ -160,17 +165,18 @@ export class Web3Service {
 
 
   private setRequestStatus(request) {
-    if (request.state == 2)
+    if (request.state === 2) {
       request.status = 'cancelled';
-    else if (request.state == 1) {
-      if (request.balance.isZero())
-        request.status = 'accepted'
-      else if (request.balance.lt(request.expectedAmount))
+    } else if (request.state === 1) {
+      if (request.balance.isZero()) {
+        request.status = 'accepted';
+      } else if (request.balance.lt(request.expectedAmount)) {
         request.status = 'in progress';
-      else if (request.balance.eq(request.expectedAmount))
+      } else if (request.balance.eq(request.expectedAmount)) {
         request.status = 'complete';
-      else if (request.balance.gt(request.expectedAmount))
+      } else if (request.balance.gt(request.expectedAmount)) {
         request.status = 'overpaid';
+      }
     } else {
       request.status = 'created';
     }
@@ -178,11 +184,11 @@ export class Web3Service {
 
 
   public createRequestAsPayee(payer: string, expectedAmount: string, data: string, callback ? ) {
-    if (this.watchDog()) return callback();
-    if (!this.web3.utils.isAddress(payer)) return callback({ message: 'payer\'s address is not a valid Ethereum address' });
+    if (this.watchDog()) { return callback(); }
+    if (!this.web3.utils.isAddress(payer)) { return callback({ message: 'payer\'s address is not a valid Ethereum address' }); }
 
     console.log('RequestNetworkService createRequestAsPayee');
-    let expectedAmountInWei = this.toWei(expectedAmount, 'ether');
+    const expectedAmountInWei = this.toWei(expectedAmount, 'ether');
     this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, expectedAmountInWei, data).on('broadcasted', response => {
       console.log('callback createRequestAsPayee: ', response);
       callback(response);
@@ -199,7 +205,7 @@ export class Web3Service {
 
 
   public cancel(requestId: string, callback ? ) {
-    if (this.watchDog()) return callback();
+    if (this.watchDog()) { return callback(); }
 
     console.log('RequestNetworkService cancel');
     this.requestNetwork.requestEthereumService.cancel(requestId).on('broadcasted', response => {
@@ -216,7 +222,7 @@ export class Web3Service {
 
 
   public accept(requestId: string, callback ? ) {
-    if (this.watchDog()) return callback();
+    if (this.watchDog()) { return callback(); }
 
     console.log('RequestNetworkService accept');
     this.requestNetwork.requestEthereumService.accept(requestId).on('broadcasted', response => {
@@ -233,10 +239,10 @@ export class Web3Service {
 
 
   public subtractAction(requestId: string, amount: string, callback ? ) {
-    if (this.watchDog()) return callback();
+    if (this.watchDog()) { return callback(); }
 
     console.log('RequestNetworkService subtractAction');
-    let amountInWei = this.toWei(amount.toString(), 'ether');
+    const amountInWei = this.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.subtractAction(requestId, amountInWei).on('broadcasted', response => {
       callback(response);
     }).then(
@@ -251,10 +257,10 @@ export class Web3Service {
 
 
   public additionalAction(requestId: string, amount: string, callback ? ) {
-    if (this.watchDog()) return callback();
+    if (this.watchDog()) { return callback(); }
 
     console.log('RequestNetworkService additionalAction');
-    let amountInWei = this.toWei(amount.toString(), 'ether');
+    const amountInWei = this.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.additionalAction(requestId, amountInWei).on('broadcasted', response => {
       callback(response);
     }).then(
@@ -269,10 +275,10 @@ export class Web3Service {
 
 
   public paymentAction(requestId: string, amount: string, callback ? ) {
-    if (this.watchDog()) return callback();
+    if (this.watchDog()) { return callback(); }
 
     console.log('RequestNetworkService pay');
-    let amountInWei = this.toWei(amount.toString(), 'ether');
+    const amountInWei = this.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0).on('broadcasted', response => {
       callback(response);
     }).then(
@@ -286,10 +292,10 @@ export class Web3Service {
   }
 
   public refundAction(requestId: string, amount: string, callback ? ) {
-    if (this.watchDog()) return callback();
+    if (this.watchDog()) { return callback(); }
 
     console.log('RequestNetworkService refund');
-    let amountInWei = this.toWei(amount.toString(), 'ether');
+    const amountInWei = this.toWei(amount.toString(), 'ether');
     this.requestNetwork.requestEthereumService.refundAction(requestId, amountInWei, 0).on('broadcasted', response => {
       callback(response);
     }).then(
@@ -306,7 +312,7 @@ export class Web3Service {
   public async getRequestAsync(requestId: string) {
     console.log('RequestNetworkService getRequest by id');
     try {
-      let request = await this.requestNetwork.requestCoreService.getRequest(requestId);
+      const request = await this.requestNetwork.requestCoreService.getRequest(requestId);
       this.setRequestStatus(request);
       return request;
     } catch (err) {
@@ -318,7 +324,7 @@ export class Web3Service {
   public async getRequestByTransactionHashAsync(requestId: string) {
     console.log('RequestNetworkService getRequest by txHash');
     try {
-      let request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
+      const request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
       this.setRequestStatus(request);
       return request;
     } catch (err) {
@@ -328,11 +334,11 @@ export class Web3Service {
   }
 
 
-  public async getRequestHistory(requestId: string) {
+  public async getRequestEvents(requestId: string) {
     console.log('RequestNetworkService getRequestHistory');
     try {
-      let history = await this.requestNetwork.requestCoreService.getRequestHistory(requestId);
-      return history.sort((a,b) => b._meta.timestamp - a._meta.timestamp);
+      const history = await this.requestNetwork.requestCoreService.getRequestEvents(requestId);
+      return history.sort((a, b) => b._meta.timestamp - a._meta.timestamp);
     } catch (err) {
       console.log('Error: ', err.message);
       return err;
@@ -342,7 +348,7 @@ export class Web3Service {
   public async getRequestsByAddress(requestId: string) {
     console.log('RequestNetworkService getRequestsByAddress');
     try {
-      let requests = await this.requestNetwork.requestCoreService.getRequestsByAddress(requestId);
+      const requests = await this.requestNetwork.requestCoreService.getRequestsByAddress(requestId);
       return requests;
     } catch (err) {
       console.log('Error: ', err.message);

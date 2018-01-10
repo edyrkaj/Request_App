@@ -15,7 +15,7 @@ import { RefundDialogComponent } from '../util/dialogs/refund-dialog.component';
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.scss'],
 })
-export class RequestComponent {
+export class RequestComponent implements OnInit, OnDestroy {
   blockies = blockies;
   objectKeys = Object.keys;
   account: string;
@@ -23,7 +23,7 @@ export class RequestComponent {
   request: any;
   progress: number;
   url: string;
-  copyUrlTxt: string = 'Copy url';
+  copyUrlTxt = 'Copy url';
   txHash: string;
   subscription;
 
@@ -43,13 +43,13 @@ export class RequestComponent {
     this.watchAccount();
 
     this.subscription = this.web3Service.request.subscribe(async request => {
-      if (!this.request || !request || this.request.requestId.startsWith('waiting') || this.request.requestId == request.requestId || request.newSearch) {
+      if (!this.request || !request || this.request.requestId.startsWith('waiting') || this.request.requestId === request.requestId || request.newSearch) {
         this.setRequest(request);
         if (request && request.requestId) {
           history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
         }
       }
-    })
+    });
 
     if (this.route.snapshot.params['requestId']) {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
@@ -57,23 +57,22 @@ export class RequestComponent {
       this.txHash = this.route.snapshot.params['txHash'];
       // if queryParams get Request from queryParams
       if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
-        let queryRequest = {
+        const queryRequest = {
           requestId: 'waiting for blockchain response...',
           expectedAmount: this.web3Service.BN(this.web3Service.toWei(this.route.snapshot.queryParams.expectedAmount)),
           balance: this.web3Service.BN(this.web3Service.toWei('0')),
           payer: this.route.snapshot.queryParams.payer,
           payee: this.route.snapshot.queryParams.payee,
           data: { data: {} }
-        }
+        };
         Object.keys(this.route.snapshot.queryParams).forEach((key) => {
-          if (!queryRequest[key])
-            queryRequest.data.data[key] = this.route.snapshot.queryParams[key];
-        })
+          if (!queryRequest[key]) { queryRequest.data.data[key] = this.route.snapshot.queryParams[key]; }
+        });
         this.setRequest(queryRequest);
       }
 
       // get Request from txHash
-      let result = await this.web3Service.getRequestByTransactionHashAsync(this.txHash);
+      const result = await this.web3Service.getRequestByTransactionHashAsync(this.txHash);
       if (result && result.requestId) {
         this.setRequest(result);
         history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
@@ -85,11 +84,11 @@ export class RequestComponent {
   getAgeFromTimeStamp(timestamp) {
     const date = new Date().getTime();
     const _days = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60 * 24));
-    let msg = _days == 1 ? `${_days} day ` : _days > 1 ? `${_days} days ` : '';
+    let msg = _days === 1 ? `${_days} day ` : _days > 1 ? `${_days} days ` : '';
     const _hours = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60) % 24);
-    msg += _days == 1 ? `${_hours} hr ` : _hours > 1 ? `${_hours} hrs ` : '';
+    msg += _days === 1 ? `${_hours} hr ` : _hours > 1 ? `${_hours} hrs ` : '';
     const _minutes = Math.floor((date - timestamp * 1000) / (1000 * 60) % 60);
-    msg += _minutes == 1 ? `${_minutes} min ` : _minutes > 1 ? `${_minutes} mins ` : '';
+    msg += _minutes === 1 ? `${_minutes} min ` : _minutes > 1 ? `${_minutes} mins ` : '';
     return msg ? `${msg}ago` : 'less than 1 min ago';
   }
 
@@ -102,9 +101,8 @@ export class RequestComponent {
       this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}`;
     }
     this.request = request;
-    this.getRequestMode()
-    if (request)
-      this.progress = 100 * this.request.balance / this.request.expectedAmount;
+    this.getRequestMode();
+    if (request) { this.progress = 100 * this.request.balance / this.request.expectedAmount; }
   }
 
 
@@ -114,20 +112,20 @@ export class RequestComponent {
     }
     this.web3Service.accountsObservable.subscribe(accounts => {
       this.account = accounts[0];
-      this.getRequestMode()
+      this.getRequestMode();
     });
   }
 
 
   getRequestMode() {
-    console.log('request:', this.request)
-    return this.mode = this.request && this.account == this.request.payee ? 'payee' : this.request && this.account == this.request.payer ? 'payer' : 'none';
+    console.log('request:', this.request);
+    return this.mode = this.request && this.account === this.request.payee ? 'payee' : this.request && this.account === this.request.payer ? 'payer' : 'none';
   }
 
 
   copyToClipboard() {
     this.copyUrlTxt = 'Copied!';
-    setTimeout(() => { this.copyUrlTxt = 'Copy url & share' }, 500);
+    setTimeout(() => { this.copyUrlTxt = 'Copy url & share'; }, 500);
   }
 
 
@@ -138,7 +136,7 @@ export class RequestComponent {
     } else if (response.message) {
       this.web3Service.openSnackBar(response.message);
     }
-  };
+  }
 
 
   cancelRequest() {
@@ -152,7 +150,7 @@ export class RequestComponent {
 
 
   subtractRequest() {
-    let subtractDialogRef = this.dialog.open(SubtractDialogComponent, {
+    const subtractDialogRef = this.dialog.open(SubtractDialogComponent, {
       hasBackdrop: true,
       width: '350px',
       data: {
@@ -170,7 +168,7 @@ export class RequestComponent {
 
 
   additionalRequest() {
-    let additionalDialogRef = this.dialog.open(AdditionalDialogComponent, {
+    const additionalDialogRef = this.dialog.open(AdditionalDialogComponent, {
       hasBackdrop: true,
       width: '350px',
       data: {
@@ -181,14 +179,15 @@ export class RequestComponent {
     additionalDialogRef
       .afterClosed()
       .subscribe(subtractValue => {
-        if (subtractValue)
+        if (subtractValue) {
           this.web3Service.additionalAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
+        }
       });
   }
 
 
   payRequest() {
-    let payDialogRef = this.dialog.open(PayDialogComponent, {
+    const payDialogRef = this.dialog.open(PayDialogComponent, {
       hasBackdrop: true,
       width: '350px',
       data: {
@@ -199,14 +198,15 @@ export class RequestComponent {
     payDialogRef
       .afterClosed()
       .subscribe(amountValue => {
-        if (amountValue)
+        if (amountValue) {
           this.web3Service.paymentAction(this.request.requestId, amountValue, response => this.callbackTx(response));
+        }
       });
   }
 
 
   refundRequest() {
-    let refundDialogRef = this.dialog.open(RefundDialogComponent, {
+    const refundDialogRef = this.dialog.open(RefundDialogComponent, {
       hasBackdrop: true,
       width: '350px',
       data: {
@@ -217,8 +217,9 @@ export class RequestComponent {
     refundDialogRef
       .afterClosed()
       .subscribe(amountValue => {
-        if (amountValue)
+        if (amountValue) {
           this.web3Service.refundAction(this.request.requestId, amountValue, response => this.callbackTx(response));
+        }
       });
   }
 
