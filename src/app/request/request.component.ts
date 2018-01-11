@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -82,13 +82,14 @@ export class RequestComponent implements OnInit, OnDestroy {
 
 
   getAgeFromTimeStamp(timestamp) {
+    if (!timestamp) { return ''; }
     const date = new Date().getTime();
-    const _days = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60 * 24));
-    let msg = _days === 1 ? `${_days} day ` : _days > 1 ? `${_days} days ` : '';
-    const _hours = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60) % 24);
-    msg += _days === 1 ? `${_hours} hr ` : _hours > 1 ? `${_hours} hrs ` : '';
-    const _minutes = Math.floor((date - timestamp * 1000) / (1000 * 60) % 60);
-    msg += _minutes === 1 ? `${_minutes} min ` : _minutes > 1 ? `${_minutes} mins ` : '';
+    const days = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60 * 24));
+    let msg = days === 1 ? `${days} day ` : days > 1 ? `${days} days ` : '';
+    const hours = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60) % 24);
+    msg += days === 1 ? `${hours} hr ` : hours > 1 ? `${hours} hrs ` : '';
+    const minutes = Math.floor((date - timestamp * 1000) / (1000 * 60) % 60);
+    msg += minutes === 1 ? `${minutes} min ` : minutes > 1 ? `${minutes} mins ` : '';
     return msg ? `${msg}ago` : 'less than 1 min ago';
   }
 
@@ -161,8 +162,9 @@ export class RequestComponent implements OnInit, OnDestroy {
     subtractDialogRef
       .afterClosed()
       .subscribe(subtractValue => {
-        if (subtractValue)
+        if (subtractValue) {
           this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
+        }
       });
   }
 

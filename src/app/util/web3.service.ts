@@ -159,7 +159,7 @@ export class Web3Service {
 
   private async setRequestWithStatus(request) {
     this.setRequestStatus(request);
-    request.history = await this.getRequestHistory(request.requestId);
+    request.history = await this.getRequestEvents(request.requestId);
     this.request.next(request);
   }
 

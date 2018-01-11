@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Web3Service } from '../util/web3.service';
@@ -8,11 +8,11 @@ import { Web3Service } from '../util/web3.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   date: number = new Date().getTime();
-  formDisabled: boolean = false;
+  formDisabled = false;
   account: string;
-  createLoading: boolean = false;
+  createLoading = false;
 
   requestForm: FormGroup;
   expectedAmountFormControl: FormControl;
@@ -26,7 +26,7 @@ export class HomeComponent {
 
 
   ngOnInit() {
-    setInterval(_ => { this.date = new Date().getTime() }, 5000);
+    setInterval(_ => { this.date = new Date().getTime(); }, 5000);
     setTimeout(_ => this.web3Service.setSearchValue(''));
 
     this.watchAccount();
@@ -56,7 +56,7 @@ export class HomeComponent {
 
 
   createRequest() {
-    if (this.createLoading) return;
+    if (this.createLoading) { return; }
 
     this.createLoading = true;
 
@@ -74,23 +74,24 @@ export class HomeComponent {
     }
     this.dateFormControl.setValue(this.date);
 
-    let data = {};
+    const data = {};
     Object.keys(this.requestForm.value).forEach(key => {
-      if (key !== 'expectedAmount' && key !== 'payer' && this.requestForm.value[key] && this.requestForm.value[key] != '')
+      if (key !== 'expectedAmount' && key !== 'payer' && this.requestForm.value[key] && this.requestForm.value[key] !== '') {
         data[key] = this.requestForm.value[key];
-    })
+      }
+    });
 
     this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), response => {
       this.createLoading = false;
       if (response && response.transactionHash) {
         this.web3Service.openSnackBar('Transaction in progress.', 'Ok', 'success-snackbar');
 
-        let queryParams = {
+        const queryParams = {
           expectedAmount: this.expectedAmountFormControl.value,
           payer: this.payerFormControl.value,
           payee: this.account,
         };
-        Object.keys(data).forEach(key => queryParams[key] = data[key])
+        Object.keys(data).forEach(key => queryParams[key] = data[key]);
 
         this.router.navigate(['/request/txHash', response.transactionHash], { queryParams });
       } else if (response && response.message) {
