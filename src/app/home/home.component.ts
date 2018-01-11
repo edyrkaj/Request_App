@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, ValidationErrors } from '@angular/forms';
 import { Web3Service } from '../util/web3.service';
 
 @Component({
@@ -16,11 +16,17 @@ export class HomeComponent implements OnInit {
 
   requestForm: FormGroup;
   expectedAmountFormControl: FormControl;
+  payeeFormControl: FormControl;
   payerFormControl: FormControl;
   reasonFormControl: FormControl;
   dateFormControl: FormControl;
   // currency = new FormControl('ETH');
   // currencies = [{ name: 'ether', iso: 'ETH' }];
+
+  static payerAddressValidator(control: FormControl) {
+    const sameAsAccount = control.value && control.root.get('payee').value === control.value;
+    return sameAsAccount ? { sameAsAccount: true } : null;
+  }
 
   constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, private router: Router) {}
 
@@ -32,12 +38,14 @@ export class HomeComponent implements OnInit {
     this.watchAccount();
 
     this.expectedAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$')]);
-    this.payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$')]);
+    this.payerFormControl = new FormControl('', [Validators.required, Validators.pattern('^(0x)?[0-9a-fA-F]{40}$'), HomeComponent.payerAddressValidator]);
+    this.payeeFormControl = new FormControl(this.account);
     this.dateFormControl = new FormControl('');
     this.reasonFormControl = new FormControl('');
 
     this.requestForm = this.formBuilder.group({
       expectedAmount: this.expectedAmountFormControl,
+      payee: this.payeeFormControl,
       payer: this.payerFormControl,
       date: this.dateFormControl,
       Reason: this.reasonFormControl,
@@ -51,6 +59,8 @@ export class HomeComponent implements OnInit {
     }
     this.web3Service.accountsObservable.subscribe(accounts => {
       this.account = accounts[0];
+      this.payeeFormControl.setValue(this.account);
+      this.payerFormControl.updateValueAndValidity();
     });
   }
 
@@ -89,7 +99,7 @@ export class HomeComponent implements OnInit {
         const queryParams = {
           expectedAmount: this.expectedAmountFormControl.value,
           payer: this.payerFormControl.value,
-          payee: this.account,
+          payee: this.payeeFormControl.value,
         };
         Object.keys(data).forEach(key => queryParams[key] = data[key]);
 
@@ -98,6 +108,10 @@ export class HomeComponent implements OnInit {
         this.web3Service.openSnackBar(response.message);
       }
     });
+  }
+
+  test(test) {
+    console.log('test:', test);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Web3Service } from '../util/web3.service';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
@@ -8,13 +8,13 @@ import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   date = new Date().getTime();
   searchValue: string;
   subscription;
   displayedColumns = ['requestId', '_meta.timestamp', 'request.payee', 'request.payer', 'request.expectedAmount', 'request.balance', 'request.status'];
   dataSource = new MatTableDataSource();
-  loading: boolean = true;
+  loading = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,10 +35,11 @@ export class SearchComponent {
       this.loading = true;
       this.searchValue = searchValue;
       history.pushState(null, null, `/#/search/${searchValue}`);
-      let resultsList = await this.web3Service.getRequestsByAddress(searchValue);
+      const resultsList = await this.web3Service.getRequestsByAddress(searchValue);
       this.loading = false;
-      if (!resultsList || !resultsList.asPayer || !resultsList.asPayee)
+      if (!resultsList || !resultsList.asPayer || !resultsList.asPayee) {
         return this.dataSource.data = [];
+      }
       let requests = resultsList.asPayer.concat(resultsList.asPayee);
       requests = requests.sort((a, b) => b._meta.timestamp - a._meta.timestamp);
       this.getRequestsFromIds(requests);
@@ -52,7 +53,7 @@ export class SearchComponent {
 
 
   getRequestsFromIds(requests) {
-    for (let request of requests) {
+    for (const request of requests) {
       this.web3Service.getRequestAsync(request.requestId).then(
         response => {
           request.request = response;
@@ -62,13 +63,14 @@ export class SearchComponent {
 
 
   getAgeFromTimeStamp(timestamp) {
-    let time = this.date - timestamp * 1000;
-    const _days = Math.floor(time / (1000 * 60 * 60 * 24));
-    let msg = _days == 1 ? `${_days} day ` : _days > 1 ? `${_days} days ` : '';
-    const _hours = Math.floor(time / (1000 * 60 * 60) % 24);
-    msg += _days == 1 ? `${_hours} hr ` : _hours > 1 ? `${_hours} hrs ` : '';
-    const _minutes = Math.floor(time / (1000 * 60) % 60);
-    msg += _minutes == 1 ? `${_minutes} min ` : _minutes > 1 ? `${_minutes} mins ` : '';
+    if (!timestamp) { return ''; }
+    const time = this.date - timestamp * 1000;
+    const days = Math.floor(time / (1000 * 60 * 60 * 24));
+    let msg = days === 1 ? `${days} day ` : days > 1 ? `${days} days ` : '';
+    const hours = Math.floor(time / (1000 * 60 * 60) % 24);
+    msg += days === 1 ? `${hours} hr ` : hours > 1 ? `${hours} hrs ` : '';
+    const minutes = Math.floor(time / (1000 * 60) % 60);
+    msg += minutes === 1 ? `${minutes} min ` : minutes > 1 ? `${minutes} mins ` : '';
     return msg ? `${msg}ago` : 'less than 1 min ago';
   }
 

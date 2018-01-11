@@ -18,7 +18,7 @@
       <ng-template #accountBlock>
         <mat-form-field *ngIf="accounts.length; else connectAccount" floatPlaceholder="never" class="w-100">
           <mat-select name="account" placeholder="select account" [(ngModel)]="account">
-            <mat-option class="px-1" *ngFor="let account of accounts" [value]="account"><small>
+            <mat-option class="px-1 text-center" *ngFor="let account of accounts" [value]="account"><small>
               {{ account }}
             </small></mat-option>
           </mat-select>

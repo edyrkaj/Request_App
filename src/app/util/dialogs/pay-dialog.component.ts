@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Web3Service } from '../../util/web3.service'
+import { Web3Service } from '../../util/web3.service';
 
 @Component({
   templateUrl: './pay-dialog.component.html'
@@ -32,4 +32,5 @@ export class PayDialogComponent implements OnInit {
   submit() {
     this.dialogRef.close(this.amountFormControl.value);
   }
+
 }

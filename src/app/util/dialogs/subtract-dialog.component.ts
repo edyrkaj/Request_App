@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Web3Service } from '../../util/web3.service'
+import { Web3Service } from '../../util/web3.service';
 
 @Component({
   templateUrl: './subtract-dialog.component.html'
@@ -19,16 +19,16 @@ export class SubtractDialogComponent implements OnInit {
 
   ngOnInit() {
     this.superiorToExpectedAmountValidator = (control: FormControl) => {
-      if (!control.value) return null;
+      if (!control.value) { return null; }
       control.markAsTouched();
       return !isNaN(control.value) && this.request.expectedAmount.lte(this.web3Service.BN(this.web3Service.toWei(control.value.toString()))) ? { superiorNumber: true } : null;
-    }
+    };
 
-    this.subtractAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$'), this.superiorToExpectedAmountValidator])
+    this.subtractAmountFormControl = new FormControl('', [Validators.required, Validators.pattern('[0-9]*([\.][0-9]{0,18})?$'), this.superiorToExpectedAmountValidator]);
 
     this.subtractForm = this.formBuilder.group({
       subtractAmountFormControl: this.subtractAmountFormControl,
-    })
+    });
   }
 
 
@@ -36,5 +36,5 @@ export class SubtractDialogComponent implements OnInit {
     this.dialogRef.close(this.subtractAmountFormControl.value);
   }
 
-  
+
 }
