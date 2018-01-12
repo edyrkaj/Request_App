@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit {
 
     const data = {};
     Object.keys(this.requestForm.value).forEach(key => {
-      if (key !== 'expectedAmount' && key !== 'payer' && this.requestForm.value[key] && this.requestForm.value[key] !== '') {
+      if (['expectedAmount', 'payer', 'payee'].findIndex(e => e === key) === -1 && this.requestForm.value[key] && this.requestForm.value[key] !== '') {
         data[key] = this.requestForm.value[key];
       }
     });
