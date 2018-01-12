@@ -79,7 +79,7 @@
               </div>
             </div>
             <div class="p-5">
-              <div class="fc-blue-grey fs-12 mx-auto w-50 text-center">
+              <div class="fc-blue-grey fs-12 mx-auto w-50 text-center progress-bar-{{request.status.replace(' ','-')}}">
                 <div><strong>{{progress | number: '1.0-2'}}%</strong> of the Request has been paid</div>
                 <mat-progress-bar class="my-1" mode="determinate" [value]="progress"></mat-progress-bar>
                 <div [ngSwitch]="request.status">

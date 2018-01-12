@@ -1,7 +1,15 @@
+@import 'variables';
+
 .url-box {
   border: 1px solid #DBE1E8;
   background: #fff !important;
   opacity: 0.5;
   height: 50px;
   font-weight: inherit;
+}
+
+.progress-bar-complete {
+  ::ng-deep .mat-progress-bar-primary::after {
+      background-color: $green;
+  }
 }

@@ -165,9 +165,9 @@ export class Web3Service {
 
 
   private setRequestStatus(request) {
-    if (request.state === 2) {
+    if (request.state === '2') {
       request.status = 'cancelled';
-    } else if (request.state === 1) {
+    } else if (request.state === '1') {
       if (request.balance.isZero()) {
         request.status = 'accepted';
       } else if (request.balance.lt(request.expectedAmount)) {
