@@ -10,7 +10,7 @@ import { Web3Service } from '../util/web3.service';
 })
 export class HomeComponent implements OnInit {
   date: number = new Date().getTime();
-  formDisabled = false;
+  // formDisabled = false;
   account: string;
   createLoading = false;
 
@@ -80,7 +80,8 @@ export class HomeComponent implements OnInit {
         this.payerFormControl.setErrors({ required: true });
       }
       this.createLoading = false;
-      return this.formDisabled = true;
+      // this.formDisabled = true;
+      return ;
     }
     this.dateFormControl.setValue(this.date);
 
@@ -108,10 +109,6 @@ export class HomeComponent implements OnInit {
         this.web3Service.openSnackBar(response.message);
       }
     });
-  }
-
-  test(test) {
-    console.log('test:', test);
   }
 
 }
