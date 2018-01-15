@@ -32,7 +32,7 @@
               <img class="px-3" style="max-height: 75px;" src="assets/img/request-logo.png">
               <div class="ml-auto text-right px-3 fc-white">
                 <h4 class="semi-bold fs-18">
-                  <span *ngIf="request.state; else waitingTemplate" popover="{{request.requestId}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">Request Id: {{request.requestId.substring(0, 5)}}...{{request.requestId.substring(56, 66)}}</span>
+                  <span *ngIf="request.status; else waitingTemplate" popover="{{request.requestId}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">Request Id: {{request.requestId.substring(0, 5)}}...{{request.requestId.substring(56, 66)}}</span>
                   <ng-template #waitingTemplate><span><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;{{request.requestId}}</span></ng-template>
                 </h4>
                 <div class="fs-14" [style.opacity]="'0.5'">
@@ -79,7 +79,7 @@
               </div>
             </div>
             <div class="p-5">
-              <div class="fc-blue-grey fs-12 mx-auto w-50 text-center progress-bar-{{request.status.replace(' ','-')}}">
+              <div *ngIf="request.status" class="fc-blue-grey fs-12 mx-auto w-50 text-center progress-bar-{{request.status.replace(' ','-')}}">
                 <div><strong>{{progress | number: '1.0-2'}}%</strong> of the Request has been paid</div>
                 <mat-progress-bar class="my-1" mode="determinate" [value]="progress"></mat-progress-bar>
                 <div [ngSwitch]="request.status">
