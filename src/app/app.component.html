@@ -1,4 +1,8 @@
 <div class=wrapper>
+  <mat-menu #accountMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
+    <button (click)="search(account)" mat-menu-item>
+      {{account}} </button>
+  </mat-menu>
   <header *ngIf="!this.router.routerState.snapshot.url.startsWith('/contact')" class="d-flex flex-wrap justify-content-between align-items-center fc-primary px-3">
     <a routerLink="/" style="text-decoration: none" class="d-flex align-items-center">
       <img class="px-3 request-logo" src="assets/img/request-logo.png">
@@ -10,26 +14,38 @@
         <button type="submit" matSuffix mat-icon-button [disabled]="!searchValueFormControl.value">
           <mat-icon>search</mat-icon>
         </button>
-        <mat-placeholder><small>Search by Request ID / ETH address</small></mat-placeholder>
+        <mat-placeholder>
+          <small>Search by Request ID / ETH address</small>
+        </mat-placeholder>
       </mat-form-field>
     </form>
     <div class="mr-3" [style.width]="'210px'">
       <mat-spinner class="pull-right mr-3" [diameter]="20" *ngIf="account == 'loading'; else accountBlock"></mat-spinner>
       <ng-template #accountBlock>
-        <mat-form-field *ngIf="accounts.length; else connectAccount" floatPlaceholder="never" class="w-100">
+        <mat-menu #accountMenu="matMenu" [overlapTrigger]="false" class="accountMenu">
+          <button (click)="search(account)" mat-menu-item>
+            <small>{{account}}</small>
+          </button>
+        </mat-menu>
+        <button type="button" mat-button class="accountMenuButton" [matMenuTriggerFor]="accountMenu" *ngIf="accounts.length; else connectAccount">
+          <img *ngIf="account" [src]="blockies({ seed: account.toLowerCase() }).toDataURL()" style="width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />
+          <span style="text-overflow: ellipsis; overflow: hidden;">&nbsp;{{ account }}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <!--  <mat-form-field *ngIf="accounts.length; else connectAccount" floatPlaceholder="never" class="w-100">
           <mat-select name="account" placeholder="select account" [(ngModel)]="account">
-            <mat-option class="px-1 text-center" *ngFor="let account of accounts" [value]="account"><small>
-              {{ account }}
-            </small></mat-option>
+            <mat-option class="px-1 text-center" *ngFor="let account of accounts" [value]="account">
+              <small>{{ account }}</small>
+            </mat-option>
           </mat-select>
           <small matPrefix>
-        <img *ngIf="account" [src]="blockies({ seed: account.toLowerCase() }).toDataURL()" style="position: relative; top: -6px; width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />
-        <mat-icon *ngIf="!account">account_circle</mat-icon>
-        &nbsp;
-      </small>
-        </mat-form-field>
+            <img *ngIf="account" [src]="blockies({ seed: account.toLowerCase() }).toDataURL()" style="position: relative; top: -6px; width: 24px; height: 24px; image-rendering: pixelated; border-radius: 12px" />
+            <mat-icon *ngIf="!account">account_circle</mat-icon>
+            &nbsp;
+          </small>
+        </mat-form-field> -->
         <ng-template #connectAccount>
-          <button mat-button class="pull-right fs-16" (click)="web3Service.openSnackBar()">
+          <button type="button" mat-button class="pull-right fs-16" (click)="web3Service.openSnackBar()">
             <mat-icon>account_circle</mat-icon>
             <span>Connect an account</span>
           </button>
@@ -72,8 +88,7 @@
       <div class="footer-column">
         <span class="my-3 semi-bold">Protocol</span>
         <a href="https://github.com/RequestNetwork/" target="_blank">Github</a>
- <!--        <a href="#">Develop with Request</a>
-        <a href="#">Library</a> -->
+        <a href="https://github.com/RequestNetwork/requestNetwork.js/" target="_blank">Library</a>
       </div>
       <div class="footer-column">
         <span class="my-3 semi-bold">Product</span>

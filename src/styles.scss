@@ -123,10 +123,32 @@ mat-toolbar.cta-toolbar {
   max-width: 365px !important;
   width: 25.25vw;
   min-width: 185px !important;
-  top: 64px;
   .mat-menu-item {
     color: $blue-grey;
     padding: 0 3rem;
+  }
+}
+
+.accountMenu {
+  box-shadow: 2px 2px 18px 0px rgba(212, 227, 255, 0.5) !important;
+  max-width: none !important;
+  .mat-menu-content {
+    padding: 0 !important;
+  }
+  .mat-menu-item {
+    color: $blue-grey;
+  }
+}
+
+button.accountMenuButton {
+  padding: 0;
+  font-size: 16px;
+  font-weight: initial;
+  width: 100%;
+  .mat-button-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
@@ -247,6 +269,10 @@ mat-hint.mat-hint {
 
 .semi-bold {
   font-weight: 500;
+}
+
+.fw-initial {
+  font-weight: initial !important;
 }
 
 .lh-14 {
