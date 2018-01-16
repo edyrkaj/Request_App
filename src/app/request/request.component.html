@@ -7,7 +7,7 @@
       <div class="col-12 text-center" *ngIf="!request.expectedAmount; else requestBlock">
         <img class="mx-auto" src="assets/img/searching.png" style="max-width: 120px;">
         <h1 class="my-3">Oops</h1>
-        <p>Sorry, we couldn’t find any matches for this Request ID.</p>
+        <p>Sorry, we couldn’t find any matches for this request Id.</p>
         <p>Please try searching with another ID.</p>
         <button mat-raised-button routerLink="/" style="text-decoration: none" class="px-5 my-5" color="accent">Back home</button>
       </div>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="mt-1">
                   <a *ngIf="txHash" class="fs-14" style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank"><i>{{web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10)}}...</i></a>
-                  <span *ngIf="request.status" class="status-{{request.status.replace(' ','-')}} fs-12">&nbsp;{{request.status}}</span>
+                  <span *ngIf="request.status" class="status-{{request.status.replace(' ','-')}} fs-12">{{request.status}}</span>
                 </div>
               </div>
             </div>
@@ -80,7 +80,7 @@
             </div>
             <div class="p-5">
               <div *ngIf="request.status" class="fc-blue-grey fs-12 mx-auto w-50 text-center progress-bar-{{request.status.replace(' ','-')}}">
-                <div><strong>{{progress | number: '1.0-2'}}%</strong> of the Request has been paid</div>
+                <div><strong>{{progress | number: '1.0-2'}}%</strong> of the request has been paid</div>
                 <mat-progress-bar class="my-1" mode="determinate" [value]="progress"></mat-progress-bar>
                 <div [ngSwitch]="request.status">
                   <span *ngSwitchCase="'overpaid'"><strong>{{ web3Service.fromWei(request.expectedAmount.sub(request.balance).abs()) }} ETH</strong> overpaid</span>
@@ -91,7 +91,7 @@
             </div>
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'90px'">
               <!-- VIEW MODE / BROADCASTING-->
-              <div *ngIf="!request.state; else ctaMode" class="text-center fs-12 lh-14 h-100">
+              <div *ngIf="!request.status; else ctaMode" class="text-center fs-12 lh-14 h-100">
                 <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
                 <div class="fc-primary semi-bold">
                   <i>You are in view mode.<br/> Synchronizing the request with the blockchain can take between 1sec and a couple of minutes.</i>

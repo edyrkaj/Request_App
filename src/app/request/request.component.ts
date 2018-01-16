@@ -120,7 +120,7 @@ export class RequestComponent implements OnInit, OnDestroy {
 
   getRequestMode() {
     console.log('request:', this.request);
-    return this.mode = this.request && this.account === this.request.payee ? 'payee' : this.request && this.account === this.request.payer ? 'payer' : 'none';
+    this.mode = this.request && this.account === this.request.payee ? 'payee' : this.request && this.account === this.request.payer ? 'payer' : 'none';
   }
 
 
@@ -130,10 +130,10 @@ export class RequestComponent implements OnInit, OnDestroy {
   }
 
 
-  callbackTx(response) {
-    if (response.transactionHash) {
-      this.txHash = response.transactionHash;
-      this.web3Service.openSnackBar('Transaction in progress.', 'Ok', 'success-snackbar');
+  callbackTx(response, msg?) {
+    if (response.transaction) {
+      // this.txHash = response.transaction.hash;
+      this.web3Service.openSnackBar(msg || 'Transaction in progress.', 'Ok', 'success-snackbar');
     } else if (response.message) {
       this.web3Service.openSnackBar(response.message);
     }
@@ -141,12 +141,12 @@ export class RequestComponent implements OnInit, OnDestroy {
 
 
   cancelRequest() {
-    this.web3Service.cancel(this.request.requestId, response => this.callbackTx(response));
+    this.web3Service.cancel(this.request.requestId, response => this.callbackTx(response, 'The request is being cancelled. Please wait a few moments for it to appear on the Blockchain.'));
   }
 
 
   acceptRequest() {
-    this.web3Service.accept(this.request.requestId, response => this.callbackTx(response));
+    this.web3Service.accept(this.request.requestId, response => this.callbackTx(response, 'The request is being accepted. Please wait a few moments for it to appear on the Blockchain.'));
   }
 
 
@@ -163,7 +163,7 @@ export class RequestComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(subtractValue => {
         if (subtractValue) {
-          this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
+          this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response, 'Subtract in progress. Please wait a few moments for it to appear on the Blockchain.'));
         }
       });
   }
@@ -182,7 +182,7 @@ export class RequestComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(subtractValue => {
         if (subtractValue) {
-          this.web3Service.additionalAction(this.request.requestId, subtractValue, response => this.callbackTx(response));
+          this.web3Service.additionalAction(this.request.requestId, subtractValue, response => this.callbackTx(response, 'Additional in progress. Please wait a few moments for it to appear on the Blockchain.'));
         }
       });
   }
@@ -201,7 +201,7 @@ export class RequestComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(amountValue => {
         if (amountValue) {
-          this.web3Service.paymentAction(this.request.requestId, amountValue, response => this.callbackTx(response));
+          this.web3Service.paymentAction(this.request.requestId, amountValue, response => this.callbackTx(response, 'Payment is being done. Please wait a few moments for it to appear on the Blockchain.'));
         }
       });
   }
@@ -220,7 +220,7 @@ export class RequestComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(amountValue => {
         if (amountValue) {
-          this.web3Service.refundAction(this.request.requestId, amountValue, response => this.callbackTx(response));
+          this.web3Service.refundAction(this.request.requestId, amountValue, response => this.callbackTx(response, 'Refund in progress. Please wait a few moments for it to appear on the Blockchain.'));
         }
       });
   }

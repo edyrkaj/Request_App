@@ -19,8 +19,8 @@
         </mat-placeholder>
       </mat-form-field>
     </form>
-    <div class="mr-3" [style.width]="'210px'">
-      <mat-spinner class="pull-right mr-3" [diameter]="20" *ngIf="account == 'loading'; else accountBlock"></mat-spinner>
+    <div class="mr-3" [style.width]="'225px'">
+      <mat-spinner class="pull-right mr-3" [diameter]="20" *ngIf="account === 'loading'; else accountBlock"></mat-spinner>
       <ng-template #accountBlock>
         <mat-menu #accountMenu="matMenu" [overlapTrigger]="false" class="accountMenu">
           <button (click)="search(account)" mat-menu-item>
@@ -88,7 +88,8 @@
       <div class="footer-column">
         <span class="my-3 semi-bold">Protocol</span>
         <a href="https://github.com/RequestNetwork/" target="_blank">Github</a>
-        <a href="https://github.com/RequestNetwork/requestNetwork.js/" target="_blank">Library</a>
+        <a href="https://github.com/RequestNetwork/requestNetwork.js/" target="_blank">requestnetwork.js</a>
+        <a href="https://github.com/RequestNetwork/Request_SmartContracts/" target="_blank">Smart Contracts</a>
       </div>
       <div class="footer-column">
         <span class="my-3 semi-bold">Product</span>

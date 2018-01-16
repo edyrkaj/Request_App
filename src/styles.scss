@@ -81,25 +81,21 @@ a {
 }
 
 .warning-snackbar {
-  color: #F0A73A !important;
-  background-color: #FDF1E0 !important;
-  border: 1px solid #F9DCB0 !important;
-  button {
-    color: #F0A73A;
-  }
+  background-color: #FCB352 !important;
 }
 
 .success-snackbar {
-  color: #55ACE6 !important;
-  background-color: #ECF6FC !important;
-  border: 1px solid #C0E0F6 !important;
-  button {
-    color: #55ACE6;
-  }
+  background-color: #5392FF !important;
 }
 
 .mat-simple-snackbar {
   overflow: hidden;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  button {
+    margin-left: 32px;
+    color: #fff;
+  }
 }
 
 mat-toolbar.cta-toolbar {
@@ -141,7 +137,6 @@ mat-toolbar.cta-toolbar {
 }
 
 button.accountMenuButton {
-  padding: 0;
   font-size: 16px;
   font-weight: initial;
   width: 100%;

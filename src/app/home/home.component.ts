@@ -10,7 +10,6 @@ import { Web3Service } from '../util/web3.service';
 })
 export class HomeComponent implements OnInit {
   date: number = new Date().getTime();
-  // formDisabled = false;
   account: string;
   createLoading = false;
 
@@ -80,7 +79,6 @@ export class HomeComponent implements OnInit {
         this.payerFormControl.setErrors({ required: true });
       }
       this.createLoading = false;
-      // this.formDisabled = true;
       return ;
     }
     this.dateFormControl.setValue(this.date);
@@ -94,8 +92,8 @@ export class HomeComponent implements OnInit {
 
     this.web3Service.createRequestAsPayee(this.payerFormControl.value, this.expectedAmountFormControl.value, JSON.stringify(data), response => {
       this.createLoading = false;
-      if (response && response.transactionHash) {
-        this.web3Service.openSnackBar('Transaction in progress.', 'Ok', 'success-snackbar');
+      if (response && response.transaction) {
+        this.web3Service.openSnackBar('The request is being created. Please wait a few moments for it to appear on the Blockchain.', 'Ok', 'success-snackbar');
 
         const queryParams = {
           expectedAmount: this.expectedAmountFormControl.value,
@@ -104,7 +102,7 @@ export class HomeComponent implements OnInit {
         };
         Object.keys(data).forEach(key => queryParams[key] = data[key]);
 
-        this.router.navigate(['/request/txHash', response.transactionHash], { queryParams });
+        this.router.navigate(['/request/txHash', response.transaction.hash], { queryParams });
       } else if (response && response.message) {
         this.web3Service.openSnackBar(response.message);
       }

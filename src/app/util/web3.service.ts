@@ -30,7 +30,7 @@ export class Web3Service {
   public BN;
 
   web3NotReadyMsg = 'Error when trying to instanciate web3.';
-  requestNetworkNotReadyMsg = 'Request Network smart contracts are not deployed on this network.';
+  requestNetworkNotReadyMsg = 'Request Network smart contracts are not deployed on this network. Please use Rinkeby Test Network.';
   metamaskNotReadyMsg = 'Connect your Metamask wallet to create or interact with a Request.';
 
   constructor(public snackBar: MatSnackBar) {
@@ -84,6 +84,7 @@ export class Web3Service {
           this.metamaskConnected = false;
           this.openSnackBar(this.metamaskNotReadyMsg);
         }
+        this.accounts = accs;
         return this.accountsObservable.next(accs);
       }
 
@@ -165,9 +166,9 @@ export class Web3Service {
 
 
   private setRequestStatus(request) {
-    if (request.state === '2') {
+    if (request.state === 2) {
       request.status = 'cancelled';
-    } else if (request.state === '1') {
+    } else if (request.state === 1) {
       if (request.balance.isZero()) {
         request.status = 'accepted';
       } else if (request.balance.lt(request.expectedAmount)) {
@@ -195,7 +196,6 @@ export class Web3Service {
     }).then(
       async response => {
         console.log('resolve createRequestAsPayee: ', response);
-        response.request.transactionHash = response.transactionHash;
         await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
@@ -212,7 +212,6 @@ export class Web3Service {
       callback(response);
     }).then(
       async response => {
-        response.request.transactionHash = response.transactionHash;
         await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
@@ -229,7 +228,6 @@ export class Web3Service {
       callback(response);
     }).then(
       async response => {
-        response.request.transactionHash = response.transactionHash;
         await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
@@ -247,7 +245,6 @@ export class Web3Service {
       callback(response);
     }).then(
       async response => {
-        response.request.transactionHash = response.transactionHash;
         await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
@@ -265,7 +262,6 @@ export class Web3Service {
       callback(response);
     }).then(
       async response => {
-        response.request.transactionHash = response.transactionHash;
         await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
@@ -283,7 +279,6 @@ export class Web3Service {
       callback(response);
     }).then(
       async response => {
-        response.request.transactionHash = response.transactionHash;
         await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
@@ -300,7 +295,6 @@ export class Web3Service {
       callback(response);
     }).then(
       async response => {
-        response.request.transactionHash = response.transactionHash;
         await this.setRequestWithStatus(response.request);
       }, err => {
         console.log('Error:', err);
@@ -321,10 +315,10 @@ export class Web3Service {
     }
   }
 
-  public async getRequestByTransactionHashAsync(requestId: string) {
+  public async getRequestByTransactionHashAsync(txHash: string) {
     console.log('RequestNetworkService getRequest by txHash');
     try {
-      const request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(requestId);
+      const request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(txHash).request;
       this.setRequestStatus(request);
       return request;
     } catch (err) {
