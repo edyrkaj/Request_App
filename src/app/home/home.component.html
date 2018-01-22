@@ -60,12 +60,12 @@
               <mat-error *ngIf="payerFormControl.hasError('pattern')">
                 ETH address format <strong>not valid</strong>
               </mat-error>
-              <mat-error *ngIf="payerFormControl.hasError('sameAsAccount')">
+              <mat-error *ngIf="payerFormControl.hasError('sameAddressAsAccount')">
                 payer's address must be <strong>different from yours</strong>
               </mat-error>
             </mat-form-field>
             <mat-form-field class="w-100" hintLabel="Max 256 characters">
-              <textarea matInput maxlength="256" rows="1" placeholder="Reason (optional)" [formControl]="reasonFormControl"></textarea>
+              <input matInput maxlength="256" placeholder="Reason (optional)" [formControl]="reasonFormControl">
               <mat-hint align="end">{{reasonFormControl?.value.length || 0}}/256</mat-hint>
             </mat-form-field>
           </div>

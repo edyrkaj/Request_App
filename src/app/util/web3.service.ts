@@ -23,15 +23,16 @@ export class Web3Service {
 
   public accountsObservable = new Subject < string[] > ();
   public searchValue = new Subject < string > ();
-  public request = new Subject < any > ();
 
   public fromWei;
   public toWei;
   public BN;
+  public isAddress;
 
   web3NotReadyMsg = 'Error when trying to instanciate web3.';
   requestNetworkNotReadyMsg = 'Request Network smart contracts are not deployed on this network. Please use Rinkeby Test Network.';
   metamaskNotReadyMsg = 'Connect your Metamask wallet to create or interact with a Request.';
+
 
   constructor(public snackBar: MatSnackBar) {
     window.addEventListener('load', event => {
@@ -54,6 +55,7 @@ export class Web3Service {
           try {
             this.setEtherscanUrl(networkId);
             this.requestNetwork = new RequestNetwork(this.web3.givenProvider, networkId);
+            this.ready = true;
           } catch (err) {
             if (this.web3) { this.openSnackBar(this.requestNetworkNotReadyMsg); }
             console.log('Error: ', err.message);
@@ -65,14 +67,15 @@ export class Web3Service {
       console.warn(`No web3 detected. Falling back to ${this.infuraNodeUrl}.`);
       this.web3 = new Web3(new Web3.providers.HttpProvider(this.infuraNodeUrl));
       this.requestNetwork = new RequestNetwork(this.web3.givenProvider, 4);
+      this.ready = true;
     }
 
     this.fromWei = this.web3.utils.fromWei;
     this.toWei = this.web3.utils.toWei;
+    this.isAddress = this.web3.utils.isAddress;
     this.BN = mixed => new this.web3.utils.BN(mixed);
 
-    this.ready = true;
-    setInterval(() => this.refreshAccounts(), 1000);
+    setInterval(_ => this.refreshAccounts(), 1000);
   }
 
 
@@ -124,12 +127,12 @@ export class Web3Service {
     return stop;
   }
 
+
   /* beautify preserve:start */
   public openSnackBar(msg ?: string, ok ?: string, panelClass ?: string, duration ?: number) {
   /* beautify preserve:end */
     if (!msg) {
-      msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg :
-        !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
+      msg = !this.web3 ? this.web3NotReadyMsg : !this.requestNetwork ? this.requestNetworkNotReadyMsg : !this.metamaskConnected ? this.metamaskNotReadyMsg : '';
       if (msg === '') { return; }
     }
 
@@ -142,30 +145,11 @@ export class Web3Service {
   }
 
 
-  public async setSearchValue(searchValue: string) {
+  public setSearchValue(searchValue: string) {
     this.searchValue.next(searchValue);
-    // if requestId
-    if (searchValue && searchValue.length > 42) {
-      this.request.next(null);
-      const request = await this.getRequestAsync(searchValue);
-      if (!request || !request.requestId) {
-        this.request.next({ requestId: searchValue, newSearch: true });
-      } else {
-        request.newSearch = true;
-        await this.setRequestWithStatus(request);
-      }
-    }
   }
 
-
-  private async setRequestWithStatus(request) {
-    this.setRequestStatus(request);
-    request.history = await this.getRequestEvents(request.requestId);
-    this.request.next(request);
-  }
-
-
-  private setRequestStatus(request) {
+  public setRequestStatus(request) {
     if (request.state === 2) {
       request.status = 'cancelled';
     } else if (request.state === 1) {
@@ -187,124 +171,51 @@ export class Web3Service {
   public createRequestAsPayee(payer: string, expectedAmount: string, data: string, callback ? ) {
     if (this.watchDog()) { return callback(); }
     if (!this.web3.utils.isAddress(payer)) { return callback({ message: 'payer\'s address is not a valid Ethereum address' }); }
-
-    console.log('RequestNetworkService createRequestAsPayee');
     const expectedAmountInWei = this.toWei(expectedAmount, 'ether');
-    this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, expectedAmountInWei, data).on('broadcasted', response => {
-      console.log('callback createRequestAsPayee: ', response);
-      callback(response);
-    }).then(
-      async response => {
-        console.log('resolve createRequestAsPayee: ', response);
-        await this.setRequestWithStatus(response.request);
-      }, err => {
-        console.log('Error:', err);
-        callback(err);
-      });
+    return this.requestNetwork.requestEthereumService.createRequestAsPayee(payer, expectedAmountInWei, data);
   }
 
 
   public cancel(requestId: string, callback ? ) {
     if (this.watchDog()) { return callback(); }
-
-    console.log('RequestNetworkService cancel');
-    this.requestNetwork.requestEthereumService.cancel(requestId).on('broadcasted', response => {
-      callback(response);
-    }).then(
-      async response => {
-        await this.setRequestWithStatus(response.request);
-      }, err => {
-        console.log('Error:', err);
-        callback(err);
-      });
+    return this.requestNetwork.requestEthereumService.cancel(requestId);
   }
 
 
   public accept(requestId: string, callback ? ) {
     if (this.watchDog()) { return callback(); }
-
-    console.log('RequestNetworkService accept');
-    this.requestNetwork.requestEthereumService.accept(requestId).on('broadcasted', response => {
-      callback(response);
-    }).then(
-      async response => {
-        await this.setRequestWithStatus(response.request);
-      }, err => {
-        console.log('Error:', err);
-        callback(err);
-      });
+    return this.requestNetwork.requestEthereumService.accept(requestId);
   }
 
 
   public subtractAction(requestId: string, amount: string, callback ? ) {
     if (this.watchDog()) { return callback(); }
-
-    console.log('RequestNetworkService subtractAction');
     const amountInWei = this.toWei(amount.toString(), 'ether');
-    this.requestNetwork.requestEthereumService.subtractAction(requestId, amountInWei).on('broadcasted', response => {
-      callback(response);
-    }).then(
-      async response => {
-        await this.setRequestWithStatus(response.request);
-      }, err => {
-        console.log('Error:', err);
-        callback(err);
-      });
+    return this.requestNetwork.requestEthereumService.subtractAction(requestId, amountInWei);
   }
 
 
   public additionalAction(requestId: string, amount: string, callback ? ) {
     if (this.watchDog()) { return callback(); }
-
-    console.log('RequestNetworkService additionalAction');
     const amountInWei = this.toWei(amount.toString(), 'ether');
-    this.requestNetwork.requestEthereumService.additionalAction(requestId, amountInWei).on('broadcasted', response => {
-      callback(response);
-    }).then(
-      async response => {
-        await this.setRequestWithStatus(response.request);
-      }, err => {
-        console.log('Error:', err);
-        callback(err);
-      });
+    return this.requestNetwork.requestEthereumService.additionalAction(requestId, amountInWei);
   }
 
 
   public paymentAction(requestId: string, amount: string, callback ? ) {
     if (this.watchDog()) { return callback(); }
-
-    console.log('RequestNetworkService pay');
     const amountInWei = this.toWei(amount.toString(), 'ether');
-    this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0).on('broadcasted', response => {
-      callback(response);
-    }).then(
-      async response => {
-        await this.setRequestWithStatus(response.request);
-      }, err => {
-        console.log('Error:', err);
-        callback(err);
-      });
+    return this.requestNetwork.requestEthereumService.paymentAction(requestId, amountInWei, 0);
   }
 
   public refundAction(requestId: string, amount: string, callback ? ) {
     if (this.watchDog()) { return callback(); }
-
-    console.log('RequestNetworkService refund');
     const amountInWei = this.toWei(amount.toString(), 'ether');
-    this.requestNetwork.requestEthereumService.refundAction(requestId, amountInWei, 0).on('broadcasted', response => {
-      callback(response);
-    }).then(
-      async response => {
-        await this.setRequestWithStatus(response.request);
-      }, err => {
-        console.log('Error:', err);
-        callback(err);
-      });
+    return this.requestNetwork.requestEthereumService.refundAction(requestId, amountInWei, 0);
   }
 
 
-  public async getRequestAsync(requestId: string) {
-    console.log('RequestNetworkService getRequest by id');
+  public async getRequestByRequestIdAsync(requestId: string) {
     try {
       const request = await this.requestNetwork.requestCoreService.getRequest(requestId);
       this.setRequestStatus(request);
@@ -315,12 +226,10 @@ export class Web3Service {
     }
   }
 
-  public async getRequestByTransactionHashAsync(txHash: string) {
-    console.log('RequestNetworkService getRequest by txHash');
+  public async getRequestByTransactionHash(txHash: string) {
     try {
-      const request = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(txHash).request;
-      this.setRequestStatus(request);
-      return request;
+      const response = await this.requestNetwork.requestCoreService.getRequestByTransactionHash(txHash);
+      return response;
     } catch (err) {
       console.log('Error: ', err.message);
       return err;
@@ -329,7 +238,6 @@ export class Web3Service {
 
 
   public async getRequestEvents(requestId: string) {
-    console.log('RequestNetworkService getRequestHistory');
     try {
       const history = await this.requestNetwork.requestCoreService.getRequestEvents(requestId);
       return history.sort((a, b) => b._meta.timestamp - a._meta.timestamp);
@@ -340,7 +248,6 @@ export class Web3Service {
   }
 
   public async getRequestsByAddress(requestId: string) {
-    console.log('RequestNetworkService getRequestsByAddress');
     try {
       const requests = await this.requestNetwork.requestCoreService.getRequestsByAddress(requestId);
       return requests;

@@ -54,7 +54,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getRequestsFromIds(requests) {
     for (const request of requests) {
-      this.web3Service.getRequestAsync(request.requestId).then(
+      this.web3Service.getRequestByRequestIdAsync(request.requestId).then(
         response => {
           request.request = response;
         });

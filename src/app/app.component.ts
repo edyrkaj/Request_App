@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   searchForm: FormGroup;
   searchValueFormControl: FormControl;
 
+
   constructor(private web3Service: Web3Service, private formBuilder: FormBuilder, public router: Router, private route: ActivatedRoute, private dialog: MatDialog) {}
 
 
@@ -34,26 +35,6 @@ export class AppComponent implements OnInit {
       this.searchValueFormControl.setValue(searchValue);
     });
   }
-
-
-  // ngAfterViewInit() {
-  //   wait for web3 to be instantiated
-  //   if (!this.web3Service || !this.web3Service.ready) {
-  //     const delay = new Promise(resolve => setTimeout(resolve, 1000));
-  //     await delay;
-  //     return await this.ngAfterViewInit();
-  //   }
-
-  //   this.dialog.open(BasicDialogComponent, {
-  //     hasBackdrop: true,
-  //     width: '300px',
-  //     data: {
-  //       title: 'Welcome to the Request Network App',
-  //       msg: 'At the moment, the website is deployed on the test net of Ethereum (Rinkeby), do not try to send real requests to customers',
-  //       ok: 'Ok',
-  //     }
-  //   });
-  // }
 
 
   watchAccount() {
@@ -86,5 +67,6 @@ export class AppComponent implements OnInit {
       }
     }
   }
+
 
 }

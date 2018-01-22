@@ -7,9 +7,19 @@
       <div class="col-12 text-center" *ngIf="!request.expectedAmount; else requestBlock">
         <img class="mx-auto" src="assets/img/searching.png" style="max-width: 120px;">
         <h1 class="my-3">Oops</h1>
-        <p>Sorry, we couldn’t find any matches for this request Id.</p>
-        <p>Please try searching with another ID.</p>
-        <button mat-raised-button routerLink="/" style="text-decoration: none" class="px-5 my-5" color="accent">Back home</button>
+        <div *ngIf="request.errorTxHash; else errorRequestIdBlock" class="">
+          <p>{{ request.errorTxHash }}</p>
+          <p><a style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank"><i>{{ web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10) }}...{{ txHash.substring(txHash.length-5, txHash.length) }}</i></a></p>
+          <div>
+            <button mat-raised-button routerLink="/" class="mx-3 px-5 my-5" color="accent">Back home</button>
+            <button mat-raised-button (click)="refresh()" class="mx-3 px-5 my-5" color="accent">Try again</button>
+          </div>
+        </div>
+        <ng-template #errorRequestIdBlock>
+          <p>Sorry, we couldn’t find any matches for this request Id.</p>
+          <p>Please try searching with another ID.</p>
+          <button mat-raised-button routerLink="/" style="text-decoration: none" class="px-5 my-5" color="accent">Back home</button>
+        </ng-template>
       </div>
       <ng-template #requestBlock>
         <div class="col-md-3 p-0">
@@ -32,14 +42,16 @@
               <img class="px-3" style="max-height: 75px;" src="assets/img/request-logo.png">
               <div class="ml-auto text-right px-3 fc-white">
                 <h4 class="semi-bold fs-18">
-                  <span *ngIf="request.status; else waitingTemplate" popover="{{request.requestId}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">Request Id: {{request.requestId.substring(0, 5)}}...{{request.requestId.substring(56, 66)}}</span>
-                  <ng-template #waitingTemplate><span><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;{{request.requestId}}</span></ng-template>
+                  <span *ngIf="request.requestId; else waitingTemplate" popover="{{request.requestId}}" popoverPlacement="bottom" [popoverOnHover]="true" [popoverCloseOnMouseOutside]="true">Request Id: {{request.requestId.substring(0, 5)}}...{{request.requestId.substring(56, 66)}}</span>
+                  <ng-template #waitingTemplate>
+                    <span><i class="fa {{request.errorMsg ? 'fa-warning fc-warn' : 'fa-circle-o-notch fa-spin'}}"></i>&nbsp;{{ request.errorMsg || request.waitingMsg || 'waiting for blockchain information...' }}</span>
+                  </ng-template>
                 </h4>
                 <div class="fs-14" [style.opacity]="'0.5'">
                   <i>{{request.data.data.date | date: 'fullDate'}}</i>
                 </div>
                 <div class="mt-1">
-                  <a *ngIf="txHash" class="fs-14" style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank"><i>{{web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10)}}...</i></a>
+                  <a *ngIf="txHash" class="fs-14" style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{txHash}}" target="_blank"><i>{{ web3Service.etherscanUrl}}tx/{{txHash.substring(0, 10) }}...{{ txHash.substring(txHash.length-5, txHash.length) }}</i></a>
                   <span *ngIf="request.status" class="status-{{request.status.replace(' ','-')}} fs-12">{{request.status}}</span>
                 </div>
               </div>
@@ -92,10 +104,18 @@
             <mat-toolbar class="p-0 bbr-7 cta-toolbar" [style.height]="'90px'">
               <!-- VIEW MODE / BROADCASTING-->
               <div *ngIf="!request.status; else ctaMode" class="text-center fs-12 lh-14 h-100">
-                <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
-                <div class="fc-primary semi-bold">
-                  <i>You are in view mode.<br/> Synchronizing the request with the blockchain can take between 1sec and a couple of minutes.</i>
+                <div *ngIf="!request.errorMsg; else errorBlock">
+                  <mat-icon class="mx-auto mt-3" color="accent">remove_red_eye</mat-icon>
+                  <div class="fc-primary semi-bold">
+                    <i>You are in view mode.<br/> Synchronizing the request with the blockchain can take between 1sec and a couple of minutes.</i>
+                  </div>
                 </div>
+                <ng-template #errorBlock>
+                  <i class="mx-auto my-3 fa fa-warning fa-2x fc-warn"></i>
+                  <div class="fc-primary semi-bold">
+                    <i>Sorry, we are unable to locate this Transaction Hash. Try refreshing the page.</i>
+                  </div>
+                </ng-template>
               </div>
               <ng-template #ctaMode>
                 <!-- STATE == CANCELED -->
@@ -105,7 +125,7 @@
                 </div>
                 <!-- NORMAL STATES -->
                 <ng-template #ctaBlock>
-                  <div class="h-100 w-100 fs-18" [ngSwitch]="mode">
+                  <div *ngIf="!loading; else loadingMode" class="h-100 w-100 fs-18" [ngSwitch]="mode">
                     <!-- PAYEE -->
                     <mat-menu #payeeActionsMenu="matMenu" [overlapTrigger]="false" class="actionsMenu">
                       <button (click)="cancelRequest()" [disabled]="request.balance > 0" mat-menu-item>
@@ -152,6 +172,17 @@
                       </div>
                     </div>
                   </div>
+                  <ng-template #loadingMode>
+                    <!-- LOADING -->
+                    <div class="h-100 w-100 fs-18">
+                      <div class="text-center fs-12 lh-14 h-100">
+                        <mat-spinner class="mx-auto mt-3" [diameter]="20"></mat-spinner>
+                        <div class="fc-primary semi-bold">
+                          <i>Waiting for transaction to be mined...<br/><a style="opacity: 0.8; color: #5392ff !important;" href="{{web3Service.etherscanUrl}}tx/{{loading}}" target="_blank">{{ web3Service.etherscanUrl}}tx/{{loading.substring(0, 10) }}...{{ loading.substring(loading.length-5, loading.length) }}</a></i>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
                 </ng-template>
               </ng-template>
             </mat-toolbar>

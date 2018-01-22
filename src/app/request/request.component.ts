@@ -22,32 +22,35 @@ export class RequestComponent implements OnInit, OnDestroy {
   mode: string;
   request: any;
   progress: number;
-  url: string;
+  url = window.location.href;
   copyUrlTxt = 'Copy url';
   txHash: string;
-  subscription;
+  subscription: any;
+  searchValue: string;
+  timerInterval: any;
+  loading = false;
 
 
   constructor(public web3Service: Web3Service, private route: ActivatedRoute, private dialog: MatDialog) {}
 
 
   async ngOnInit() {
-    this.url = window.location.href;
-
     // wait for web3 to be instantiated
     if (!this.web3Service || !this.web3Service.ready) {
       const delay = new Promise(resolve => setTimeout(resolve, 1000));
       await delay;
-      return await this.ngOnInit();
+      return this.ngOnInit();
     }
     this.watchAccount();
 
-    this.subscription = this.web3Service.request.subscribe(async request => {
-      if (!this.request || !request || this.request.requestId.startsWith('waiting') || this.request.requestId === request.requestId || request.newSearch) {
+    this.subscription = this.web3Service.searchValue.subscribe(async searchValue => {
+      if (searchValue && searchValue.length > 42) {
+        this.loading = false;
+        this.searchValue = searchValue;
+        const request = await this.web3Service.getRequestByRequestIdAsync(searchValue);
+        request.history = await this.web3Service.getRequestEvents(request.requestId);
+        this.request = null;
         this.setRequest(request);
-        if (request && request.requestId) {
-          history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
-        }
       }
     });
 
@@ -55,51 +58,62 @@ export class RequestComponent implements OnInit, OnDestroy {
       this.web3Service.setSearchValue(this.route.snapshot.params['requestId']);
     } else if (this.route.snapshot.params['txHash']) {
       this.txHash = this.route.snapshot.params['txHash'];
-      // if queryParams get Request from queryParams
-      if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
-        const queryRequest = {
-          requestId: 'waiting for blockchain response...',
-          expectedAmount: this.web3Service.BN(this.web3Service.toWei(this.route.snapshot.queryParams.expectedAmount)),
-          balance: this.web3Service.BN(this.web3Service.toWei('0')),
-          payer: this.route.snapshot.queryParams.payer,
-          payee: this.route.snapshot.queryParams.payee,
-          data: { data: {} }
-        };
-        Object.keys(this.route.snapshot.queryParams).forEach((key) => {
-          if (!queryRequest[key]) { queryRequest.data.data[key] = this.route.snapshot.queryParams[key]; }
-        });
-        this.setRequest(queryRequest);
-      }
+      this.watchRequestByTxHash();
+    }
 
-      // get Request from txHash
-      const result = await this.web3Service.getRequestByTransactionHashAsync(this.txHash);
-      if (result && result.requestId) {
-        this.setRequest(result);
-        history.pushState(null, null, `/#/request/requestId/${this.request.requestId}`);
-      }
+    this.timerInterval = setInterval(_ => this.getRequestByRequestId(), 10000);
+  }
+
+
+  async watchRequestByTxHash() {
+    if (this.searchValue) { return console.log('stopped watching txHash'); }
+
+    const result = await this.web3Service.getRequestByTransactionHash(this.txHash);
+
+    if (result.request && result.request.requestId) {
+      // this.setRequestWithEventsAndStatus(result.request);
+      this.web3Service.setSearchValue(result.request.requestId);
+    } else if (result.transaction) {
+      this.setRequest({
+        waitingMsg: 'waiting for transaction to be mined...',
+        expectedAmount: this.web3Service.BN(result.transaction.method.parameters[1]),
+        payer: result.transaction.method.parameters[0],
+        payee: result.transaction.from,
+        data: { data: { date: Date.now() } }
+      });
+      const delay = new Promise(resolve => setTimeout(resolve, 5000));
+      await delay;
+      return this.watchRequestByTxHash();
+    } else if (Object.keys(this.route.snapshot.queryParams).length > 0 && this.route.snapshot.queryParams.expectedAmount && this.route.snapshot.queryParams.payer && this.route.snapshot.queryParams.payee) {
+      const queryRequest = {
+        expectedAmount: this.web3Service.BN(this.web3Service.toWei(this.route.snapshot.queryParams.expectedAmount)),
+        balance: this.web3Service.BN(this.web3Service.toWei('0')),
+        payer: this.route.snapshot.queryParams.payer,
+        payee: this.route.snapshot.queryParams.payee,
+        data: { data: {} }
+      };
+      Object.keys(this.route.snapshot.queryParams).forEach((key) => {
+        if (!queryRequest[key]) { queryRequest.data.data[key] = this.route.snapshot.queryParams[key]; }
+      });
+      if (!this.request) { setTimeout(_ => this.request.errorMsg = 'unable to locate this Transaction Hash', 5000); }
+      this.setRequest(queryRequest);
+    } else {
+      this.setRequest({ errorTxHash: 'Sorry, we are unable to locate this Transaction Hash' });
     }
   }
 
-
-  getAgeFromTimeStamp(timestamp) {
-    if (!timestamp) { return ''; }
-    const date = new Date().getTime();
-    const days = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60 * 24));
-    let msg = days === 1 ? `${days} day ` : days > 1 ? `${days} days ` : '';
-    const hours = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60) % 24);
-    msg += days === 1 ? `${hours} hr ` : hours > 1 ? `${hours} hrs ` : '';
-    const minutes = Math.floor((date - timestamp * 1000) / (1000 * 60) % 60);
-    msg += minutes === 1 ? `${minutes} min ` : minutes > 1 ? `${minutes} mins ` : '';
-    return msg ? `${msg}ago` : 'less than 1 min ago';
+  async getRequestByRequestId() {
+    if (!this.searchValue) { return; }
+    const request = await this.web3Service.getRequestByRequestIdAsync(this.searchValue);
+    request.history = await this.web3Service.getRequestEvents(request.requestId);
+    return this.setRequest(request);
   }
 
-  spaceBeforeCapital(name) {
-    return name.replace(/([A-Z])/g, ' $1').trim();
-  }
 
   setRequest(request) {
-    if (request && request.state && request.requestId) {
-      this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${request.requestId}`;
+    if (this.searchValue && (!this.request || this.request.requestId && this.searchValue !== this.request.requestId)) {
+      history.pushState(null, null, `/#/request/requestId/${this.searchValue}`);
+      this.url = `${window.location.protocol}//${window.location.host}/#/request/requestId/${this.searchValue}`;
     }
     this.request = request;
     this.getRequestMode();
@@ -118,22 +132,44 @@ export class RequestComponent implements OnInit, OnDestroy {
   }
 
 
+  getAgeFromTimeStamp(timestamp) {
+    if (!timestamp) { return ''; }
+    const date = new Date().getTime();
+    const days = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60 * 24));
+    let msg = days === 1 ? `${days} day ` : days > 1 ? `${days} days ` : '';
+    const hours = Math.floor((date - timestamp * 1000) / (1000 * 60 * 60) % 24);
+    msg += days === 1 ? `${hours} hr ` : hours > 1 ? `${hours} hrs ` : '';
+    const minutes = Math.floor((date - timestamp * 1000) / (1000 * 60) % 60);
+    msg += minutes === 1 ? `${minutes} min ` : minutes > 1 ? `${minutes} mins ` : '';
+    return msg ? `${msg}ago` : 'less than 1 min ago';
+  }
+
+
   getRequestMode() {
-    console.log('request:', this.request);
     this.mode = this.request && this.account === this.request.payee ? 'payee' : this.request && this.account === this.request.payer ? 'payer' : 'none';
+  }
+
+
+  spaceBeforeCapital(name) {
+    return name.replace(/([A-Z])/g, ' $1').trim();
   }
 
 
   copyToClipboard() {
     this.copyUrlTxt = 'Copied!';
-    setTimeout(() => { this.copyUrlTxt = 'Copy url & share'; }, 500);
+    setTimeout(_ => { this.copyUrlTxt = 'Copy url & share'; }, 500);
+  }
+
+
+  refresh() {
+    location.reload();
   }
 
 
   callbackTx(response, msg ? ) {
     if (response.transaction) {
-      // this.txHash = response.transaction.hash;
-      this.web3Service.openSnackBar(msg || 'Transaction in progress.', 'Ok', 'success-snackbar');
+      this.web3Service.openSnackBar(msg || 'Transaction in progress.', 'Ok', 'info-snackbar');
+      this.loading = response.transaction.hash;
     } else if (response.message) {
       this.web3Service.openSnackBar(response.message);
     }
@@ -141,12 +177,37 @@ export class RequestComponent implements OnInit, OnDestroy {
 
 
   cancelRequest() {
-    this.web3Service.cancel(this.request.requestId, response => this.callbackTx(response, 'The request is being cancelled. Please wait a few moments for it to appear on the Blockchain.'));
+    this.web3Service.cancel(this.request.requestId, this.callbackTx)
+      .on('broadcasted', response => {
+        this.callbackTx(response, 'The request is being cancelled. Please wait a few moments for it to appear on the Blockchain.');
+      }).then(
+        response => {
+          setTimeout(_ => {
+            this.loading = false;
+            this.web3Service.openSnackBar('Request successfully cancelled.', 'Ok', 'success-snackbar');
+          }, 5000);
+        }, err => {
+          console.log('Error:', err);
+          this.callbackTx(err);
+        }
+      );
   }
 
 
   acceptRequest() {
-    this.web3Service.accept(this.request.requestId, response => this.callbackTx(response, 'The request is being accepted. Please wait a few moments for it to appear on the Blockchain.'));
+    this.web3Service.accept(this.request.requestId, this.callbackTx)
+      .on('broadcasted', response => {
+        this.callbackTx(response, 'The request is being accepted. Please wait a few moments for it to appear on the Blockchain.');
+      }).then(
+        response => {
+          setTimeout(_ => {
+            this.loading = false;
+            this.web3Service.openSnackBar('Request successfully accepted.', 'Ok', 'success-snackbar');
+          }, 5000);
+        }, err => {
+          console.log('Error:', err);
+          this.callbackTx(err);
+        });
   }
 
 
@@ -163,7 +224,19 @@ export class RequestComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(subtractValue => {
         if (subtractValue) {
-          this.web3Service.subtractAction(this.request.requestId, subtractValue, response => this.callbackTx(response, 'Subtract in progress. Please wait a few moments for it to appear on the Blockchain.'));
+          this.web3Service.subtractAction(this.request.requestId, subtractValue, this.callbackTx)
+            .on('broadcasted', response => {
+              this.callbackTx(response, 'Subtract in progress. Please wait a few moments for it to appear on the Blockchain.');
+            }).then(
+              response => {
+                setTimeout(_ => {
+                  this.loading = false;
+                  this.web3Service.openSnackBar('Subtract done.', 'Ok', 'success-snackbar');
+                }, 5000);
+              }, err => {
+                console.log('Error:', err);
+                this.callbackTx(err);
+              });
         }
       });
   }
@@ -182,7 +255,19 @@ export class RequestComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(subtractValue => {
         if (subtractValue) {
-          this.web3Service.additionalAction(this.request.requestId, subtractValue, response => this.callbackTx(response, 'Additional in progress. Please wait a few moments for it to appear on the Blockchain.'));
+          this.web3Service.additionalAction(this.request.requestId, subtractValue, this.callbackTx)
+            .on('broadcasted', response => {
+              this.callbackTx(response, 'Additional in progress. Please wait a few moments for it to appear on the Blockchain.');
+            }).then(
+              response => {
+                setTimeout(_ => {
+                  this.loading = false;
+                  this.web3Service.openSnackBar('Additional done.', 'Ok', 'success-snackbar');
+                }, 5000);
+              }, err => {
+                console.log('Error:', err);
+                this.callbackTx(err);
+              });
         }
       });
   }
@@ -201,7 +286,19 @@ export class RequestComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(amountValue => {
         if (amountValue) {
-          this.web3Service.paymentAction(this.request.requestId, amountValue, response => this.callbackTx(response, 'Payment is being done. Please wait a few moments for it to appear on the Blockchain.'));
+          this.web3Service.paymentAction(this.request.requestId, amountValue, this.callbackTx)
+            .on('broadcasted', response => {
+              this.callbackTx(response, 'Payment is being done. Please wait a few moments for it to appear on the Blockchain.');
+            }).then(
+              response => {
+                setTimeout(_ => {
+                  this.loading = false;
+                  this.web3Service.openSnackBar('Payment done.', 'Ok', 'success-snackbar');
+                }, 5000);
+              }, err => {
+                console.log('Error:', err);
+                this.callbackTx(err);
+              });
         }
       });
   }
@@ -220,14 +317,27 @@ export class RequestComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(amountValue => {
         if (amountValue) {
-          this.web3Service.refundAction(this.request.requestId, amountValue, response => this.callbackTx(response, 'Refund in progress. Please wait a few moments for it to appear on the Blockchain.'));
+          this.web3Service.refundAction(this.request.requestId, amountValue, this.callbackTx)
+            .on('broadcasted', response => {
+              this.callbackTx(response, 'Refund in progress. Please wait a few moments for it to appear on the Blockchain.');
+            }).then(
+              response => {
+                setTimeout(_ => {
+                  this.loading = false;
+                  this.web3Service.openSnackBar('Refund done.', 'Ok', 'success-snackbar');
+                }, 5000);
+              }, err => {
+                console.log('Error:', err);
+                this.callbackTx(err);
+              });
         }
       });
   }
 
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) { this.subscription.unsubscribe(); }
+    if (this.timerInterval) { clearInterval(this.timerInterval); }
   }
 
 

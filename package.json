@@ -24,7 +24,7 @@
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
-    "@requestnetwork/request-network.js": "^0.1.6",
+    "@requestnetwork/request-network.js": "^0.1.7",
     "blockies": "0.0.2",
     "bootstrap": "^4.0.0-beta",
     "core-js": "^2.4.1",
