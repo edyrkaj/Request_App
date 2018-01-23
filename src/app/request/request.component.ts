@@ -61,7 +61,7 @@ export class RequestComponent implements OnInit, OnDestroy {
       this.watchRequestByTxHash();
     }
 
-    this.timerInterval = setInterval(_ => this.getRequestByRequestId(), 10000);
+    this.timerInterval = setInterval(() => this.getRequestByRequestId(), 10000);
   }
 
 
@@ -71,7 +71,6 @@ export class RequestComponent implements OnInit, OnDestroy {
     const result = await this.web3Service.getRequestByTransactionHash(this.txHash);
 
     if (result.request && result.request.requestId) {
-      // this.setRequestWithEventsAndStatus(result.request);
       this.web3Service.setSearchValue(result.request.requestId);
     } else if (result.transaction) {
       this.setRequest({
@@ -95,7 +94,7 @@ export class RequestComponent implements OnInit, OnDestroy {
       Object.keys(this.route.snapshot.queryParams).forEach((key) => {
         if (!queryRequest[key]) { queryRequest.data.data[key] = this.route.snapshot.queryParams[key]; }
       });
-      if (!this.request) { setTimeout(_ => this.request.errorMsg = 'unable to locate this Transaction Hash', 5000); }
+      if (!this.request) { setTimeout(() => this.request.errorMsg = 'unable to locate this Transaction Hash', 5000); }
       this.setRequest(queryRequest);
     } else {
       this.setRequest({ errorTxHash: 'Sorry, we are unable to locate this Transaction Hash' });
@@ -157,7 +156,7 @@ export class RequestComponent implements OnInit, OnDestroy {
 
   copyToClipboard() {
     this.copyUrlTxt = 'Copied!';
-    setTimeout(_ => { this.copyUrlTxt = 'Copy url & share'; }, 500);
+    setTimeout(() => { this.copyUrlTxt = 'Copy url & share'; }, 500);
   }
 
 
@@ -182,7 +181,7 @@ export class RequestComponent implements OnInit, OnDestroy {
         this.callbackTx(response, 'The request is being cancelled. Please wait a few moments for it to appear on the Blockchain.');
       }).then(
         response => {
-          setTimeout(_ => {
+          setTimeout(() => {
             this.loading = false;
             this.web3Service.openSnackBar('Request successfully cancelled.', 'Ok', 'success-snackbar');
           }, 5000);
@@ -200,7 +199,7 @@ export class RequestComponent implements OnInit, OnDestroy {
         this.callbackTx(response, 'The request is being accepted. Please wait a few moments for it to appear on the Blockchain.');
       }).then(
         response => {
-          setTimeout(_ => {
+          setTimeout(() => {
             this.loading = false;
             this.web3Service.openSnackBar('Request successfully accepted.', 'Ok', 'success-snackbar');
           }, 5000);
@@ -229,7 +228,7 @@ export class RequestComponent implements OnInit, OnDestroy {
               this.callbackTx(response, 'Subtract in progress. Please wait a few moments for it to appear on the Blockchain.');
             }).then(
               response => {
-                setTimeout(_ => {
+                setTimeout(() => {
                   this.loading = false;
                   this.web3Service.openSnackBar('Subtract done.', 'Ok', 'success-snackbar');
                 }, 5000);
@@ -260,7 +259,7 @@ export class RequestComponent implements OnInit, OnDestroy {
               this.callbackTx(response, 'Additional in progress. Please wait a few moments for it to appear on the Blockchain.');
             }).then(
               response => {
-                setTimeout(_ => {
+                setTimeout(() => {
                   this.loading = false;
                   this.web3Service.openSnackBar('Additional done.', 'Ok', 'success-snackbar');
                 }, 5000);
@@ -291,7 +290,7 @@ export class RequestComponent implements OnInit, OnDestroy {
               this.callbackTx(response, 'Payment is being done. Please wait a few moments for it to appear on the Blockchain.');
             }).then(
               response => {
-                setTimeout(_ => {
+                setTimeout(() => {
                   this.loading = false;
                   this.web3Service.openSnackBar('Payment done.', 'Ok', 'success-snackbar');
                 }, 5000);
@@ -322,7 +321,7 @@ export class RequestComponent implements OnInit, OnDestroy {
               this.callbackTx(response, 'Refund in progress. Please wait a few moments for it to appear on the Blockchain.');
             }).then(
               response => {
-                setTimeout(_ => {
+                setTimeout(() => {
                   this.loading = false;
                   this.web3Service.openSnackBar('Refund done.', 'Ok', 'success-snackbar');
                 }, 5000);

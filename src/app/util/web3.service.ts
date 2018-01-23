@@ -75,7 +75,7 @@ export class Web3Service {
     this.isAddress = this.web3.utils.isAddress;
     this.BN = mixed => new this.web3.utils.BN(mixed);
 
-    setInterval(_ => this.refreshAccounts(), 1000);
+    setInterval(() => this.refreshAccounts(), 1000);
   }
 
 

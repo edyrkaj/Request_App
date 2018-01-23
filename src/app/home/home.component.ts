@@ -32,8 +32,8 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
-    setInterval(_ => { this.date = new Date().getTime(); }, 5000);
-    setTimeout(_ => this.web3Service.setSearchValue(''));
+    setInterval(() => { this.date = new Date().getTime(); }, 5000);
+    setTimeout(() => this.web3Service.setSearchValue(''));
 
     this.watchAccount();
 
@@ -117,7 +117,7 @@ export class HomeComponent implements OnInit {
       .then(
         response => {
           console.log('resolve createRequestAsPayee: ', response);
-          setTimeout(_ => { this.web3Service.openSnackBar('Request successfully created.', 'Ok', 'success-snackbar'); }, 5000);
+          setTimeout(() => { this.web3Service.openSnackBar('Request successfully created.', 'Ok', 'success-snackbar'); }, 5000);
         }, err => {
           console.log('Error:', err);
           callback(err);

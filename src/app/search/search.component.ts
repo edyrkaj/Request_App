@@ -47,7 +47,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     if (this.route.snapshot.params['searchValue']) {
-      setTimeout(_ => this.web3Service.setSearchValue(this.route.snapshot.params['searchValue']));
+      setTimeout(() => this.web3Service.setSearchValue(this.route.snapshot.params['searchValue']));
     }
   }
 
