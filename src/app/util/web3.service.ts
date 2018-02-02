@@ -239,8 +239,8 @@ export class Web3Service {
 
   public async getRequestEvents(requestId: string) {
     try {
-      const history = await this.requestNetwork.requestCoreService.getRequestEvents(requestId);
-      return history.sort((a, b) => b._meta.timestamp - a._meta.timestamp);
+      const events = await this.requestNetwork.requestCoreService.getRequestEvents(requestId);
+      return events.sort((a, b) => b._meta.timestamp - a._meta.timestamp);
     } catch (err) {
       console.log('Error: ', err.message);
       return err;

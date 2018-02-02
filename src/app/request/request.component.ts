@@ -48,7 +48,7 @@ export class RequestComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.searchValue = searchValue;
         const request = await this.web3Service.getRequestByRequestIdAsync(searchValue);
-        request.history = await this.web3Service.getRequestEvents(request.requestId);
+        request.events = await this.web3Service.getRequestEvents(request.requestId);
         this.request = null;
         this.setRequest(request);
       }
@@ -104,7 +104,7 @@ export class RequestComponent implements OnInit, OnDestroy {
   async getRequestByRequestId() {
     if (!this.searchValue) { return; }
     const request = await this.web3Service.getRequestByRequestIdAsync(this.searchValue);
-    request.history = await this.web3Service.getRequestEvents(request.requestId);
+    request.events = await this.web3Service.getRequestEvents(request.requestId);
     return this.setRequest(request);
   }
 

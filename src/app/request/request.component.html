@@ -26,11 +26,11 @@
           <input mat-button class="url-box fc-blue-grey fs-12 px-3 w-100" [value]="url" disabled>
           <button mat-button class="w-100 fs-16 bor-accent my-3" style="height: 50px" color="accent" type="button" ngxClipboard [cbContent]="url" (cbOnSuccess)="copyToClipboard()">{{copyUrlTxt}}</button>
           <hr style="border-top: 1px solid #617B9F; opacity: 0.2">
-          <div class="fc-blue-grey" *ngIf="request.history">
+          <div class="fc-blue-grey" *ngIf="request.events">
             <p class="semi-bold mb-2 fs-14">
               History
             </p>
-            <div *ngFor="let e of request.history" class="fs-12 d-flex justify-content-between">
+            <div *ngFor="let e of request.events" class="fs-12 d-flex justify-content-between">
               <span>{{ spaceBeforeCapital(e.name) }} </span>
               <span>{{ getAgeFromTimeStamp(e._meta.timestamp) }}</span>
             </div>
