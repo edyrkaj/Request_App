@@ -9,7 +9,9 @@
     "build:prod": "ng build --prod --aot --build-optimizer",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "private": true,
   "dependencies": {
@@ -35,7 +37,8 @@
     "rxjs": "^5.5.3",
     "truffle-contract": "^3.0.1",
     "web-animations-js": "^2.3.1",
-    "zone.js": "^0.8.14"
+    "zone.js": "^0.8.14",
+    "snyk": "^1.105.0"
   },
   "devDependencies": {
     "@angular/cli": "1.5.0",
@@ -58,5 +61,6 @@
     "tslint": "~5.7.0",
     "typescript": "~2.4.2",
     "web3": "^1.0.0-beta.24"
-  }
+  },
+  "snyk": true
 }
